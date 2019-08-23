@@ -5,30 +5,35 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-
 using static Universal_Share.SharedComponents;
-namespace Universal_Share
-{
-    class Client
-    {
 
-
+namespace Universal_Share {
+    class Client {
         public void Start() {
-            while ( true ) {
-                var ipend = new IPEndPoint( IPAddress.Parse( "127.0.0.1" ), FILE_PORT );
-                var listener = new TcpClient();
-                listener.Connect(ipend);
+            var ipend = new IPEndPoint( IPAddress.Parse( "127.0.0.1" ), FILE_PORT );
 
-                SendFile( listener, "test.txt" );
-                Console.WriteLine( "Finished!" );
+            while ( true ) {
+                try {
+                    var listener = new TcpClient();
+                    listener.Connect( ipend );
+
+                    SendFile( listener, "test.txt" );
+                    Console.WriteLine( "Finished!" );
+
+                    
+                    Thread.Sleep( 1000 );
+                } catch {
+                    Thread.Sleep( 1000 );
+                }
             }
         }
 
         void SendFile(TcpClient cl, string filename) {
             SocketError errorCode = SocketError.NotConnected;
             int         readBytes = -1;
-            
+
             byte[] buffer = new byte[BUFFER_SIZE];
 
             Stream strm = new FileStream( filename, FileMode.Open );
@@ -41,6 +46,7 @@ namespace Universal_Share
                 totalReadBytes += readBytes;
                 cl.Client.Send( buffer, 0, readBytes, SocketFlags.None, out errorCode );
             }
+
             cl.Close();
             strm.Close();
             return;

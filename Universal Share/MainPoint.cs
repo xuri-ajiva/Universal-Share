@@ -2,23 +2,25 @@
 using System.Collections.Specialized;
 using System.Diagnostics;
 
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
 // ReSharper disable HeuristicUnreachableCode
 #pragma warning disable 162
 
 namespace Universal_Share {
     static class MainPoint {
-        const bool DEBUG  = true;
-        const bool SERVER = true;
+        const bool DEBUG         = true;
+        const bool SERVER        = true;
+        const bool START_OPPOSITE = false;
 
         static void Main(string[] args) {
             if ( DEBUG ) {
                 if ( args.Length == 0 ) {
                     if ( SERVER ) {
-                        Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "C" );
+                        if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "C" );
                         new Server().Start();
                     }
                     else {
-                        Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "S" );
+                        if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "S" );
                         new Client().Start();
                     }
                 }
