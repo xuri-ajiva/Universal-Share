@@ -9,8 +9,8 @@ using System.Diagnostics;
 namespace Universal_Share {
     static class MainPoint {
         const bool DEBUG         = true;
-        const bool SERVER        = true;
-        const bool START_OPPOSITE = false;
+        const bool SERVER        = false;
+        const bool START_OPPOSITE = true;
 
         static void Main(string[] args) {
             if ( DEBUG ) {

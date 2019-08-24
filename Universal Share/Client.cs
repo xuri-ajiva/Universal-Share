@@ -7,21 +7,29 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using static Universal_Share.SharedComponents;
 
 namespace Universal_Share {
-    class Client {
+    class Client :SharedComponents {
         public void Start() {
-            var ipend = new IPEndPoint( IPAddress.Parse( "127.0.0.1" ), FILE_PORT );
+            var ipend_F = new IPEndPoint( IPAddress.Parse( "127.0.0.1" ), FILE_PORT );
+            var ipend_R = new IPEndPoint( IPAddress.Parse( "127.0.0.1" ), TEXT_PORT );
 
             while ( true ) {
                 try {
-                    var listener = new TcpClient();
-                    listener.Connect( ipend );
+                    var register = new TcpClient();
+                    register.Connect( ipend_R );
+                    
+                    var fileSocket = new TcpClient();
+                    fileSocket.Connect( ipend_F );
 
-                    SendFile( listener, "test.txt" );
+                    var id = new Random().Next(100000000,999999999);
+
+                    SendRegister( register, "test.txt", id );
+
+                    SendFile( fileSocket, "..\\..\\..\\test.txt",id );
                     Console.WriteLine( "Finished!" );
-
+                    register.Close();
+                    fileSocket.Close();
                     
                     Thread.Sleep( 1000 );
                 } catch {
@@ -30,26 +38,6 @@ namespace Universal_Share {
             }
         }
 
-        void SendFile(TcpClient cl, string filename) {
-            SocketError errorCode = SocketError.NotConnected;
-            int         readBytes = -1;
 
-            byte[] buffer = new byte[BUFFER_SIZE];
-
-            Stream strm = new FileStream( filename, FileMode.Open );
-
-            int blockCtr       = 0;
-            int totalReadBytes = 0;
-            while ( readBytes != 0 ) {
-                readBytes = strm.Read( buffer, 0, BUFFER_SIZE );
-                blockCtr++;
-                totalReadBytes += readBytes;
-                cl.Client.Send( buffer, 0, readBytes, SocketFlags.None, out errorCode );
-            }
-
-            cl.Close();
-            strm.Close();
-            return;
-        }
     }
 }
