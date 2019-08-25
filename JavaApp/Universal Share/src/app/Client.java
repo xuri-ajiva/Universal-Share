@@ -1,35 +1,26 @@
 package app;
 
 import java.util.*;
-
-import java.io.*;
+import java.io.File;
+//import java.io.*;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 
 public class Client extends SharedData {
+
+    /**
+     *
+     */
+    
+    private static final int ERRORCODE = -1;
 
     public void Start() throws Exception {
         while (true) {
             try {
-                Socket MainSocket = new Socket("localhost", FILE_PORT);
+                
+                System.out.println("SendFile Returned: " + SendFile("..\\..\\test.txt"));
 
-                Socket MainSocket2 = new Socket("localhost", 9999);
-
-                System.out.println("Connected!");
-
-                int id = new Random().nextInt(99999999) + 10000000;
-
-                SendRegister(MainSocket2, "TestFile", id);
-
-                SendFile(MainSocket, "..\\..\\test.txt", id);
-
-                MainSocket.close();
-                MainSocket2.close();
-
-                System.out.println("Finished!");
-
+                
                 Thread.sleep(1000);
-
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 Thread.sleep(1000);
@@ -37,73 +28,31 @@ public class Client extends SharedData {
         }
     }
 
-    void SendRegister(Socket CommunicationSocket, String SaveFileName, int id) throws Exception {
-        OutputStream OutStream = CommunicationSocket.getOutputStream();
-        InputStream InStream = CommunicationSocket.getInputStream();
+    public int SendFile(String FileName) throws Exception {
+        Socket MainSocket = new Socket("localhost", FILE_PORT);
 
-        byte[] id_B = formInt(id);
-        byte[] Filaneme_B = formString(SaveFileName);
+        Socket MainSocket2 = new Socket("localhost", 9999);
 
-        int saveFileLangth = Filaneme_B.length;
-        int bufflength = HEATHER_SIZE + saveFileLangth;
+        System.out.println("Connected!");
 
-        byte[] buffer = new byte[bufflength];
+        int id = new Random().nextInt(99999999) + 10000000;
 
-        System.arraycopy(id_B, 0, buffer, 0, HEATHER_SIZE);
-        System.arraycopy(Filaneme_B, 0, buffer, HEATHER_SIZE,saveFileLangth);
+        File f = new File(FileName);
+        if (!f.exists())
+            return ERRORCODE;
 
-        OutStream.write(buffer);
-        OutStream.flush();
+        String F_Name = f.getName();
+        String F_Absolute = f.getAbsolutePath();
 
-        OutStream.close();
-        InStream.close();
+        SendRegister(MainSocket2, F_Name, id);
+        Thread.sleep(100);
+        SendFile(MainSocket, F_Absolute, id);
+
+        MainSocket.close();
+        MainSocket2.close();
+
+        System.out.println("Finished!");
+        return 0;
     }
 
-    void SendFile(Socket FileSocket, String filename, int id) throws Exception {
-        int readBytes = -1;
-        byte[] buffer = new byte[BUFFER_SIZE];
-
-        // id = id == -1 ? new Random().nextInt(99999999) + 10000000 : id;
-        byte[] id_B = formInt(id);
-
-        FileInputStream strm = new FileInputStream(filename);
-
-        int blockCtr = 0;
-        int totalReadBytes = 0;
-
-        OutputStream OutStream = FileSocket.getOutputStream();
-        while (readBytes != 0) {
-            readBytes = strm.read(buffer, HEATHER_SIZE, BUFFER_SIZE - HEATHER_SIZE);
-            if (readBytes == -1)
-                break;
-            blockCtr++;
-            totalReadBytes += readBytes;
-
-            System.arraycopy(id_B, 0, buffer, 0, id_B.length);
-
-            OutStream.write(buffer, 0, readBytes + HEATHER_SIZE);
-            System.out.println("Paket: id = " + id + "    | " + ToInt(Arrays.copyOfRange(buffer, 0, HEATHER_SIZE))
-                    + "  :  " + Arrays.toString(Arrays.copyOfRange(buffer, 0, HEATHER_SIZE)));
-        }
-
-        OutStream.close();
-        strm.close();
-        return;
-    }
-
-    int ToInt(byte[] b) {
-        return Integer.valueOf(ToString(b));
-    }
-
-    byte[] formInt(int i) {
-        return formString(String.valueOf(i));
-    }
-
-    String ToString(byte[] b) {
-        return new String(b, StandardCharsets.UTF_8);
-    }
-
-    byte[] formString(String S) {
-        return S.getBytes(StandardCharsets.UTF_8);
-    }
 }

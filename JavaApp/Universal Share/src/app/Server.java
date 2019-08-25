@@ -11,7 +11,7 @@ public class Server extends SharedData {
 
         System.out.println("Waiting for connections ...");
         while (true) {
-            Socket cl = MainSocket.accept();
+           Socket cl = MainSocket.accept();
            ReturnData returnData=  HandleClient(cl, "testfile");
            System.out.println("  -   " + returnData.fileName);
            System.out.println("  -   " + returnData.blockCtr);
