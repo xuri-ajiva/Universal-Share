@@ -6,13 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Universal_Share {
-    public struct regInfo : IDisposable {
-        public static regInfo Empty;
+    public struct RegInfo : IDisposable {
+        public static RegInfo Empty;
         public        Stream  Stream;
         public        int     ID;
         private       string  SaveFilePath;
 
-        public regInfo(Stream stream, int id, string saveFilePath) {
+        public RegInfo(Stream stream, int id, string saveFilePath) {
             this.ID           = id;
             this.Stream       = stream;
             this.SaveFilePath = saveFilePath;
