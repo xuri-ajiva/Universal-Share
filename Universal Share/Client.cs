@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Universal_Share {
-    class Client : SharedComponents {
+    public class Client : SharedComponents {
         public void Start() {
             var ip = IPAddress.Parse( "127.0.0.1" );
 

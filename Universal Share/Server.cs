@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Universal_Share {
-    class Server : SharedComponents {
+   public class Server : SharedComponents {
         private Socket _socket;
 
 

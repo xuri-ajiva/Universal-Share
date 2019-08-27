@@ -5,18 +5,14 @@ using System.Threading.Tasks;
 
 namespace Universal_Share
 {
-    class Program {
+   public class ßProgram {
         private BuildId buildId;
 
-        public Program() {
+        public ßProgram() {
             this.buildId = new BuildId();
-
-            //Console.WriteLine( this.buildId.MakeId +"\n\n");
-            //Console.WriteLine( this.buildId.FullId );
-
         }
 
-
+       public Settings settings = new Settings();
 
     }
 }

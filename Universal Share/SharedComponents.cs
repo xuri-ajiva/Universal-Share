@@ -9,11 +9,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using static Universal_Share.ßMainPoint;
 
 #endregion
 
 namespace Universal_Share {
-    internal class SharedComponents : NetworkFileSend {
+    public class SharedComponents : NetworkFileSend {
         public const string ID_NOT_EXIST          = "REGISTER DOSE NOT EXIST!";
         public const string ID_STREAM_NOT_EXIST   = "STREAM DOSE NOT EXIST!";
         public const string ID_REGISTER_SUCCESSES = "REGISTER SUCCESSES!";
@@ -144,7 +145,7 @@ namespace Universal_Share {
             var readBytes = cl.Client.Receive( buffer, 0, this.BUFFER_SIZE, SocketFlags.None, out var errorCode );
 
             if ( !int.TryParse( Encoding.UTF8.GetString( SubArray( buffer, 0, this.HEATHER_SIZE ) ), out var id ) ) throw new NotSupportedException( "Can not get ID!" );
-            if ( this.IdStreamsMap.ContainsKey( id ) ) throw new MissingPrimaryKeyException( "Key Already Exists" );
+            if ( S.IdStreamsMap_Contains( id ) ) throw new MissingPrimaryKeyException( "Key Already Exists" );
 
             var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( SubArray( buffer, this.HEATHER_SIZE, readBytes - this.HEATHER_SIZE ) ) ) ).Split( Path.GetInvalidFileNameChars() ) );
             var finalSaveName = DEFAULT_SAVE_LOCATION + finalFileName;
@@ -152,8 +153,8 @@ namespace Universal_Share {
             Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) );
             Stream strm = new FileStream( finalSaveName, FileMode.OpenOrCreate );
 
-            var regInfo = new RegInfo( strm, id, finalSaveName );
-            this.IdStreamsMap.Add( id, regInfo );
+            var regInfo = new RegInfo( strm, id, finalSaveName, RegInfo.TYPE.SINGLE_FILE );
+            S.IdStreamsMap_Add( id, regInfo );
 
             Console.WriteLine( "Saving in: " + finalFileName + "  as:" + finalSaveName );
             Console.WriteLine( "Paket: id = "                          + "  :  [{0}]", string.Join( ", ", SubArray( buffer, 0, 8 ) ) );
@@ -181,14 +182,14 @@ namespace Universal_Share {
                     //throw new NotSupportedException( "Can not get ID!" );
                 }
 
-                if ( !this.IdStreamsMap.ContainsKey( id ) ) {
+                if ( !S.IdStreamsMap_Contains( id ) ) {
                     cl.Client.Send( Encoding.UTF8.GetBytes( ID_STREAM_NOT_EXIST ) );
                     Console.WriteLine( "MemoryStream Dose Not Exists" );
                     return new Tuple<SocketError, int, int, int>( SocketError.OperationAborted, -1, -1, -1 );
                     //throw new MissingPrimaryKeyException( "MemoryStream Dose Not Exists" );
                 }
 
-                this.IdStreamsMap[id].Stream.Write( buffer, this.HEATHER_SIZE, readBytes - this.HEATHER_SIZE );
+                S.IdStreamsMap_Get(id).Stream.Write( buffer, this.HEATHER_SIZE, readBytes - this.HEATHER_SIZE );
 
                 Console.WriteLine( "Paket: id = " + id + "  :  [{0}]", string.Join( ", ", SubArray( buffer, 0, 8 ) ) );
 
@@ -198,12 +199,14 @@ namespace Universal_Share {
                 cl.Client.Send( Encoding.UTF8.GetBytes( ID_REGISTER_SUCCESSES ) );
             }
 
-            this.IdStreamsMap[id].Finished();
-            this.IdStreamsMap.Remove( id );
+            if ( ßMainPoint.S.execute( S.IdStreamsMap_Get(id  ) ) ) {
+                S.IdStreamsMap_Get(id  ).Finished();
+                S.IdStreamsMap_Remove( id );
+            }
+
             return new Tuple<SocketError, int, int, int>( errorCode, totalReadBytes, blockCtr, id );
         }
 
-        public readonly Dictionary<int, RegInfo> IdStreamsMap = new Dictionary<int, RegInfo>();
 
         private void TextHandler(TcpListener listener) {
             while ( true ) {
@@ -217,7 +220,7 @@ namespace Universal_Share {
                 Console.WriteLine( reg.Item1 );
                 Console.WriteLine( reg.Item2 );
                 Console.WriteLine( reg.Item3 );
-                Console.WriteLine( reg.Item4 );
+                Console.WriteLine( reg.Item4.ToString() );
                 Console.WriteLine( "Finished!" );
             }
         }
