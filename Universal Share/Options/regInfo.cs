@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region using
+
+using System;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Universal_Share {
+#endregion
+
+namespace Universal_Share.Options {
     [Serializable, XmlInclude( typeof(RegInfo) )]
     public partial struct RegInfo : IDisposable {
         public static readonly RegInfo Empty;
@@ -26,11 +25,11 @@ namespace Universal_Share {
             this.SaveFilePath = saveFilePath;
         }
 
-        public override string ToString() { return "ID: " + this.ID + "  | Stream: " + this.Stream + "  | FilePath: " + this.SaveFilePath + "  | Type: " + this.Type; }
+        public override string ToString() => "ID: " + this.ID + "  | Stream: " + this.Stream + "  | FilePath: " + this.SaveFilePath + "  | Type: " + this.Type;
 
         public void Finished() {
             this.Stream?.Close();
-            this.Dispose();
+            Dispose();
             this.Stream       = default;
             this.ID           = default;
             this.SaveFilePath = default;

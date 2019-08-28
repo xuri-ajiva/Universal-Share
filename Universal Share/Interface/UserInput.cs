@@ -1,15 +1,21 @@
-﻿using System.Windows.Forms;
+﻿#region using
 
-namespace Universal_Share {
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+using Universal_Share.Options;
+
+#endregion
+
+namespace Universal_Share.Interface {
     public class UserInput : Form {
-        public UserInput() { InitializeComponent(); }
-
-        public static bool chackboxChecked = false;
+        public static bool  chackboxChecked;
+        private       Label InfoLable;
 
         private Button   NoButton;
-        private Button   YesButton;
-        private Label    InfoLable;
         private CheckBox Remember;
+        private Button   YesButton;
+        public UserInput() { InitializeComponent(); }
 
         //Console.WriteLine(us.GetConfirm( new RegInfo(null,-1,@"..\\..\\..\\test.txt", RegInfo.TYPE.SINGLE_FILE), new TypeHolder(@"C:\windows\system32\cmd.exe","-c pause",true," descript",false)));
         public bool GetConfirm(RegInfo reg, TypeHolder th) {
@@ -29,69 +35,69 @@ namespace Universal_Share {
             // 
             // NoButton
             // 
-            this.NoButton.Font                    =  new System.Drawing.Font( "Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte) ( 254 ) ) );
-            this.NoButton.Location                =  new System.Drawing.Point( 292, 106 );
+            this.NoButton.Font                    =  new Font( "Microsoft Sans Serif", 13F, FontStyle.Regular, GraphicsUnit.Point, 254 );
+            this.NoButton.Location                =  new Point( 292, 106 );
             this.NoButton.Name                    =  "NoButton";
-            this.NoButton.Size                    =  new System.Drawing.Size( 85, 30 );
+            this.NoButton.Size                    =  new Size( 85, 30 );
             this.NoButton.TabIndex                =  0;
             this.NoButton.Text                    =  "NO";
             this.NoButton.UseVisualStyleBackColor =  true;
-            this.NoButton.Click                   += new System.EventHandler( NoButton_Click );
+            this.NoButton.Click                   += NoButton_Click;
             // 
             // YesButton
             // 
-            this.YesButton.Font                    =  new System.Drawing.Font( "Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte) ( 254 ) ) );
-            this.YesButton.Location                =  new System.Drawing.Point( 201, 106 );
+            this.YesButton.Font                    =  new Font( "Microsoft Sans Serif", 13F, FontStyle.Regular, GraphicsUnit.Point, 254 );
+            this.YesButton.Location                =  new Point( 201, 106 );
             this.YesButton.Name                    =  "YesButton";
-            this.YesButton.Size                    =  new System.Drawing.Size( 85, 30 );
+            this.YesButton.Size                    =  new Size( 85, 30 );
             this.YesButton.TabIndex                =  1;
             this.YesButton.Text                    =  "YES";
             this.YesButton.UseVisualStyleBackColor =  true;
-            this.YesButton.Click                   += new System.EventHandler( YesButton_Click );
+            this.YesButton.Click                   += YesButton_Click;
             // 
             // InfoLable
             // 
             this.InfoLable.AutoSize = true;
-            this.InfoLable.Font     = new System.Drawing.Font( "Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte) ( 254 ) ) );
-            this.InfoLable.Location = new System.Drawing.Point( 8, 9 );
+            this.InfoLable.Font     = new Font( "Microsoft Sans Serif", 13F, FontStyle.Regular, GraphicsUnit.Point, 254 );
+            this.InfoLable.Location = new Point( 8, 9 );
             this.InfoLable.Name     = "InfoLable";
-            this.InfoLable.Size     = new System.Drawing.Size( 162, 22 );
+            this.InfoLable.Size     = new Size( 162, 22 );
             this.InfoLable.TabIndex = 2;
             this.InfoLable.Text     = "Info Currently Emty";
             // 
             // Remember
             // 
             this.Remember.AutoSize                =  true;
-            this.Remember.Font                    =  new System.Drawing.Font( "Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte) ( 254 ) ) );
-            this.Remember.Location                =  new System.Drawing.Point( 12, 113 );
+            this.Remember.Font                    =  new Font( "Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point, 254 );
+            this.Remember.Location                =  new Point( 12, 113 );
             this.Remember.Name                    =  "Remember";
-            this.Remember.Size                    =  new System.Drawing.Size( 174, 21 );
+            this.Remember.Size                    =  new Size( 174, 21 );
             this.Remember.TabIndex                =  3;
             this.Remember.Text                    =  "Remember for this type";
             this.Remember.UseVisualStyleBackColor =  true;
-            this.Remember.CheckedChanged          += new System.EventHandler( Remember_CheckedChanged );
+            this.Remember.CheckedChanged          += Remember_CheckedChanged;
             // 
             // UserInput
             // 
-            this.ClientSize = new System.Drawing.Size( 389, 148 );
+            this.ClientSize = new Size( 389, 148 );
             this.Controls.Add( this.Remember );
             this.Controls.Add( this.InfoLable );
             this.Controls.Add( this.YesButton );
             this.Controls.Add( this.NoButton );
-            this.Font = new System.Drawing.Font( "Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte) ( 254 ) ) );
+            this.Font = new Font( "Microsoft Sans Serif", 13F, FontStyle.Regular, GraphicsUnit.Point, 254 );
             this.Name = "UserInput";
             ResumeLayout( false );
             PerformLayout();
         }
 
-        private void Remember_CheckedChanged(object sender, System.EventArgs e) { UserInput.chackboxChecked = this.Remember.Checked; }
+        private void Remember_CheckedChanged(object sender, EventArgs e) { chackboxChecked = this.Remember.Checked; }
 
-        private void YesButton_Click(object sender, System.EventArgs e) {
+        private void YesButton_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.Yes;
             Close();
         }
 
-        private void NoButton_Click(object sender, System.EventArgs e) {
+        private void NoButton_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.No;
             Close();
         }

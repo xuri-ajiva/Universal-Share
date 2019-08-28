@@ -1,27 +1,27 @@
-﻿using System;
+﻿#region using
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Universal_Share {
+#endregion
+
+namespace Universal_Share.Options {
     [Serializable]
     public class SerializableDictionary <TK, TV> {
         public delegate void DictionaryChanged(object sender, DictChangedEventArgs<TK, TV> e);
 
-        public event DictionaryChanged OnDictionaryChanged;
-
-        private void Invoke(TypeE type, TK key, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV>() { Type = type, Key = key, Value = value } );
-        private void Invoke(TypeE type, TK key) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV>() { Type = type, Key = key } );
-        private void Invoke(TypeE type)           => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV>() { Type = type } );
-        private void Invoke(TypeE type, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV>() { Type = type, Value = value } );
-
-
-        [XmlIgnore] public TK type;
-        [XmlIgnore] public TV Key;
-
-        [XmlIgnore] private Dictionary<TK, TV> _BackupDict = new Dictionary<TK, TV>();
+        [XmlIgnore] private readonly Dictionary<TK, TV> _BackupDict = new Dictionary<TK, TV>();
 
         public List<ValueType_L<TK, TV>> DictionaryTypes = new List<ValueType_L<TK, TV>>();
+
+        public event DictionaryChanged OnDictionaryChanged;
+
+        private void Invoke(TypeE type, TK key, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key, Value = value } );
+        private void Invoke(TypeE type, TK key) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key } );
+        private void Invoke(TypeE type)           => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type } );
+        private void Invoke(TypeE type, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Value = value } );
 
         [Serializable]
         public struct ValueType_L <T, V> {
@@ -93,7 +93,7 @@ namespace Universal_Share {
         public ICollection Values => this._BackupDict.Values;
 
         /// <inheritdoc />
-        public IEnumerator GetEnumerator() { return this._BackupDict.GetEnumerator(); }
+        public IEnumerator GetEnumerator() => this._BackupDict.GetEnumerator();
 
         #endregion
 
@@ -108,6 +108,7 @@ namespace Universal_Share {
 
         #endregion
     }
+
     public class DictChangedEventArgs <K, V> : EventArgs {
         public TypeE Type { get; set; }
 
@@ -126,6 +127,6 @@ namespace Universal_Share {
         CopyTo,
         Count,
         GetAt,
-        SetAt, GetEnumerator,
+        SetAt, GetEnumerator
     }
 }

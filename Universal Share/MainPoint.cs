@@ -3,6 +3,9 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using Universal_Share.Interface;
+using Universal_Share.Net;
+using Universal_Share.Options;
 
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 // ReSharper disable HeuristicUnreachableCode

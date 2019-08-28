@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
-namespace Universal_Share {
+namespace Universal_Share.Options {
     public partial class Settings {
         [XmlIgnore] public bool Changed = false;
 
@@ -31,7 +26,7 @@ namespace Universal_Share {
     public partial class Settings {
         public bool execute(RegInfo regInfo) {
             if ( this.RegList.Contains( regInfo.Type ) ) {
-                var t  = RegList.Get( regInfo.Type );
+                var t  = this.RegList.Get( regInfo.Type );
                 var f1 = true;
                 var f2 = true;
                 var f3 = t.UserConfirm;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Universal_Share {
+namespace Universal_Share.Options {
     [Serializable, XmlInclude( typeof(TypeHolder) )]
     public struct TypeHolder {
         public static readonly TypeHolder Empty;

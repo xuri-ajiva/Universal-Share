@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
-using System;
-using System.IO;
-using System.Linq;
-using System.Management;
-using System.Net.NetworkInformation;
 
-namespace Universal_Share {
+namespace Universal_Share.Net {
     internal class BuildId {
         static readonly MD5          Md5    = MD5.Create();
         static readonly SHA512       SHA512 = SHA512.Create();
