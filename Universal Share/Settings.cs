@@ -14,29 +14,30 @@ namespace Universal_Share {
         [XmlIgnore] public bool Changed = false;
 
 
+        public SerializableDictionary<RegInfo.TYPE,TypeHolder> RegList      = new SerializableDictionary<RegInfo.TYPE,TypeHolder>();
+        public SerializableDictionary<RegInfo.TYPE, DialogResult>       RememberType = new SerializableDictionary<RegInfo.TYPE, DialogResult>();
+        public SerializableDictionary<int, RegInfo>             IdStreamsMap = new SerializableDictionary<int, RegInfo>();
 
-        //[XmlIgnore] public readonly EventDictionary<RegInfo.TYPE, TypeHolder> RegList      = new EventDictionary<RegInfo.TYPE, TypeHolder>();
-        //[XmlIgnore] public readonly EventDictionary<RegInfo.TYPE, bool>       RememberType = new EventDictionary<RegInfo.TYPE, bool>();
-        //[XmlIgnore] public readonly EventDictionary<int, RegInfo>             IdStreamsMap = new EventDictionary<int, RegInfo>();
+        public Settings() {
+            this.RegList.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
+            this.RememberType.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
+            this.IdStreamsMap.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
+        }
 
-        public List<RegTypeTypeHolder> RegList      = new List<RegTypeTypeHolder>();
-        public List<RegTypeBoolean>    RememberType = new List<RegTypeBoolean>();
-        public List<Int32RegInfo>      IdStreamsMap = new List<Int32RegInfo>();
-
-        // 
+        void ChangedEventHandler() { this.Changed = true; }
     }
 
 
     public partial class Settings {
         public bool execute(RegInfo regInfo) {
-            if ( this.RegList_Contains( regInfo.Type ) ) {
-                var t  = RegList_Get( regInfo.Type );
+            if ( this.RegList.Contains( regInfo.Type ) ) {
+                var t  = RegList.Get( regInfo.Type );
                 var f1 = true;
                 var f2 = true;
                 var f3 = t.UserConfirm;
                 if ( f3 ) {
-                    if ( this.RememberType_Contains( regInfo.Type ) ) {
-                        var dr = this.RememberType_Get( regInfo.Type );
+                    if ( this.RememberType.Contains( regInfo.Type ) ) {
+                        var dr = this.RememberType.Get( regInfo.Type );
                         f1 = dr == DialogResult.Yes || dr == DialogResult.OK;
                     }
 
@@ -62,7 +63,7 @@ namespace Universal_Share {
         public static void Save(ßProgram p) { SAVE( p.settings, SettingsStatic.SAVE_PATH_S ); }
 
         public static T LOAD <T>(string path) {
-            if ( !File.Exists( path ) ) throw new TypeAccessException();
+            if ( !File.Exists( path ) ) throw new IOException("File Dose Not Exists");
             XmlSerializer xmlSerializer = new XmlSerializer( typeof(T) );
             FileStream    fileStream    = new FileStream( path, FileMode.Open, FileAccess.Read, FileShare.Read );
             T             obj           = (T) xmlSerializer.Deserialize( (Stream) fileStream );

@@ -11,7 +11,7 @@ using System.Threading;
 namespace Universal_Share {
     public static class ßMainPoint {
         const bool DEBUG          = true;
-        const bool SERVER         = true;
+        const bool SERVER         = false;
         const bool START_OPPOSITE = true;
 
         private static readonly ßProgram  _prgMain   = new ßProgram();
@@ -22,7 +22,7 @@ namespace Universal_Share {
         public static ßProgram PrgMain => _prgMain;
 
         public  static void Main(string[] args) {
-            S.RegList_Add( RegInfo.TYPE.SINGLE_FILE,new TypeHolder("cmd", "/c echo"," && pause",true,"descript",false) );
+            S.RegList.Add( RegInfo.TYPE.SINGLE_FILE,new TypeHolder("cmd", "/c echo"," && pause",true,"descript",false) );
             
 
             if ( DEBUG ) {

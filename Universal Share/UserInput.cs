@@ -15,7 +15,7 @@ namespace Universal_Share {
         public bool GetConfirm(RegInfo reg, TypeHolder th) {
             var ret  = ShowDialog();
             var bret = ret == DialogResult.Yes || ret == DialogResult.OK;
-            if ( chackboxChecked ) ßMainPoint.S.RememberType_Add( reg.Type, ret );
+            if ( chackboxChecked ) ßMainPoint.S.RememberType.Add( reg.Type, ret );
 
             return bret;
         }

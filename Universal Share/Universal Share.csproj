@@ -51,12 +51,12 @@
   <ItemGroup>
     <Compile Include="BuildId.cs" />
     <Compile Include="Client.cs" />
-    <Compile Include="EventDictionary.cs" />
     <Compile Include="MainPoint.cs" />
     <Compile Include="NetworkFileSend.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="regInfo.cs" />
+    <Compile Include="SerializableDictionary.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="SettingsStatic.cs" />
     <Compile Include="Settings_Setter.cs" />
