@@ -25,7 +25,6 @@ namespace Universal_Share.ProgMain {
 
         public  static void Main(string[] args) {
             S.RegList.Add( RegInfo.TYPE.SINGLE_FILE,new TypeHolder("cmd", "/c echo"," && pause",true,"descript",false) );
-            
 
             if ( DEBUG ) {
                 if ( args.Length == 0 ) {
