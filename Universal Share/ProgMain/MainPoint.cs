@@ -12,9 +12,9 @@ using Universal_Share.Options;
 
 namespace Universal_Share.ProgMain {
     public static class ßMainPoint {
-        const bool DEBUG          = true;
-        const bool SERVER         = false;
-        const bool START_OPPOSITE = true;
+        private const bool DEBUG          = true;
+        private const bool SERVER         = false;
+        private const bool START_OPPOSITE = true;
 
         private static readonly ßProgram _prgMain = new ßProgram();
         private static UserInput _userInput = new UserInput();

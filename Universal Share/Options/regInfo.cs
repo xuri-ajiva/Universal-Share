@@ -3,6 +3,8 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+// ReSharper disable UnassignedReadonlyField
+// ReSharper disable UnusedMember.Global
 
 #endregion
 

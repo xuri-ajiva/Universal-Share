@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading;
 using Universal_Share.Options;
 using Universal_Share.ProgMain;
+// ReSharper disable UnusedMethodReturnValue.Global
+// ReSharper disable UnusedMethodReturnValue.Local
+// ReSharper disable FunctionNeverReturns
 
 #endregion
 
@@ -27,25 +30,25 @@ namespace Universal_Share.Net {
         public const int    DEFAULT_BUFFER_SIZE   = 32768;
         public const int    DEFAULT_HEATHER_SIZE  = 8;
 
-        public int    FILE_PORT;
-        public int    TEXT_PORT;
-        public string SAVE_LOCATION;
-        public int    BUFFER_SIZE;
-        public int    HEATHER_SIZE;
+        public int    FilePort;
+        public int    TextPort;
+        public string SaveLocation;
+        public int    BufferSize;
+        public int    HeatherSize;
 
         public SharedComponents(int filePort = DEFAULT_FILE_PORT, int textPort = DEFAULT_TEXT_PORT, int bufferSize = DEFAULT_BUFFER_SIZE, string saveLocation = DEFAULT_SAVE_LOCATION) {
-            this.FILE_PORT     = filePort;
-            this.TEXT_PORT     = textPort;
-            this.BUFFER_SIZE   = bufferSize;
-            this.SAVE_LOCATION = saveLocation;
+            this.FilePort     = filePort;
+            this.TextPort     = textPort;
+            this.BufferSize   = bufferSize;
+            this.SaveLocation = saveLocation;
         }
 
         public SharedComponents() {
-            this.FILE_PORT     = DEFAULT_FILE_PORT;
-            this.TEXT_PORT     = DEFAULT_TEXT_PORT;
-            this.SAVE_LOCATION = DEFAULT_SAVE_LOCATION;
-            this.BUFFER_SIZE   = DEFAULT_BUFFER_SIZE;
-            this.HEATHER_SIZE  = DEFAULT_HEATHER_SIZE;
+            this.FilePort     = DEFAULT_FILE_PORT;
+            this.TextPort     = DEFAULT_TEXT_PORT;
+            this.SaveLocation = DEFAULT_SAVE_LOCATION;
+            this.BufferSize   = DEFAULT_BUFFER_SIZE;
+            this.HeatherSize  = DEFAULT_HEATHER_SIZE;
         }
 
         public Socket CreateSocket() => new Socket( SocketType.Stream, ProtocolType.Tcp );
@@ -54,14 +57,14 @@ namespace Universal_Share.Net {
         public Tuple<string, int> SendFile(IPAddress remoteHost, string fileName) {
             var id = 0;
             try {
-                var ipend_F = new IPEndPoint( remoteHost, this.FILE_PORT );
-                var ipend_R = new IPEndPoint( remoteHost, this.TEXT_PORT );
+                var ipendF = new IPEndPoint( remoteHost, this.FilePort );
+                var ipendR = new IPEndPoint( remoteHost, this.TextPort );
 
                 var register = new TcpClient();
-                register.Connect( ipend_R );
+                register.Connect( ipendR );
 
                 var fileSocket = new TcpClient();
-                fileSocket.Connect( ipend_F );
+                fileSocket.Connect( ipendF );
 
                 id = new Random().Next( 100000000, 999999999 );
 
@@ -80,30 +83,25 @@ namespace Universal_Share.Net {
             }
         }
 
-        private Tuple<string, int> SendFileArray(TcpClient FileSocket, String filename, int id) {
+        private Tuple<string, int> SendFileArray(TcpClient fileSocket, String filename, int id) {
             var    errorCode = SocketError.NotConnected;
             int    readBytes = -1;
-            byte[] buffer    = new byte[this.BUFFER_SIZE];
+            byte[] buffer    = new byte[this.BufferSize];
 
             // id = id == -1 ? new Random().nextInt(99999999) + 10000000 : id;
-            byte[] id_B = Encoding.UTF8.GetBytes( id.ToString() );
+            byte[] idB = Encoding.UTF8.GetBytes( id.ToString() );
 
             Stream strm = new FileStream( filename, FileMode.Open );
 
-            int blockCtr       = 0;
-            int totalReadBytes = 0;
-
             while ( readBytes != 0 ) {
-                readBytes = strm.Read( buffer, this.HEATHER_SIZE, this.BUFFER_SIZE - this.HEATHER_SIZE );
+                readBytes = strm.Read( buffer, this.HeatherSize, this.BufferSize - this.HeatherSize );
                 if ( readBytes == -1 ) break;
-                blockCtr++;
-                totalReadBytes += readBytes;
 
-                Array.Copy( id_B, 0, buffer, 0, id_B.Length );
+                Array.Copy( idB, 0, buffer, 0, idB.Length );
 
-                FileSocket.Client.Send( buffer, 0, readBytes + this.HEATHER_SIZE, SocketFlags.None, out errorCode );
+                fileSocket.Client.Send( buffer, 0, readBytes + this.HeatherSize, SocketFlags.None, out errorCode );
 
-                int readBytes2 = FileSocket.Client.Receive( buffer, 0, this.BUFFER_SIZE, SocketFlags.None );
+                int readBytes2 = fileSocket.Client.Receive( buffer, 0, this.BufferSize, SocketFlags.None );
 
                 if ( readBytes2 > 0 )
                     switch (Encoding.UTF8.GetString( SubArray( buffer, 0, readBytes2 ) )) {
@@ -113,44 +111,44 @@ namespace Universal_Share.Net {
                         default:                    return new Tuple<string, int>( UNKNOWN_ERROR,       -3 );
                     }
 
-                Console.WriteLine( "Paket: id = " + id + "    | " + Encoding.UTF8.GetString( SubArray( buffer, 0, this.HEATHER_SIZE ) ) + "  :  [{0}]", string.Join( ", ", SubArray( buffer, 0, 8 ) ) );
+                Console.WriteLine( "Paket: id = " + id + "    | " + Encoding.UTF8.GetString( SubArray( buffer, 0, this.HeatherSize ) ) + "  :  [{0}]", string.Join( ", ", SubArray( buffer, 0, 8 ) ) );
             }
 
             strm.Close();
-            FileSocket.Close();
+            fileSocket.Close();
             return new Tuple<string, int>( errorCode.ToString(), id );
         }
 
-        private Tuple<string, int> SendRegister(TcpClient CommunicationSocket, String SaveFileName, int id) {
-            byte[] id_B       = Encoding.UTF8.GetBytes( id.ToString() );
-            byte[] Filaneme_B = Encoding.UTF8.GetBytes( SaveFileName );
+        private Tuple<string, int> SendRegister(TcpClient communicationSocket, String saveFileName, int id) {
+            byte[] idB       = Encoding.UTF8.GetBytes( id.ToString() );
+            byte[] filanemeB = Encoding.UTF8.GetBytes( saveFileName );
 
-            int saveFileLangth = Filaneme_B.Length;
-            int bufflength     = this.HEATHER_SIZE + saveFileLangth;
+            int saveFileLangth = filanemeB.Length;
+            int bufflength     = this.HeatherSize + saveFileLangth;
 
             byte[] buffer = new byte[bufflength];
 
-            Array.Copy( id_B,       0, buffer, 0,                 this.HEATHER_SIZE );
-            Array.Copy( Filaneme_B, 0, buffer, this.HEATHER_SIZE, saveFileLangth );
+            Array.Copy( idB,       0, buffer, 0,                 this.HeatherSize );
+            Array.Copy( filanemeB, 0, buffer, this.HeatherSize, saveFileLangth );
 
-            CommunicationSocket.Client.Send( buffer );
+            communicationSocket.Client.Send( buffer );
 
-            CommunicationSocket.Close();
+            communicationSocket.Close();
             return new Tuple<string, int>( "", id );
         }
 
         /// server ///
         public Tuple<SocketError, int, int, RegInfo> CreateRegister(TcpClient cl) {
-            var buffer    = new byte[this.BUFFER_SIZE];
-            var readBytes = cl.Client.Receive( buffer, 0, this.BUFFER_SIZE, SocketFlags.None, out var errorCode );
+            var buffer    = new byte[this.BufferSize];
+            var readBytes = cl.Client.Receive( buffer, 0, this.BufferSize, SocketFlags.None, out var errorCode );
 
-            if ( !int.TryParse( Encoding.UTF8.GetString( SubArray( buffer, 0, this.HEATHER_SIZE ) ), out var id ) ) throw new NotSupportedException( "Can not get ID!" );
+            if ( !int.TryParse( Encoding.UTF8.GetString( SubArray( buffer, 0, this.HeatherSize ) ), out var id ) ) throw new NotSupportedException( "Can not get ID!" );
             if ( ßMainPoint.S.IdStreamsMap.Contains( id ) ) throw new MissingPrimaryKeyException( "Key Already Exists" );
 
-            var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( SubArray( buffer, this.HEATHER_SIZE, readBytes - this.HEATHER_SIZE ) ) ) ).Split( Path.GetInvalidFileNameChars() ) );
+            var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( SubArray( buffer, this.HeatherSize, readBytes - this.HeatherSize ) ) ) ).Split( Path.GetInvalidFileNameChars() ) );
             var finalSaveName = DEFAULT_SAVE_LOCATION + finalFileName;
 
-            Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) );
+            Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) ?? throw new InvalidOperationException() );
             Stream strm = new FileStream( finalSaveName, FileMode.OpenOrCreate );
 
             var regInfo = new RegInfo( strm, id, finalSaveName, RegInfo.TYPE.SINGLE_FILE );
@@ -166,16 +164,16 @@ namespace Universal_Share.Net {
             var errorCode = SocketError.NotConnected;
             var readBytes = -1;
 
-            var buffer = new byte[this.BUFFER_SIZE];
+            var buffer = new byte[this.BufferSize];
 
             var blockCtr       = 0;
             var totalReadBytes = 0;
             int id             = -1;
             while ( readBytes != 0 ) {
-                readBytes = cl.Client.Receive( buffer, 0, this.BUFFER_SIZE, SocketFlags.None, out errorCode );
+                readBytes = cl.Client.Receive( buffer, 0, this.BufferSize, SocketFlags.None, out errorCode );
                 if ( readBytes <= 0 ) break;
 
-                if ( !int.TryParse( Encoding.UTF8.GetString( SubArray( buffer, 0, this.HEATHER_SIZE ) ), out id ) ) {
+                if ( !int.TryParse( Encoding.UTF8.GetString( SubArray( buffer, 0, this.HeatherSize ) ), out id ) ) {
                     cl.Client.Send( Encoding.UTF8.GetBytes( ID_NOT_EXIST ) );
                     Console.WriteLine( "Can not get ID!" );
                     return new Tuple<SocketError, int, int, int>( SocketError.OperationAborted, -1, -1, -1 );
@@ -189,7 +187,7 @@ namespace Universal_Share.Net {
                     //throw new MissingPrimaryKeyException( "MemoryStream Dose Not Exists" );
                 }
 
-                ßMainPoint.S.IdStreamsMap.Get(id).Stream.Write( buffer, this.HEATHER_SIZE, readBytes - this.HEATHER_SIZE );
+                ßMainPoint.S.IdStreamsMap.Get(id).Stream.Write( buffer, this.HeatherSize, readBytes - this.HeatherSize );
 
                 Console.WriteLine( "Paket: id = " + id + "  :  [{0}]", string.Join( ", ", SubArray( buffer, 0, 8 ) ) );
 
@@ -247,7 +245,7 @@ namespace Universal_Share.Net {
             Thread      fileThread      = default;
             TcpListener tcpFileListener = default;
             try {
-                tcpFileListener = new TcpListener( IPAddress.Any, this.FILE_PORT );
+                tcpFileListener = new TcpListener( IPAddress.Any, this.FilePort );
                 fileThread      = new Thread( () => FileHandler( tcpFileListener ) );
 
                 tcpFileListener.Start();
@@ -263,7 +261,7 @@ namespace Universal_Share.Net {
             Thread      textThread = default;
             TcpListener register   = default;
             try {
-                register   = new TcpListener( IPAddress.Any, this.TEXT_PORT );
+                register   = new TcpListener( IPAddress.Any, this.TextPort );
                 textThread = new Thread( () => TextHandler( register ) );
 
                 register.Start();

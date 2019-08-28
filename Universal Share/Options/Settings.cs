@@ -20,7 +20,7 @@ namespace Universal_Share.Options {
             this.IdStreamsMap.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
         }
 
-        void ChangedEventHandler() { this.Changed = true; }
+        private void ChangedEventHandler() { this.Changed = true; }
     }
 
 
@@ -62,7 +62,7 @@ namespace Universal_Share.Options {
             if ( !File.Exists( path ) ) throw new IOException("File Dose Not Exists");
             XmlSerializer xmlSerializer = new XmlSerializer( typeof(T) );
             FileStream    fileStream    = new FileStream( path, FileMode.Open, FileAccess.Read, FileShare.Read );
-            T             obj           = (T) xmlSerializer.Deserialize( (Stream) fileStream );
+            T             obj           = (T) xmlSerializer.Deserialize( fileStream );
             fileStream.Close();
             return obj;
         }
@@ -70,8 +70,8 @@ namespace Universal_Share.Options {
         public static void SAVE <T>(T dataLayout, string path) {
             new FileInfo( path ).Directory?.Create();
             XmlSerializer xmlSerializer = new XmlSerializer( dataLayout.GetType() );
-            TextWriter    textWriter    = (TextWriter) new StreamWriter( path );
-            xmlSerializer.Serialize( textWriter, (object) dataLayout );
+            TextWriter    textWriter    = new StreamWriter( path );
+            xmlSerializer.Serialize( textWriter, dataLayout );
             textWriter.Close();
         }
     }

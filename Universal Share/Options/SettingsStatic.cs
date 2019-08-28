@@ -1,5 +1,4 @@
 ﻿using System.Xml.Serialization;
-using Universal_Share;
 
 namespace Universal_Share.Options {
     public static class SettingsStatic {

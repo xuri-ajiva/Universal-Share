@@ -16,6 +16,7 @@ namespace Universal_Share.Net {
                     Thread.Sleep( 1000 );
                 }
             }
+            // ReSharper disable once FunctionNeverReturns
         }
     }
 }

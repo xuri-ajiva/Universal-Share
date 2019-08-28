@@ -7,12 +7,9 @@ using System.Text;
 
 namespace Universal_Share.Net {
     internal class BuildId {
-        static readonly MD5          Md5    = MD5.Create();
-        static readonly SHA512       SHA512 = SHA512.Create();
-        readonly        List<string> _fref  = new List<string>();
+        private static readonly SHA512       Sha512 = SHA512.Create();
+        private readonly        List<string> _fref  = new List<string>();
 
-
-        public BuildId() { }
 
         private void GrabHdware() {
             this._fref.RemoveRange( 0, this._fref.Count );
@@ -30,26 +27,26 @@ namespace Universal_Share.Net {
 
         private string _id = "";
 
-        private void MakeID() {
+        private void MakeId() {
             this._id = "";
             foreach ( var pref in this._fref ) {
-                this._id += Encoding.UTF8.GetString( SHA512.ComputeHash( Encoding.UTF8.GetBytes( pref ) ) );
+                this._id += Encoding.UTF8.GetString( Sha512.ComputeHash( Encoding.UTF8.GetBytes( pref ) ) );
             }
         }
-        
-        const int chunk = 4;
-        private string computeid() {
+
+        private const int CHUNK = 4;
+        private string Computeid() {
             string ret = "";
             GrabHdware();
-            MakeID();
+            MakeId();
 
-            var intervall = SHA512.ComputeHash( new[] { (byte) 000, (byte) 111, (byte) 222, (byte) 123 } ).Length / chunk;
+            var intervall = Sha512.ComputeHash( new[] { (byte) 000, (byte) 111, (byte) 222, (byte) 123 } ).Length / CHUNK;
 
-            for ( int i = 0; i < chunk; i++ ) {
+            for ( int i = 0; i < CHUNK; i++ ) {
 
-                var byt = SHA512.ComputeHash( Encoding.Unicode.GetBytes( this._id.Substring( intervall * i, intervall ) ) ).ToList();
-                byt.Add( (byte) 111 );
-                byt.Add( (byte) 111 );
+                var byt = Sha512.ComputeHash( Encoding.Unicode.GetBytes( this._id.Substring( intervall * i, intervall ) ) ).ToList();
+                byt.Add( 111 );
+                byt.Add( 111 );
 
                 ret += Convert.ToBase64String( byt.ToArray() );
             }
@@ -57,12 +54,12 @@ namespace Universal_Share.Net {
             return ret;
         }
 
-        public string MakeId => computeid();
+        public string MakeIdS => Computeid();
         public string FullId => ComputeFullId();
 
         private string ComputeFullId() {
             GrabHdware();
-            MakeID();
+            MakeId();
             return Convert.ToBase64String( Encoding.UTF8.GetBytes( this._id ) );
         }
     }
