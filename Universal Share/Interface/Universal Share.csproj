@@ -49,28 +49,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Net\BuildId.cs" />
+    <Compile Include="Net\Client.cs" />
+    <Compile Include="MainPoint.cs" />
+    <Compile Include="Net\NetworkFileSend.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Options\regInfo.cs" />
+    <Compile Include="Options\SerializableDictionary.cs" />
+    <Compile Include="Net\Server.cs" />
+    <Compile Include="Options\SettingsStatic.cs" />
+    <Compile Include="Net\SharedComponents.cs" />
+    <Compile Include="Options\Settings.cs" />
+    <Compile Include="Options\TypeHolder.cs" />
     <Compile Include="Interface\UserInput.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProgMain\MainPoint.cs" />
-    <Compile Include="Net\BuildId.cs" />
-    <Compile Include="Net\Client.cs" />
-    <Compile Include="Net\NetworkFileSend.cs" />
-    <Compile Include="Net\Server.cs" />
-    <Compile Include="Net\SharedComponents.cs" />
-    <Compile Include="Options\regInfo.cs" />
-    <Compile Include="Options\SerializableDictionary.cs" />
-    <Compile Include="Options\Settings.cs" />
-    <Compile Include="Options\SettingsStatic.cs" />
-    <Compile Include="Options\TypeHolder.cs" />
-    <Compile Include="ProgMain\Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Interface\UserInput.resx" />
+    <EmbeddedResource Include="Interface\UserInput.resx">
+      <DependentUpon>UserInput.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

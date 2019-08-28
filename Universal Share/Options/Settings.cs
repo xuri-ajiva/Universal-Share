@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Universal_Share.ProgMain;
 
 namespace Universal_Share.Options {
     public partial class Settings {

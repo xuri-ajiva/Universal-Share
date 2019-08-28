@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Universal_Share.Net;
+﻿using Universal_Share.Net;
 using Universal_Share.Options;
 
-namespace Universal_Share
+namespace Universal_Share.ProgMain
 {
    public class ßProgram {
         private BuildId buildId;

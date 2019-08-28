@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -7,17 +6,17 @@ using Universal_Share.Interface;
 using Universal_Share.Net;
 using Universal_Share.Options;
 
-// ReSharper disable ConditionIsAlwaysTrueOrFalse
-// ReSharper disable HeuristicUnreachableCode
-#pragma warning disable 162
+//// ReSharper disable ConditionIsAlwaysTrueOrFalse
+//// ReSharper disable HeuristicUnreachableCode
+//#pragma warning disable 162
 
-namespace Universal_Share {
+namespace Universal_Share.ProgMain {
     public static class ßMainPoint {
         const bool DEBUG          = true;
         const bool SERVER         = false;
         const bool START_OPPOSITE = true;
 
-        private static readonly ßProgram  _prgMain   = new ßProgram();
+        private static readonly ßProgram _prgMain = new ßProgram();
         private static UserInput _userInput = new UserInput();
 
         public static Settings  S { get => _prgMain.settings; set => _prgMain.settings = value; }

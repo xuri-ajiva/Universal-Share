@@ -1,11 +1,9 @@
-﻿#region using
-
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Universal_Share.Options;
-
-#endregion
+using Universal_Share;
+using Universal_Share.ProgMain;
 
 namespace Universal_Share.Interface {
     public class UserInput : Form {
