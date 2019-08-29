@@ -2,9 +2,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using Universal_Share.hocks;
 using Universal_Share.Interface;
 using Universal_Share.Net;
 using Universal_Share.Options;
+using Universal_Share.Security;
 
 //// ReSharper disable ConditionIsAlwaysTrueOrFalse
 //// ReSharper disable HeuristicUnreachableCode
@@ -13,18 +15,23 @@ using Universal_Share.Options;
 namespace Universal_Share.ProgMain {
     public static class ßMainPoint {
         private const bool DEBUG          = true;
-        private const bool SERVER         = false;
+        private const bool SERVER         = true;
         private const bool START_OPPOSITE = true;
 
-        private static readonly ßProgram _prgMain = new ßProgram();
-        private static UserInput _userInput = new UserInput();
+        private static readonly ßProgram  _prgMain   = new ßProgram();
+        private static          UserInput _userInput = new UserInput();
+        private static          Auth      _auth      = new Auth();
 
-        public static Settings  S { get => _prgMain.settings; set => _prgMain.settings = value; }
-        public static UserInput U { get => _userInput;        set => _userInput = value; }
-        public static ßProgram PrgMain => _prgMain;
+        public static byte[]    K       { get => _auth.KeyBytes; }
+        public static byte[]    T       { get => _auth.TokenBytes; }
+        public static Settings  S       { get => _prgMain.settings; set => _prgMain.settings = value; }
+        public static UserInput U       { get => _userInput;        set => _userInput = value; }
+        public static ßProgram  PrgMain => _prgMain;
 
-        public  static void Main(string[] args) {
-            S.RegList.Add( RegInfo.TYPE.SINGLE_FILE,new TypeHolder("cmd", "/c echo"," && pause",true,"descript",false) );
+        public static void Main(string[] args) {
+            PreInizialze();
+
+            S.RegList.Add( RegInfo.TYPE.SINGLE_FILE, new TypeHolder( "cmd", "/c echo", " && pause", true, "descript", false ) );
 
             if ( DEBUG ) {
                 if ( args.Length == 0 ) {
@@ -51,10 +58,22 @@ namespace Universal_Share.ProgMain {
                 StartNormal( args );
         }
 
+        private static void PreInizialze() { hocks.Exit.CreateHock(); }
+
+        public static bool Exit(hocks.Exit.CtrlType sig = hocks.Exit.CtrlType.CTRL_BREAK_EVENT) {
+            Console.WriteLine( sig.ToString() );
+            switch (sig) {
+                case hocks.Exit.CtrlType.CTRL_C_EVENT:        return true;
+                case hocks.Exit.CtrlType.CTRL_LOGOFF_EVENT:   return true;
+                case hocks.Exit.CtrlType.CTRL_SHUTDOWN_EVENT: return true;
+                case hocks.Exit.CtrlType.CTRL_CLOSE_EVENT:    return true;
+                default:                                      return false;
+            }
+        }
+
         public static void InizialzeAll() {
             try {
                 Settings.Load( PrgMain );
-
             } catch (Exception e) {
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.WriteLine( e.Message + "\n Die Settings Datei Wird Gelöscht..." );
@@ -63,15 +82,14 @@ namespace Universal_Share.ProgMain {
                     File.Delete( SettingsStatic.SAVE_PATH_S );
                 } catch (Exception ex) {
                     Console.BackgroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine( ex.Message  );
+                    Console.WriteLine( ex.Message );
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
             }
 
             var t = new Thread( () => {
                 while ( true ) {
-                    if(S.Changed)
-                        Settings.Save( PrgMain );
+                    if ( S.Changed ) Settings.Save( PrgMain );
                     Thread.Sleep( 1000 );
                 }
             } );

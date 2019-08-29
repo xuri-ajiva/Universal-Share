@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing.Design;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -10,17 +11,21 @@ namespace Universal_Share.Options {
         [XmlIgnore] public bool Changed = false;
 
 
-        public SerializableDictionary<RegInfo.TYPE,TypeHolder> RegList      = new SerializableDictionary<RegInfo.TYPE,TypeHolder>();
-        public SerializableDictionary<RegInfo.TYPE, DialogResult>       RememberType = new SerializableDictionary<RegInfo.TYPE, DialogResult>();
-        public SerializableDictionary<int, RegInfo>             IdStreamsMap = new SerializableDictionary<int, RegInfo>();
+        public SerializableDictionary<RegInfo.TYPE, TypeHolder>   RegList      = new SerializableDictionary<RegInfo.TYPE, TypeHolder>();
+        public SerializableDictionary<RegInfo.TYPE, DialogResult> RememberType = new SerializableDictionary<RegInfo.TYPE, DialogResult>();
+        public SerializableDictionary<int, RegInfo>               IdStreamsMap = new SerializableDictionary<int, RegInfo>();
 
-        public Settings() {
-            this.RegList.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
+        public Settings() { CreatedEventHandler(); }
+
+        public void CreatedEventHandler() {
+            this.RegList.OnDictionaryChanged      += (sender, args) => ChangedEventHandler();
             this.RememberType.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
             this.IdStreamsMap.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
         }
 
-        private void ChangedEventHandler() { this.Changed = true; }
+        private void ChangedEventHandler() {
+            this.Changed = true;
+        }
     }
 
 
@@ -38,7 +43,7 @@ namespace Universal_Share.Options {
                     }
 
                     if ( f1 ) f2 = ßMainPoint.U.GetConfirm( regInfo, t );
-                    if (!f2 ) return false;
+                    if ( !f2 ) return false;
                     if ( !f1 ) return false;
                 }
 
@@ -55,11 +60,19 @@ namespace Universal_Share.Options {
             return false;
         }
 
-        public static void Load(ßProgram p) { p.settings = LOAD<Settings>( SettingsStatic.SAVE_PATH_S ); }
-        public static void Save(ßProgram p) { SAVE( p.settings, SettingsStatic.SAVE_PATH_S ); }
+        public static void Load(ßProgram p) {
+            p.settings = LOAD<Settings>( SettingsStatic.SAVE_PATH_S );
+            p.settings.CreatedEventHandler();
+        }
+
+        public static void Save(ßProgram p) {
+            SAVE( p.settings, SettingsStatic.SAVE_PATH_S );
+        }
+
+
 
         public static T LOAD <T>(string path) {
-            if ( !File.Exists( path ) ) throw new IOException("File Dose Not Exists");
+            if ( !File.Exists( path ) ) throw new IOException( "File Dose Not Exists" );
             XmlSerializer xmlSerializer = new XmlSerializer( typeof(T) );
             FileStream    fileStream    = new FileStream( path, FileMode.Open, FileAccess.Read, FileShare.Read );
             T             obj           = (T) xmlSerializer.Deserialize( fileStream );

@@ -4,17 +4,73 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Xml.Serialization;
 
 #endregion
 
 namespace Universal_Share.Options {
-    [Serializable]
-    public class SerializableDictionary <TK, TV> {
+    [XmlRoot( "dictionary" )]
+    public class SerializableDictionary <TK, TV> : Dictionary<TK, TV>, IXmlSerializable {
+        #region IXmlSerializable Members
+
+        public System.Xml.Schema.XmlSchema GetSchema() { return null; }
+
+        public void ReadXml(System.Xml.XmlReader reader) {
+            XmlSerializer keySerializer   = new XmlSerializer( typeof(TK) );
+            XmlSerializer valueSerializer = new XmlSerializer( typeof(TV) );
+
+            bool wasEmpty = reader.IsEmptyElement;
+            reader.Read();
+
+            if ( wasEmpty ) return;
+
+            while ( reader.NodeType != System.Xml.XmlNodeType.EndElement ) {
+                reader.ReadStartElement( "item" );
+
+                reader.ReadStartElement( "key" );
+                TK key = (TK) keySerializer.Deserialize( reader );
+                reader.ReadEndElement();
+
+                reader.ReadStartElement( "value" );
+                TV value = (TV) valueSerializer.Deserialize( reader );
+                reader.ReadEndElement();
+
+                this.Add( key, value );
+
+                reader.ReadEndElement();
+                reader.MoveToContent();
+            }
+
+            reader.ReadEndElement();
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer) {
+            XmlSerializer keySerializer   = new XmlSerializer( typeof(TK) );
+            XmlSerializer valueSerializer = new XmlSerializer( typeof(TV) );
+
+            foreach ( TK key in this.Keys ) {
+                writer.WriteStartElement( "item" );
+
+                writer.WriteStartElement( "key" );
+                keySerializer.Serialize( writer, key );
+                writer.WriteEndElement();
+
+                writer.WriteStartElement( "value" );
+                TV value = this[key];
+                valueSerializer.Serialize( writer, value );
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+            }
+        }
+
+        #endregion
+
+
         public delegate void DictionaryChanged(object sender, DictChangedEventArgs<TK, TV> e);
-
-        [XmlIgnore] private readonly Dictionary<TK, TV> _BackupDict = new Dictionary<TK, TV>();
-
-        public List<ValueType_L<TK, TV>> DictionaryTypes = new List<ValueType_L<TK, TV>>();
 
         public event DictionaryChanged OnDictionaryChanged;
 
@@ -23,90 +79,61 @@ namespace Universal_Share.Options {
         private void Invoke(TypeE type)           => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type } );
         private void Invoke(TypeE type, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Value = value } );
 
-        [Serializable]
-        public struct ValueType_L <T, V> {
-            public T Type;
-            public V Key;
-
-            public ValueType_L(T type, V key) {
-                this.Type = type;
-                this.Key  = key;
-            }
-        }
 
         #region Implementation of IEnumerable
 
         /// <inheritdoc />
         public bool Contains(TK key) {
             Invoke( TypeE.ContainsKey, key );
-            return this._BackupDict.ContainsKey( key );
+            return this.ContainsKey( key );
+        }
+        public new bool ContainsKey(TK key) {
+            Invoke( TypeE.ContainsKey, key );
+            return base.ContainsKey( key );
+        }
+        /// <inheritdoc />
+        public new void Add(TK key, TV value) {
+            Invoke( TypeE.AddItem, key, value );
+            base.Add( key, value );
         }
 
         /// <inheritdoc />
-        public void Add(TK key, TV value) {
-            if ( this._BackupDict.ContainsKey( key ) ) return;
-            this._BackupDict.Add( key, value );
-            this.DictionaryTypes.Add( new ValueType_L<TK, TV>( key, value ) );
-        }
-
-        /// <inheritdoc />
-        public void Clear() {
+        public new void Clear() {
             Invoke( TypeE.Clear );
-            this._BackupDict.Clear();
-            this.DictionaryTypes.Clear();
+            base.Clear();
         }
 
         /// <inheritdoc />
-        public void Remove(TK key) {
+        public new void Remove(TK key) {
             Invoke( TypeE.RemoveItem, key );
-            var item = this.DictionaryTypes.Find( x => x.Key.Equals( this._BackupDict[key] ) );
-            this.DictionaryTypes.Remove( item );
-            this._BackupDict.Remove( key );
+            base.Remove( key );
         }
 
         /// <inheritdoc />
         [XmlIgnore]
-        public TV this[TK key] {
+        public new TV this[TK key] {
             get {
                 Invoke( TypeE.GetAt, key );
-                return this._BackupDict[key];
+                return base[key];
             }
             set {
                 Invoke( TypeE.SetAt, key, value );
-                this._BackupDict[key] = value;
+                base[key] = value;
             }
         }
-
 
         /// <inheritdoc />
         public TV Get(TK key) {
             Invoke( TypeE.GetAt, key );
-            return this[key];
+            return base[key];
         }
 
-        /// <inheritdoc />
-        [XmlIgnore]
-        public ICollection Keys => this._BackupDict.Keys;
-
-        /// <inheritdoc />
-        [XmlIgnore]
-        public ICollection Values => this._BackupDict.Values;
-
-        /// <inheritdoc />
-        public IEnumerator GetEnumerator() => this._BackupDict.GetEnumerator();
-
         #endregion
 
-        #region Implementation of ICollection
-
-        /// <inheritdoc />
-        public void CopyTo(ValueType_L<TK, TV>[] array, int index) => this.DictionaryTypes.CopyTo( array, index );
 
         /// <inheritdoc />
         [XmlIgnore]
-        public int Count => this.DictionaryTypes.Count;
-
-        #endregion
+        public int TCount => this.Count;
     }
 
     public class DictChangedEventArgs <K, V> : EventArgs {
