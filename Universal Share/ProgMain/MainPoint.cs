@@ -15,7 +15,7 @@ using Universal_Share.Security;
 namespace Universal_Share.ProgMain {
     public static class ßMainPoint {
         private const bool DEBUG          = true;
-        private const bool SERVER         = true;
+        private const bool SERVER         = false;
         private const bool START_OPPOSITE = true;
 
         private static readonly ßProgram  _prgMain   = new ßProgram();
@@ -38,6 +38,7 @@ namespace Universal_Share.ProgMain {
                     if ( SERVER ) {
                         SettingsStatic.SAVE_PATH_S = "S_" + SettingsStatic.SAVE_PATH_S;
                         Console.WriteLine( "starting Server..." );
+                        Console.Title = "server";
                         InizialzeAll();
                         if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "C" );
                         new Server().Start();
@@ -45,6 +46,7 @@ namespace Universal_Share.ProgMain {
                     else {
                         SettingsStatic.SAVE_PATH_S = "C_" + SettingsStatic.SAVE_PATH_S;
                         Console.WriteLine( "starting Client..." );
+                        Console.Title = "client";
                         InizialzeAll();
                         if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "S" );
                         new Client().Start();
@@ -105,12 +107,14 @@ namespace Universal_Share.ProgMain {
                     case "s":
                         SettingsStatic.SAVE_PATH_S = "S_" + SettingsStatic.SAVE_PATH_S;
                         Console.WriteLine( "starting Server..." );
+                        Console.Title = "server";
                         InizialzeAll();
                         new Server().Start();
                         break;
                     case "c":
                         SettingsStatic.SAVE_PATH_S = "C_" + SettingsStatic.SAVE_PATH_S;
                         Console.WriteLine( "starting Client..." );
+                        Console.Title = "client";
                         InizialzeAll();
                         new Client().Start();
                         break;

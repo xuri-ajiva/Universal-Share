@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -72,12 +73,11 @@ namespace Universal_Share.Options {
 
         public delegate void DictionaryChanged(object sender, DictChangedEventArgs<TK, TV> e);
 
-        public event DictionaryChanged OnDictionaryChanged;
-
-        private void Invoke(TypeE type, TK key, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key, Value = value } );
-        private void Invoke(TypeE type, TK key) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key } );
-        private void Invoke(TypeE type)           => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type } );
-        private void Invoke(TypeE type, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Value = value } );
+        public event DictionaryChanged     OnDictionaryChanged;
+        [DebuggerStepThrough] private void Invoke(TypeE type, TK key, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key, Value = value } );
+        [DebuggerStepThrough] private void Invoke(TypeE type, TK key) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key } );
+        [DebuggerStepThrough] private void Invoke(TypeE type)           => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type } );
+        [DebuggerStepThrough] private void Invoke(TypeE type, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Value = value } );
 
 
         #region Implementation of IEnumerable
@@ -87,10 +87,12 @@ namespace Universal_Share.Options {
             Invoke( TypeE.ContainsKey, key );
             return this.ContainsKey( key );
         }
+
         public new bool ContainsKey(TK key) {
             Invoke( TypeE.ContainsKey, key );
             return base.ContainsKey( key );
         }
+
         /// <inheritdoc />
         public new void Add(TK key, TV value) {
             Invoke( TypeE.AddItem, key, value );

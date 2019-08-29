@@ -11,6 +11,7 @@ using System.Threading;
 using Universal_Share.Options;
 using Universal_Share.ProgMain;
 using Universal_Share.Security;
+using static Universal_Share.Net.options;
 
 // ReSharper disable UnusedMethodReturnValue.Global
 // ReSharper disable UnusedMethodReturnValue.Local
@@ -24,6 +25,16 @@ namespace Universal_Share.Net {
         public static readonly byte[] SUCCESS         = new byte[] { 1, 1, 1, 1 };
         public static readonly byte[] SAVE_TO_FILE    = new byte[] { 3, 2, 1, 1 };
         public static readonly byte[] CREATE_REGISTER = new byte[] { 3, 4, 1, 1 };
+
+        [DebuggerStepThrough]
+        public static bool isEqual(byte[] x1, byte[] x2) {
+            if ( x1.Length != x2.Length ) return false;
+            for ( int i = 0; i < x1.Length; i++ ) {
+                if ( x1[i] != x2[i] ) return false;
+            }
+
+            return true;
+        }
     }
 
     public class SharedComponents : NetworkFileSend {
@@ -99,7 +110,6 @@ namespace Universal_Share.Net {
             var id = 0;
             try {
                 var ipendF = new IPEndPoint( remoteHost, this.FilePort );
-
 
                 var fileSocket = new TcpClient();
                 fileSocket.Connect( ipendF );
@@ -254,7 +264,7 @@ namespace Universal_Share.Net {
         const         int option_size  = 4;
         private const int heather_size = key_size + Id_size + option_size;
 
-        //[DebuggerStepThrough]
+        [DebuggerStepThrough]
         /// <summary>
         /// return new Tuple&lt;byte[], byte[], byte[], byte[]&gt;( tokenArray, idArray, optionArray, contendArray );
         /// </summary>
@@ -265,9 +275,10 @@ namespace Universal_Share.Net {
             byte[] tokenArray   = SubArray( buffer, 0,                                key_size );
             byte[] idArray      = SubArray( buffer, key_size,                         Id_size );
             byte[] optionArray  = SubArray( buffer, key_size           + Id_size,     option_size );
-            byte[] contendArray = SubArray( buffer, key_size + Id_size + option_size, readBytes-(key_size + Id_size + option_size) );
+            byte[] contendArray = SubArray( buffer, key_size + Id_size + option_size, readBytes - ( key_size + Id_size + option_size ) );
             return new Tuple<byte[], byte[], byte[], byte[]>( tokenArray, idArray, optionArray, contendArray );
         }
+
         [DebuggerStepThrough]
         byte[] Parts_To_Buffer(byte[] tokenBytes, byte[] idBytes, byte[] option, byte[] contendBytes) {
             var buffer = new byte[buffer_size];
@@ -290,6 +301,7 @@ namespace Universal_Share.Net {
             Console.WriteLine( "Paket: id = [{0}] , Token = [{1}]", string.Join( ", ", sorted.Item2 ), string.Join( ", ", sorted.Item1 ) );
             return new Tuple<string, int>( SUCCESS, id );
         }
+
         public Tuple<string, int> BufferBandClinet(int readBytes, byte[] buffer) {
             var sorted = Buffer_To_Parts( buffer, readBytes );
 
@@ -304,23 +316,25 @@ namespace Universal_Share.Net {
         }
 
         private Tuple<string, int> processOptionsClient(int id, byte[] option, byte[] contend) {
-            if ( option == options.ERROR) {
+            if ( isEqual( option, ERROR ) ) {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine( Encoding.UTF8.GetString( contend ) );
+                Console.ForegroundColor = ConsoleColor.White;
             }
-            else if ( option == options.SUCCESS) {
-                Console.WriteLine( Encoding.UTF8.GetString( contend ) );
+            else if ( isEqual( option, options.SUCCESS ) ) {
+                //Console.WriteLine( Encoding.UTF8.GetString( contend ) );
             }
 
             return new Tuple<string, int>( SUCCESS, id );
         }
 
         private Tuple<string, int> processOptionsServer(int id, byte[] option, byte[] contend) {
-            if ( option == options.SAVE_TO_FILE ) {
+            if ( isEqual( option, SAVE_TO_FILE ) ) {
                 var regi = ßMainPoint.S.IdStreamsMap.Get( id );
                 regi.CreateStream();
                 regi.Stream.Write( contend, 0, contend.Length );
             }
-            else if ( option == options.CREATE_REGISTER ) {
+            else if ( isEqual( option, CREATE_REGISTER ) ) {
                 if ( ßMainPoint.S.IdStreamsMap.Contains( id ) ) return new Tuple<string, int>( ID_ALREADY_EXISTS, id );
 
                 var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( contend ) ) ).Split( Path.GetInvalidFileNameChars() ) );
@@ -353,57 +367,55 @@ namespace Universal_Share.Net {
                 if ( readBytes <= 0 ) break;
                 var ret = this.BufferBandServer( readBytes, buffer );
 
-                cl.Client.Send( Parts_To_Buffer( ßMainPoint.T, Encoding.UTF8.GetBytes( ret.Item2.ToString() ), options.ERROR, Encoding.UTF8.GetBytes( ret.Item1 ) ) );
+                cl.Client.Send( Parts_To_Buffer( ßMainPoint.T, Encoding.UTF8.GetBytes( ret.Item2.ToString() ), options.SUCCESS, Encoding.UTF8.GetBytes( ret.Item1 ) ) );
 
                 blockCtr++;
                 totalReadBytes += readBytes;
             }
 
-           // if ( ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( id ) ) ) {
-           //     ßMainPoint.S.IdStreamsMap.Get( id ).Finished();
-           //     ßMainPoint.S.IdStreamsMap.Remove( id );
-           // }
+            // if ( ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( id ) ) ) {
+            //     ßMainPoint.S.IdStreamsMap.Get( id ).Finished();
+            //     ßMainPoint.S.IdStreamsMap.Remove( id );
+            // }
         }
-        
+
         private Tuple<string, int> SendRegisterStream(TcpClient communicationSocket, String saveFileName, int id) {
             byte[] idB       = Encoding.UTF8.GetBytes( id.ToString() );
             byte[] filanemeB = Encoding.UTF8.GetBytes( saveFileName );
 
-            var b = Parts_To_Buffer( ßMainPoint.T, idB, options.CREATE_REGISTER, filanemeB );
-            
+            var b = Parts_To_Buffer( ßMainPoint.T, idB, CREATE_REGISTER, filanemeB );
+
             var buffer = new byte[buffer_size];
             communicationSocket.Client.Send( b );
             var readet = communicationSocket.Client.Receive( buffer, SocketFlags.None );
 
-            var t = Buffer_To_Parts( buffer,readet);
+            var t = Buffer_To_Parts( buffer, readet );
 
             return new Tuple<string, int>( Encoding.UTF8.GetString( t.Item4 ), id );
         }
 
-        public void SteamClient(TcpClient cl,string filename,int id) {
+        public void SteamClient(TcpClient cl, string filename, int id) {
             int    readerBytes = -1;
-            byte[] buffer    = new byte[buffer_size - heather_size];
+            byte[] buffer      = new byte[buffer_size - heather_size];
 
             byte[] idB = Encoding.UTF8.GetBytes( id.ToString() );
 
             Stream strm = new FileStream( filename, FileMode.Open );
 
-            
-
             var blockCtr       = 0;
             var totalReadBytes = 0;
 
-
             while ( readerBytes != 0 ) {
-                readerBytes = strm.Read( buffer, 0, buffer_size -heather_size );
+                buffer = new byte[buffer_size - heather_size];
+                readerBytes = strm.Read( buffer, 0, buffer_size - heather_size );
                 if ( readerBytes == -1 ) break;
 
-                var ret = Parts_To_Buffer( ßMainPoint.T, idB, options.SAVE_TO_FILE, buffer );
+                var ret = Parts_To_Buffer( ßMainPoint.T, idB, SAVE_TO_FILE, buffer );
 
-                cl.Client.Send( ret, SocketFlags.None);
+                cl.Client.Send( ret, SocketFlags.None );
 
                 buffer = new byte[buffer_size];
-                
+
                 int readBytes2 = cl.Client.Receive( buffer, 0, this.BufferSize, SocketFlags.None );
 
                 //var sp = Buffer_To_Parts( buffer, readBytes2 );

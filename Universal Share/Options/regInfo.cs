@@ -156,7 +156,7 @@ namespace Universal_Share.Options {
             this.Position     = positionInStream;
 
             this.Stream = (EventStream) stream;
-            CreateStream();
+            ForceCreateStream();
             this.Stream.OnStreamChanged += StreamOnOnStreamChanged;
         }
 
@@ -194,6 +194,13 @@ namespace Universal_Share.Options {
                 this.Stream          = (EventStream) File.Open( this.SaveFilePath, FileMode.OpenOrCreate );
                 this.Stream.Position = this.Position;
             }
+        }
+
+        public void ForceCreateStream() {
+            this.Stream?.Dispose();
+
+            this.Stream          = (EventStream) File.Open( this.SaveFilePath, FileMode.OpenOrCreate );
+            this.Stream.Position = this.Position;
         }
     }
 

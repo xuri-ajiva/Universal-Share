@@ -22,7 +22,7 @@ namespace Universal_Share.Options {
             this.RememberType.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
             this.IdStreamsMap.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
         }
-
+        [DebuggerStepThrough]
         private void ChangedEventHandler() {
             this.Changed = true;
         }
