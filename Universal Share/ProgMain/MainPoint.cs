@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Windows.Forms;
 using Universal_Share.hocks;
 using Universal_Share.Interface;
 using Universal_Share.Net;
@@ -15,7 +17,7 @@ using Universal_Share.Security;
 namespace Universal_Share.ProgMain {
     public static class ßMainPoint {
         private const bool DEBUG          = true;
-        private const bool SERVER         = false;
+        private const bool SERVER         = true;
         private const bool START_OPPOSITE = true;
 
         private static readonly ßProgram  _prgMain   = new ßProgram();
@@ -29,9 +31,8 @@ namespace Universal_Share.ProgMain {
         public static ßProgram  PrgMain => _prgMain;
 
         public static void Main(string[] args) {
+            Application.EnableVisualStyles();
             PreInizialze();
-
-            S.RegList.Add( RegInfo.TYPE.SINGLE_FILE, new TypeHolder( "cmd", "/c echo", " && pause", true, "descript", false ) );
 
             if ( DEBUG ) {
                 if ( args.Length == 0 ) {
@@ -41,7 +42,7 @@ namespace Universal_Share.ProgMain {
                         Console.Title = "server";
                         InizialzeAll();
                         if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "C" );
-                        new Server().Start();
+                        new Server().CreateUI();
                     }
                     else {
                         SettingsStatic.SAVE_PATH_S = "C_" + SettingsStatic.SAVE_PATH_S;
@@ -96,6 +97,11 @@ namespace Universal_Share.ProgMain {
                 }
             } );
             t.Start();
+
+            _auth = new Auth( SettingsStatic.SAVE_PATH_S );
+            try {
+                S.RegList.Add( RegInfo.TYPE.SINGLE_FILE, new TypeHolder( "cmd", "/c echo", " && timeout 3", true, "descript", false ) );
+            }catch{}
         }
 
         private static void StartNormal(string[] args) {

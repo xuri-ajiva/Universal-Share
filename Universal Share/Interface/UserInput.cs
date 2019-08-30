@@ -42,6 +42,7 @@ namespace Universal_Share.Interface {
         }
 
         private void ResetAndInfo(string info) {
+            this._DescriptionBox.Text = "";
             this.Text = Console.Title.ToUpper();
             this._infoLable.Text   = info;
             this._remember.Checked = false;

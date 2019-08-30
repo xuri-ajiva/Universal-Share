@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Universal_Share.Interface;
+using Universal_Share.ProgMain;
 using Universal_Share.Security;
 
 namespace Universal_Share.Net {
@@ -32,13 +34,27 @@ namespace Universal_Share.Net {
         public const int    DEFAULT_HEATHER_SIZE  = 8;
 
 
-        protected bool IsKeyVailed(byte[] toaken) { return true; }
+        protected bool IsKeyVailed(byte[] toaken) {
+            var base64Key = Convert.ToBase64String( toaken );
+
+            if ( ßMainPoint.S.ToakenList.ContainsKey( base64Key ) ) {
+                var ti = ßMainPoint.S.ToakenList.Get( base64Key );
+                options.isEqual( toaken, ti.TokenBytes );
+                if ( ti.remember ) return ti.Trusted;
+            }
+
+            if ( ßMainPoint.U.GetConfirm( new TokenItem( toaken, false, false ) ) ) {
+                return true;
+            }
+
+            return false;
+        }
 
 
         ///New
         ///
-        
         public int FilePort;
+
         protected const int buffer_size = DEFAULT_BUFFER_SIZE;
 
         protected const int Id_size      = DEFAULT_HEATHER_SIZE;

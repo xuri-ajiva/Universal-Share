@@ -177,7 +177,7 @@ namespace Universal_Share.Options {
             }
         }
 
-        public override string ToString() => "ID: " + this.ID + "  | Stream: " + this.Stream + "  | FilePath: " + this.SaveFilePath + "  | Type: " + this.Type;
+        public override string ToString() => "ID: " + this.ID  + "  | FilePath: " + this.SaveFilePath + "  | Type: " + this.Type;
 
         public void Finished() {
             this.Stream?.Close();

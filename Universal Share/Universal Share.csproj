@@ -54,12 +54,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="hocks\Exit.cs" />
+    <Compile Include="Interface\ServerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\ServerForm.Designer.cs">
+      <DependentUpon>ServerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interface\ServerForm_New.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Interface\UserInput.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Net\ClientBase.cs" />
     <Compile Include="Net\NetBase.cs" />
     <Compile Include="Net\ServerBase.cs" />
+    <Compile Include="Options\RememberType.cs" />
     <Compile Include="ProgMain\MainPoint.cs" />
     <Compile Include="Net\BuildId.cs" />
     <Compile Include="Net\Client.cs" />
@@ -80,6 +90,9 @@
     <None Include="Properties\app.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Interface\ServerForm.resx">
+      <DependentUpon>ServerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Interface\UserInput.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

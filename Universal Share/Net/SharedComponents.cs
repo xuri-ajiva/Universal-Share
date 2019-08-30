@@ -28,6 +28,7 @@ namespace Universal_Share.Net {
 
         [DebuggerStepThrough]
         public static bool isEqual(byte[] x1, byte[] x2) {
+            if ( x1 == null && x2 == null ) return false;
             if ( x1.Length != x2.Length ) return false;
             for ( int i = 0; i < x1.Length; i++ ) {
                 if ( x1[i] != x2[i] ) return false;
