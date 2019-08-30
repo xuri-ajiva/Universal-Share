@@ -9,7 +9,7 @@ namespace Universal_Share.Net {
 
             while ( true ) {
                 try {
-                    SendFile2( ip, "..\\..\\..\\test.exe" );
+                    SendFile( ip, "..\\..\\..\\test.exe" );
                     Thread.Sleep( 1000 );
                 } catch (Exception e) {
                     Console.WriteLine( e.Message );
