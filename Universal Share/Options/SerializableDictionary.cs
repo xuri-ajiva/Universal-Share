@@ -51,21 +51,23 @@ namespace Universal_Share.Options {
         public void WriteXml(System.Xml.XmlWriter writer) {
             XmlSerializer keySerializer   = new XmlSerializer( typeof(TK) );
             XmlSerializer valueSerializer = new XmlSerializer( typeof(TV) );
+            try {
+                foreach ( TK key in this.Keys ) {
+                    writer.WriteStartElement( "item" );
 
-            foreach ( TK key in this.Keys ) {
-                writer.WriteStartElement( "item" );
+                    writer.WriteStartElement( "key" );
+                    keySerializer.Serialize( writer, key );
+                    writer.WriteEndElement();
 
-                writer.WriteStartElement( "key" );
-                keySerializer.Serialize( writer, key );
-                writer.WriteEndElement();
+                    writer.WriteStartElement( "value" );
+                    TV value = this[key];
+                    valueSerializer.Serialize( writer, value );
+                    writer.WriteEndElement();
 
-                writer.WriteStartElement( "value" );
-                TV value = this[key];
-                valueSerializer.Serialize( writer, value );
-                writer.WriteEndElement();
+                    writer.WriteEndElement();
+                }
+            }catch{writer.Close();}
 
-                writer.WriteEndElement();
-            }
         }
 
         #endregion
@@ -82,29 +84,30 @@ namespace Universal_Share.Options {
 
         #region Implementation of IEnumerable
 
+        [DebuggerStepThrough]
         /// <inheritdoc />
         public bool Contains(TK key) {
             Invoke( TypeE.ContainsKey, key );
-            return this.ContainsKey( key );
+            return base.ContainsKey( key );
         }
-
+        [DebuggerStepThrough]
         public new bool ContainsKey(TK key) {
             Invoke( TypeE.ContainsKey, key );
             return base.ContainsKey( key );
         }
-
+        [DebuggerStepThrough]
         /// <inheritdoc />
         public new void Add(TK key, TV value) {
             Invoke( TypeE.AddItem, key, value );
             base.Add( key, value );
         }
-
+        [DebuggerStepThrough]
         /// <inheritdoc />
         public new void Clear() {
             Invoke( TypeE.Clear );
             base.Clear();
         }
-
+        [DebuggerStepThrough]
         /// <inheritdoc />
         public new void Remove(TK key) {
             Invoke( TypeE.RemoveItem, key );
@@ -113,17 +116,17 @@ namespace Universal_Share.Options {
 
         /// <inheritdoc />
         [XmlIgnore]
-        public new TV this[TK key] {
+        public new TV this[TK key] {[DebuggerStepThrough]
             get {
                 Invoke( TypeE.GetAt, key );
                 return base[key];
-            }
+            }[DebuggerStepThrough]
             set {
                 Invoke( TypeE.SetAt, key, value );
                 base[key] = value;
             }
         }
-
+        [DebuggerStepThrough]
         /// <inheritdoc />
         public TV Get(TK key) {
             Invoke( TypeE.GetAt, key );
