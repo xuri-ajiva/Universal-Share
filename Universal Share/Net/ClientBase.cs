@@ -36,7 +36,7 @@ namespace Universal_Share.Net {
         }
 
         public (string, int) BufferBandClinet(int readBytes, byte[] buffer) {
-            (var tokenArray,var idArray,var optionArray,var contendArray ) = Buffer_To_Parts( buffer, readBytes );
+            ( var tokenArray, var idArray, var optionArray, var contendArray ) = Buffer_To_Parts( buffer, readBytes );
 
             if ( !IsKeyVailed( tokenArray ) ) return ( KEY_NOT_VALID, -1 );
 
@@ -44,14 +44,14 @@ namespace Universal_Share.Net {
 
             processOptionsClient( id, optionArray, contendArray );
 
-            Console.WriteLine( "Paket: id = [{0}] , Token(0,8) = [{1}]", string.Join( ", ", id ), string.Join( ", ", SubArray( tokenArray,0,8 ) ) );
+            Console.WriteLine( "Paket: id = [{0}] , Token(0,8) = [{1}]", string.Join( ", ", id ), string.Join( ", ", SubArray( tokenArray, 0, 8 ) ) );
             return ( SUCCESS, id );
         }
 
         private (string, int) processOptionsClient(int id, byte[] option, byte[] contend) {
             if ( options.isEqual( option, options.ERROR ) ) {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine( Encoding.UTF8.GetString( contend ) );
+                Console.WriteLine( Encoding.UTF8.GetString( contend ).Replace( Encoding.UTF8.GetString( new byte[] { 0 } ), "" ) );
                 Console.ForegroundColor = ConsoleColor.White;
             }
             else if ( options.isEqual( option, options.SUCCESS ) ) {

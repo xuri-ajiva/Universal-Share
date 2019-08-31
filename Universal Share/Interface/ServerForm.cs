@@ -124,17 +124,23 @@ namespace Universal_Share.Interface {
                 case "ID":
                     ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( this.currentItem[0].Text ) ) );
                     break;
-                case "TO": break;
+                case "TO":
+                    try {
+                        ( var r20, var r10 ) = ßMainPoint.E.CreateNewTokenItem();
+                        ßMainPoint.S.ToakenList.Add( r10, r20 );
+                    } catch { }
+
+                    break;
                 case "RE":
                     try {
-                        ( var r21, var r11 ) = ßMainPoint.E.CreateNewRememberType( RegInfo.AllTypes() );
+                        ( var r21, var r11 ) = ßMainPoint.E.CreateNewRememberType();
                         ßMainPoint.S.RememberType.Add( r11, r21 );
                     } catch { }
 
                     break;
                 case "RG":
                     try {
-                        ( var r22, var r12 ) = ßMainPoint.E.CreateNewTypeHolder( RegInfo.AllTypes() );
+                        ( var r22, var r12 ) = ßMainPoint.E.CreateNewTypeHolder();
                         ßMainPoint.S.RegList.Add( r12, r22 );
                     } catch { }
 
@@ -176,13 +182,20 @@ namespace Universal_Share.Interface {
         private void EditToolStripMenuItem_Click(object sender, EventArgs e) {
             switch (this.currentItem[0].ListView.Name) {
                 case "ID":
-                    ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( this.currentItem[0].Text ) ) );
+                    //ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( this.currentItem[0].Text ) ) );
                     break;
-                case "TO": break;
+                case "TO":
+                    try {
+                        ( var r20, var r10 ) = ßMainPoint.E.EditTokenItem( ßMainPoint.S.ToakenList.Get( this.currentItem[0].Text ) );
+                        ßMainPoint.S.ToakenList.Remove( this.currentItem[0].Text );
+                        ßMainPoint.S.ToakenList.Add( r10, r20 );
+                    } catch { }
+
+                    break;
                 case "RE":
                     try {
                         if ( Enum.TryParse<RegInfo.TYPE>( this.currentItem[0].SubItems[0].Text, out var enu1 ) ) {
-                            ( var r21, var r11 ) = ßMainPoint.E.EditRememberType( RegInfo.AllTypes(), ßMainPoint.S.RememberType.Get( enu1 ) );
+                            ( var r21, var r11 ) = ßMainPoint.E.EditRememberType( ßMainPoint.S.RememberType.Get( enu1 ) );
                             ßMainPoint.S.RememberType.Remove( enu1 );
                             ßMainPoint.S.RememberType.Add( r11, r21 );
                         }
@@ -192,7 +205,7 @@ namespace Universal_Share.Interface {
                 case "RG":
                     try {
                         if ( Enum.TryParse<RegInfo.TYPE>( this.currentItem[0].SubItems[0].Text, out var enu2 ) ) {
-                            ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder( RegInfo.AllTypes(), ßMainPoint.S.RegList.Get( enu2 ) );
+                            ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder( ßMainPoint.S.RegList.Get( enu2 ), enu2 );
                             ßMainPoint.S.RegList.Remove( enu2 );
                             ßMainPoint.S.RegList.Add( r12, r22 );
                         }

@@ -15,21 +15,25 @@ namespace Universal_Share.Net
     {
         
         private (string, int) processOptionsServer(int id, byte[] option, byte[] contend,byte[] tokenBytes) {
-            if ( options.isEqual( option, options.SAVE_TO_FILE ) ) {
-                var regi = ßMainPoint.S.IdStreamsMap.Get( id );
-                regi.CreateStream();
-                regi.Stream.Write( contend, 0, contend.Length );
-            }
-            else if ( options.isEqual( option, options.CREATE_REGISTER ) ) {
-                if ( ßMainPoint.S.IdStreamsMap.Contains( id ) ) return ( ID_ALREADY_EXISTS, id );
+            try {
+                if ( options.isEqual( option, options.SAVE_TO_FILE ) ) {
+                    var regi = ßMainPoint.S.IdStreamsMap.Get( id );
+                    regi.CreateStream();
+                    regi.Stream.Write( contend, 0, contend.Length );
+                }
+                else if ( options.isEqual( option, options.CREATE_REGISTER ) ) {
+                    if ( ßMainPoint.S.IdStreamsMap.Contains( id ) ) return ( ID_ALREADY_EXISTS, id );
 
-                var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( contend ) ) ).Split( Path.GetInvalidFileNameChars() ) );
-                var finalSaveName = DEFAULT_SAVE_LOCATION + finalFileName;
+                    var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( contend ) ) ).Split( Path.GetInvalidFileNameChars() ) );
+                    var finalSaveName = DEFAULT_SAVE_LOCATION + finalFileName;
 
-                Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) );
+                    Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) );
 
-                var regInfo = new RegInfo( null, id, finalSaveName, Convert.ToBase64String( tokenBytes ), RegInfo.TYPE.SINGLE_FILE );
-                ßMainPoint.S.IdStreamsMap.Add( id, regInfo );
+                    var regInfo = new RegInfo( null, id, finalSaveName, Convert.ToBase64String( tokenBytes ), RegInfo.TYPE.SINGLE_FILE );
+                    ßMainPoint.S.IdStreamsMap.Add( id, regInfo );
+                }
+            } catch (Exception e) {
+                return ( e.Message, id );
             }
 
             return ( SUCCESS, id );
@@ -39,14 +43,16 @@ namespace Universal_Share.Net
         public (string, int) BufferBandServer(int readBytes, byte[] buffer) {
             ( var token, var idB, var option, var conetnd ) = Buffer_To_Parts( buffer, readBytes );
 
-            if ( !IsKeyVailed( token ) ) return ( KEY_NOT_VALID, -1 );
 
             if ( !int.TryParse( Encoding.UTF8.GetString( idB ), out var id ) ) return ( ID_NOT_EXIST, id );
 
-            processOptionsServer( id, option, conetnd, token );
-
+            if ( !IsKeyVailed( token ) ) {
+                return ( TOKEN_NOT_ACCEPTED, id );
+            }
+            ( var message, var idBX) =  processOptionsServer( id, option, conetnd, token );
+            var ret = message == SUCCESS ? SUCCESS : message;
             Console.WriteLine( "Paket: id = [{0}] , Token(0,8) = [{1}]",  id , string.Join( ", ", SubArray( token,0,8 ) ) );
-            return ( SUCCESS, id );
+            return ( ret, id );
         }
         
         public void SteamServer(TcpClient cl) {
@@ -57,14 +63,15 @@ namespace Universal_Share.Net
 
             var blockCtr       = 0;
             var totalReadBytes = 0;
-            int id             = -1;
 
             while ( readBytes != 0 ) {
                 readBytes = cl.Client.Receive( buffer, 0, buffer_size, SocketFlags.None, out errorCode );
                 if ( readBytes <= 0 ) break;
-                var ret = this.BufferBandServer( readBytes, buffer );
+                ( var message, var idRet ) = this.BufferBandServer( readBytes, buffer );
 
-                cl.Client.Send( Parts_To_Buffer( ßMainPoint.T, Encoding.UTF8.GetBytes( ret.Item2.ToString() ), options.SUCCESS, Encoding.UTF8.GetBytes( ret.Item1 ) ) );
+                var option = message == SUCCESS ? options.SUCCESS : options.ERROR;
+
+                cl.Client.Send( Parts_To_Buffer( ßMainPoint.T, Encoding.UTF8.GetBytes( idRet.ToString() ),option , Encoding.UTF8.GetBytes( message ) ) );
 
                 blockCtr++;
                 totalReadBytes += readBytes;

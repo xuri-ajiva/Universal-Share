@@ -25,6 +25,7 @@ namespace Universal_Share.Net {
         public static readonly byte[] SUCCESS         = new byte[] { 1, 1, 1, 1 };
         public static readonly byte[] SAVE_TO_FILE    = new byte[] { 3, 2, 1, 1 };
         public static readonly byte[] CREATE_REGISTER = new byte[] { 3, 4, 1, 1 };
+        public static readonly byte[] FILE_TYPE       = new byte[] { 9, 9, 0, 0 };
 
         [DebuggerStepThrough]
         public static bool isEqual(byte[] x1, byte[] x2) {
@@ -39,24 +40,24 @@ namespace Universal_Share.Net {
     }
 
     public partial class SharedComponents : NetworkFileSend {
-       //public int    BufferSize;
+        //public int    BufferSize;
 
         public SharedComponents(int filePort = DEFAULT_FILE_PORT, int textPort = DEFAULT_TEXT_PORT, int bufferSize = DEFAULT_BUFFER_SIZE, string saveLocation = DEFAULT_SAVE_LOCATION) {
-        //    this.FilePort     = filePort;
-        //    this.TextPort     = textPort;
-        //    this.BufferSize   = bufferSize;
-        //    this.SaveLocation = saveLocation;
+            //    this.FilePort     = filePort;
+            //    this.TextPort     = textPort;
+            //    this.BufferSize   = bufferSize;
+            //    this.SaveLocation = saveLocation;
         }
 
         public SharedComponents() {
-           // this.FilePort     = DEFAULT_FILE_PORT;
-           // this.TextPort     = DEFAULT_TEXT_PORT;
-           // this.SaveLocation = DEFAULT_SAVE_LOCATION;
-           // this.BufferSize   = DEFAULT_BUFFER_SIZE;
-           // this.HeatherSize  = DEFAULT_HEATHER_SIZE;
+            // this.FilePort     = DEFAULT_FILE_PORT;
+            // this.TextPort     = DEFAULT_TEXT_PORT;
+            // this.SaveLocation = DEFAULT_SAVE_LOCATION;
+            // this.BufferSize   = DEFAULT_BUFFER_SIZE;
+            // this.HeatherSize  = DEFAULT_HEATHER_SIZE;
         }
-
     }
+
     /*
     public partial class SharedComponents {
         /// client ///

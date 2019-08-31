@@ -26,6 +26,7 @@ namespace Universal_Share.Net {
         public const string KEY_NOT_VALID         = "KEY_NOT_VALID";
         public const string SUCCESS               = "SUCCESS";
         public const string ID_ALREADY_EXISTS     = "ID_ALREADY_EXISTS";
+        public const string TOKEN_NOT_ACCEPTED    = "TOKEN_NOT_ACCEPTED";
 
         public const int    DEFAULT_FILE_PORT     = 4333;
         public const int    DEFAULT_TEXT_PORT     = 9999;
@@ -50,9 +51,6 @@ namespace Universal_Share.Net {
             return false;
         }
 
-
-        ///New
-        ///
         public int FilePort;
 
         protected const int buffer_size = DEFAULT_BUFFER_SIZE;
@@ -62,13 +60,14 @@ namespace Universal_Share.Net {
         protected const int option_size  = 4;
         protected const int heather_size = key_size + Id_size + option_size;
 
-        [DebuggerStepThrough]
+
         /// <summary>
         /// return new Tuple&lt;byte[], byte[], byte[], byte[]&gt;( tokenArray, idArray, optionArray, contendArray );
         /// </summary>
         /// <param name="buffer">buffer read form network</param>
         /// <param name="readBytes">the bytes read</param>
         /// <returns>return new Tuple&amp;lt;byte[], byte[], byte[], byte[]&amp;gt;( tokenArray, idArray, optionArray, contendArray );</returns>
+        [DebuggerStepThrough]
         protected (byte[], byte[], byte[], byte[]) Buffer_To_Parts(byte[] buffer, int readBytes) {
             byte[] tokenArray   = SubArray( buffer, 0,                                key_size );
             byte[] idArray      = SubArray( buffer, key_size,                         Id_size );

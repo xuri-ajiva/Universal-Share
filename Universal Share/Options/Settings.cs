@@ -35,21 +35,21 @@ namespace Universal_Share.Options {
     public partial class Settings {
         public bool execute(RegInfo regInfo) {
             if ( this.RegList.Contains( regInfo.Type ) ) {
-                var t  = this.RegList.Get( regInfo.Type );
-                var f1 = false;
-                var f2 = true;
-                var f3 = t.UserConfirm;
-                if ( f3 ) {
-                    if ( this.RememberType.Contains( regInfo.Type ) ) {
-                        var dr = this.RememberType.Get( regInfo.Type );
-                        f1 = dr.IsOkOrYes();
+                var t = this.RegList.Get( regInfo.Type );
+                if ( t.UserConfirm ) {
+                    if ( this.RememberType.Contains( regInfo.Type ) )
+                        if ( this.RememberType.Get( regInfo.Type ).IsOkOrYes() )
+                            goto start;
+                        else { return false; }
+
+                    if ( ßMainPoint.U.GetConfirm( regInfo, t ) ) {
+                        goto start;
                     }
 
-                    if ( !f1 ) f2 = ßMainPoint.U.GetConfirm( regInfo, t );
-                    if ( !f2 ) return false;
-                    if ( !f1 ) return false;
+                    return false;
                 }
 
+                start:
                 try {
                     if ( t.CloseFileStream ) regInfo.Stream?.Close();
                     Process.Start( t.OpenWith, t.ArgumentsBeforePathToFile + " " + regInfo.SaveFilePath + " " + t.ArgumentsAfterPathToFile );
