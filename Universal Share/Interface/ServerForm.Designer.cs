@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this._idStreamMap = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.Stop = new System.Windows.Forms.Button();
             this.ForceUpdateAll = new System.Windows.Forms.Button();
             this.B_StartServer = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -45,23 +47,31 @@
             this.splitter2 = new System.Windows.Forms.Splitter();
             this._RegList = new System.Windows.Forms.ListView();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // _idStreamMap
             // 
+            this._idStreamMap.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this._idStreamMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this._idStreamMap.Dock = System.Windows.Forms.DockStyle.Fill;
             this._idStreamMap.HideSelection = false;
+            this._idStreamMap.HoverSelection = true;
             this._idStreamMap.Location = new System.Drawing.Point(0, 0);
             this._idStreamMap.Name = "_idStreamMap";
-            this._idStreamMap.Size = new System.Drawing.Size(908, 316);
+            this._idStreamMap.Size = new System.Drawing.Size(908, 546);
             this._idStreamMap.TabIndex = 0;
             this._idStreamMap.UseCompatibleStateImageBehavior = false;
             this._idStreamMap.View = System.Windows.Forms.View.Details;
             this._idStreamMap.DoubleClick += new System.EventHandler(this._idStreamMap_DoubleClick);
+            this._idStreamMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this._idStreamMap_MouseClick);
             // 
             // columnHeader1
             // 
@@ -72,18 +82,29 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(194, 829);
+            this.panel1.Size = new System.Drawing.Size(194, 858);
             this.panel1.TabIndex = 1;
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.Stop);
             this.panel2.Controls.Add(this.ForceUpdateAll);
             this.panel2.Controls.Add(this.B_StartServer);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel2.Location = new System.Drawing.Point(1102, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(200, 829);
+            this.panel2.Size = new System.Drawing.Size(200, 858);
             this.panel2.TabIndex = 0;
+            // 
+            // Stop
+            // 
+            this.Stop.Location = new System.Drawing.Point(6, 41);
+            this.Stop.Name = "Stop";
+            this.Stop.Size = new System.Drawing.Size(75, 23);
+            this.Stop.TabIndex = 1;
+            this.Stop.Text = "Stop";
+            this.Stop.UseVisualStyleBackColor = true;
+            this.Stop.Click += new System.EventHandler(this.Stop_Click);
             // 
             // ForceUpdateAll
             // 
@@ -108,9 +129,9 @@
             // panel3
             // 
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 829);
+            this.panel3.Location = new System.Drawing.Point(0, 858);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1302, 57);
+            this.panel3.Size = new System.Drawing.Size(1302, 28);
             this.panel3.TabIndex = 2;
             // 
             // panel4
@@ -125,14 +146,14 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(194, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(908, 829);
+            this.panel4.Size = new System.Drawing.Size(908, 858);
             this.panel4.TabIndex = 3;
             // 
             // splitter4
             // 
             this.splitter4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitter4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter4.Location = new System.Drawing.Point(0, 316);
+            this.splitter4.Location = new System.Drawing.Point(0, 546);
             this.splitter4.Name = "splitter4";
             this.splitter4.Size = new System.Drawing.Size(908, 5);
             this.splitter4.TabIndex = 7;
@@ -144,23 +165,24 @@
             this.columnHeader4});
             this._TokenList.Dock = System.Windows.Forms.DockStyle.Bottom;
             this._TokenList.HideSelection = false;
-            this._TokenList.Location = new System.Drawing.Point(0, 321);
+            this._TokenList.Location = new System.Drawing.Point(0, 551);
             this._TokenList.Name = "_TokenList";
-            this._TokenList.Size = new System.Drawing.Size(908, 163);
+            this._TokenList.Size = new System.Drawing.Size(908, 108);
             this._TokenList.TabIndex = 3;
             this._TokenList.UseCompatibleStateImageBehavior = false;
             this._TokenList.View = System.Windows.Forms.View.Details;
             this._TokenList.DoubleClick += new System.EventHandler(this._TokenList_DoubleClick);
+            this._TokenList.MouseClick += new System.Windows.Forms.MouseEventHandler(this._TokenList_MouseClick);
             // 
             // columnHeader4
             // 
-            this.columnHeader4.Width = 581;
+            this.columnHeader4.Width = 591;
             // 
             // splitter1
             // 
             this.splitter1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter1.Location = new System.Drawing.Point(0, 484);
+            this.splitter1.Location = new System.Drawing.Point(0, 659);
             this.splitter1.Name = "splitter1";
             this.splitter1.Size = new System.Drawing.Size(908, 5);
             this.splitter1.TabIndex = 4;
@@ -172,13 +194,14 @@
             this.columnHeader2});
             this._RememberList.Dock = System.Windows.Forms.DockStyle.Bottom;
             this._RememberList.HideSelection = false;
-            this._RememberList.Location = new System.Drawing.Point(0, 489);
+            this._RememberList.Location = new System.Drawing.Point(0, 664);
             this._RememberList.Name = "_RememberList";
-            this._RememberList.Size = new System.Drawing.Size(908, 161);
+            this._RememberList.Size = new System.Drawing.Size(908, 95);
             this._RememberList.TabIndex = 1;
             this._RememberList.UseCompatibleStateImageBehavior = false;
             this._RememberList.View = System.Windows.Forms.View.Details;
             this._RememberList.DoubleClick += new System.EventHandler(this._RememberList_DoubleClick);
+            this._RememberList.MouseClick += new System.Windows.Forms.MouseEventHandler(this._RememberList_MouseClick);
             // 
             // columnHeader2
             // 
@@ -188,7 +211,7 @@
             // 
             this.splitter2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter2.Location = new System.Drawing.Point(0, 650);
+            this.splitter2.Location = new System.Drawing.Point(0, 759);
             this.splitter2.Name = "splitter2";
             this.splitter2.Size = new System.Drawing.Size(908, 5);
             this.splitter2.TabIndex = 5;
@@ -200,17 +223,49 @@
             this.columnHeader3});
             this._RegList.Dock = System.Windows.Forms.DockStyle.Bottom;
             this._RegList.HideSelection = false;
-            this._RegList.Location = new System.Drawing.Point(0, 655);
+            this._RegList.Location = new System.Drawing.Point(0, 764);
             this._RegList.Name = "_RegList";
-            this._RegList.Size = new System.Drawing.Size(908, 174);
+            this._RegList.Size = new System.Drawing.Size(908, 94);
             this._RegList.TabIndex = 2;
             this._RegList.UseCompatibleStateImageBehavior = false;
             this._RegList.View = System.Windows.Forms.View.Details;
             this._RegList.DoubleClick += new System.EventHandler(this._RegList_DoubleClick);
+            this._RegList.MouseClick += new System.Windows.Forms.MouseEventHandler(this._RegList_MouseClick);
             // 
             // columnHeader3
             // 
             this.columnHeader3.Width = 89;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editToolStripMenuItem,
+            this.deleateToolStripMenuItem,
+            this.newToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 92);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.EditToolStripMenuItem_Click);
+            // 
+            // deleateToolStripMenuItem
+            // 
+            this.deleateToolStripMenuItem.Name = "deleateToolStripMenuItem";
+            this.deleateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleateToolStripMenuItem.Text = "Deleate";
+            this.deleateToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.ImageKey = "NEW";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
             // 
             // ServerForm
             // 
@@ -227,6 +282,7 @@
             this.Load += new System.EventHandler(this.ServerForm_Load);
             this.panel2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -250,5 +306,10 @@
         private System.Windows.Forms.Splitter splitter2;
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.Button ForceUpdateAll;
+        private System.Windows.Forms.Button Stop;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
     }
 }

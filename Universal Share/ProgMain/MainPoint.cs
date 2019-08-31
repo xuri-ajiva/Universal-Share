@@ -23,12 +23,14 @@ namespace Universal_Share.ProgMain {
         private static readonly ßProgram  _prgMain   = new ßProgram();
         private static          UserInput _userInput = new UserInput();
         private static          Auth      _auth      = new Auth();
+        private static          Editor    _editor    = new Editor();
 
         public static byte[]    K       { get => _auth.KeyBytes; }
         public static byte[]    T       { get => _auth.TokenBytes; }
         public static Settings  S       { get => _prgMain.settings; set => _prgMain.settings = value; }
         public static UserInput U       { get => _userInput;        set => _userInput = value; }
         public static ßProgram  PrgMain => _prgMain;
+        public static Editor    E  => _editor;
 
         public static void Main(string[] args) {
             Application.EnableVisualStyles();
@@ -101,7 +103,7 @@ namespace Universal_Share.ProgMain {
             _auth = new Auth( SettingsStatic.SAVE_PATH_S );
             try {
                 S.RegList.Add( RegInfo.TYPE.SINGLE_FILE, new TypeHolder( "cmd", "/c echo", " && timeout 3", true, "descript", false ) );
-            }catch{}
+            } catch { }
         }
 
         private static void StartNormal(string[] args) {

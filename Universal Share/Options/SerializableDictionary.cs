@@ -1,14 +1,9 @@
 ﻿#region using
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
-using System.Xml.Serialization;
 
 #endregion
 
@@ -66,8 +61,7 @@ namespace Universal_Share.Options {
 
                     writer.WriteEndElement();
                 }
-            }catch{writer.Close();}
-
+            } catch { writer.Close(); }
         }
 
         #endregion
@@ -90,23 +84,27 @@ namespace Universal_Share.Options {
             Invoke( TypeE.ContainsKey, key );
             return base.ContainsKey( key );
         }
+
         [DebuggerStepThrough]
         public new bool ContainsKey(TK key) {
             Invoke( TypeE.ContainsKey, key );
             return base.ContainsKey( key );
         }
+
         [DebuggerStepThrough]
         /// <inheritdoc />
         public new void Add(TK key, TV value) {
             Invoke( TypeE.AddItem, key, value );
             base.Add( key, value );
         }
+
         [DebuggerStepThrough]
         /// <inheritdoc />
         public new void Clear() {
             Invoke( TypeE.Clear );
             base.Clear();
         }
+
         [DebuggerStepThrough]
         /// <inheritdoc />
         public new void Remove(TK key) {
@@ -116,16 +114,19 @@ namespace Universal_Share.Options {
 
         /// <inheritdoc />
         [XmlIgnore]
-        public new TV this[TK key] {[DebuggerStepThrough]
+        public new TV this[TK key] {
+            [DebuggerStepThrough]
             get {
                 Invoke( TypeE.GetAt, key );
                 return base[key];
-            }[DebuggerStepThrough]
+            }
+            [DebuggerStepThrough]
             set {
                 Invoke( TypeE.SetAt, key, value );
                 base[key] = value;
             }
         }
+
         [DebuggerStepThrough]
         /// <inheritdoc />
         public TV Get(TK key) {

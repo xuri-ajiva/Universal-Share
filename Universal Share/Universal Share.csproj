@@ -54,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="hocks\Exit.cs" />
+    <Compile Include="Interface\Editor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Interface\ServerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +93,9 @@
     <None Include="Properties\app.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Interface\Editor.resx">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Interface\ServerForm.resx">
       <DependentUpon>ServerForm.cs</DependentUpon>
     </EmbeddedResource>

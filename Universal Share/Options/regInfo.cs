@@ -29,19 +29,16 @@ namespace Universal_Share.Options {
             Interrupt( TypeE.Flush );
         }
 
-
         public long Seek(long offset, SeekOrigin origin) {
             var re = this.SelfStream.Seek( offset, origin );
             Interrupt( TypeE.Seek );
             return re;
         }
 
-
         public void SetLength(long value) {
             this.SelfStream.SetLength( value );
             Interrupt( TypeE.SetLength );
         }
-
 
         public int Read(byte[] buffer, int offset, int count) {
             var re = this.SelfStream.Read( buffer, offset, count );
@@ -49,12 +46,10 @@ namespace Universal_Share.Options {
             return re;
         }
 
-
         public void Write(byte[] buffer, int offset, int count) {
             this.SelfStream.Write( buffer, offset, count );
             Interrupt( TypeE.Write );
         }
-
 
         public bool CanRead {
             get {
@@ -63,14 +58,12 @@ namespace Universal_Share.Options {
             }
         }
 
-
         public bool CanSeek {
             get {
                 Interrupt( TypeE.CanSeek );
                 return this.SelfStream.CanSeek;
             }
         }
-
 
         public bool CanWrite {
             get {
@@ -79,14 +72,12 @@ namespace Universal_Share.Options {
             }
         }
 
-
         public long Length {
             get {
                 Interrupt( TypeE.Length );
                 return this.SelfStream.Length;
             }
         }
-
 
         public long Position {
             get {
@@ -116,7 +107,7 @@ namespace Universal_Share.Options {
 
         public bool IsNull => this.SelfStream == null;
 
-        public long PositionWothoutEvent { get => this.SelfStream.Position; set => this.SelfStream.Position = value; }
+        public long PositionWithoutEvent { get => this.SelfStream.Position; set => this.SelfStream.Position = value; }
 
         public void Close() {
             Interrupt( TypeE.Close );
@@ -142,6 +133,7 @@ namespace Universal_Share.Options {
         [XmlIgnore] public     EventStream Stream;
         public                 int         ID;
         public                 string      SaveFilePath;
+        public                 string      SenderAuth;
 
         public long Position;
 
@@ -149,11 +141,12 @@ namespace Universal_Share.Options {
     }
 
     public partial struct RegInfo {
-        public RegInfo(Stream stream, int id, string saveFilePath, TYPE type, int positionInStream = 0) {
+        public RegInfo(Stream stream, int id, string saveFilePath, string senderAuth, TYPE type, int positionInStream = 0) {
             this.Type         = type;
             this.ID           = id;
             this.SaveFilePath = saveFilePath;
             this.Position     = positionInStream;
+            this.SenderAuth   = senderAuth;
 
             this.Stream = (EventStream) stream;
             ForceCreateStream();
@@ -171,13 +164,13 @@ namespace Universal_Share.Options {
                 case EventStream.TypeE.PositionSet:
                 case EventStream.TypeE.Close:
                 case EventStream.TypeE.Dispose: {
-                    this.Position = this.Stream.PositionWothoutEvent;
+                    this.Position = this.Stream.PositionWithoutEvent;
                     break;
                 }
             }
         }
 
-        public override string ToString() => "ID: " + this.ID  + "  | FilePath: " + this.SaveFilePath + "  | Type: " + this.Type;
+        public override string ToString() => "ID: " + this.ID + "  | FilePath: " + this.SaveFilePath + "  | Type: " + this.Type;
 
         public void Finished() {
             this.Stream?.Close();
@@ -211,5 +204,7 @@ namespace Universal_Share.Options {
             ARCHIFE,
             TEXT
         }
+
+        public static object[] AllTypes() { return new [] { TYPE.ARCHIFE.ToString(), TYPE.SINGLE_FILE.ToString(), TYPE.TEXT.ToString(), TYPE.UNKNOWN.ToString() }; }
     }
 }

@@ -24,9 +24,11 @@ namespace Universal_Share.Options {
             this.RegList.OnDictionaryChanged      += (sender, args) => ChangedEventHandler();
             this.RememberType.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
             this.IdStreamsMap.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
+            this.ToakenList.OnDictionaryChanged   += (sender, args) => ChangedEventHandler();
         }
 
-        [DebuggerStepThrough] private void ChangedEventHandler() { this.Changed = true; }
+        //[DebuggerStepThrough]
+        private void ChangedEventHandler() { this.Changed = true; }
     }
 
 
@@ -49,7 +51,7 @@ namespace Universal_Share.Options {
                 }
 
                 try {
-                    if ( t.CloseFileStream ) regInfo.Stream.Close();
+                    if ( t.CloseFileStream ) regInfo.Stream?.Close();
                     Process.Start( t.OpenWith, t.ArgumentsBeforePathToFile + " " + regInfo.SaveFilePath + " " + t.ArgumentsAfterPathToFile );
                     return true;
                 } catch (Exception e) {

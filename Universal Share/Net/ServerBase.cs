@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Universal_Share.Options;
 using Universal_Share.ProgMain;
 
@@ -13,7 +14,7 @@ namespace Universal_Share.Net
     public  class ServerBase : NetBase
     {
         
-        private (string, int) processOptionsServer(int id, byte[] option, byte[] contend) {
+        private (string, int) processOptionsServer(int id, byte[] option, byte[] contend,byte[] tokenBytes) {
             if ( options.isEqual( option, options.SAVE_TO_FILE ) ) {
                 var regi = ßMainPoint.S.IdStreamsMap.Get( id );
                 regi.CreateStream();
@@ -27,7 +28,7 @@ namespace Universal_Share.Net
 
                 Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) );
 
-                var regInfo = new RegInfo( null, id, finalSaveName, RegInfo.TYPE.SINGLE_FILE );
+                var regInfo = new RegInfo( null, id, finalSaveName, Convert.ToBase64String( tokenBytes ), RegInfo.TYPE.SINGLE_FILE );
                 ßMainPoint.S.IdStreamsMap.Add( id, regInfo );
             }
 
@@ -42,7 +43,7 @@ namespace Universal_Share.Net
 
             if ( !int.TryParse( Encoding.UTF8.GetString( idB ), out var id ) ) return ( ID_NOT_EXIST, id );
 
-            processOptionsServer( id, option, conetnd );
+            processOptionsServer( id, option, conetnd, token );
 
             Console.WriteLine( "Paket: id = [{0}] , Token(0,8) = [{1}]",  id , string.Join( ", ", SubArray( token,0,8 ) ) );
             return ( SUCCESS, id );
