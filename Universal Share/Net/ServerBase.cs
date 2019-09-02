@@ -13,33 +13,6 @@ namespace Universal_Share.Net
 {
     public  class ServerBase : NetBase
     {
-        
-        private (string, int) processOptionsServer(int id, byte[] option, byte[] contend,byte[] tokenBytes) {
-            try {
-                if ( options.isEqual( option, options.SAVE_TO_FILE ) ) {
-                    var regi = ßMainPoint.S.IdStreamsMap.Get( id );
-                    regi.CreateStream();
-                    regi.Stream.Write( contend, 0, contend.Length );
-                }
-                else if ( options.isEqual( option, options.CREATE_REGISTER ) ) {
-                    if ( ßMainPoint.S.IdStreamsMap.Contains( id ) ) return ( ID_ALREADY_EXISTS, id );
-
-                    var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( contend ) ) ).Split( Path.GetInvalidFileNameChars() ) );
-                    var finalSaveName = DEFAULT_SAVE_LOCATION + finalFileName;
-
-                    Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) );
-
-                    var regInfo = new RegInfo( null, id, finalSaveName, Convert.ToBase64String( tokenBytes ), RegInfo.TYPE.SINGLE_FILE );
-                    ßMainPoint.S.IdStreamsMap.Add( id, regInfo );
-                }
-            } catch (Exception e) {
-                return ( e.Message, id );
-            }
-
-            return ( SUCCESS, id );
-        }
-
-
         public (string, int) BufferBandServer(int readBytes, byte[] buffer) {
             ( var token, var idB, var option, var conetnd ) = Buffer_To_Parts( buffer, readBytes );
 
@@ -49,7 +22,7 @@ namespace Universal_Share.Net
             if ( !IsKeyVailed( token ) ) {
                 return ( TOKEN_NOT_ACCEPTED, id );
             }
-            ( var message, var idBX) =  processOptionsServer( id, option, conetnd, token );
+            ( var message, var idBX) =  processOptionsServer( token, id, option, conetnd );
             var ret = message == SUCCESS ? SUCCESS : message;
             Console.WriteLine( "Paket: id = [{0}] , Token(0,8) = [{1}]",  id , string.Join( ", ", SubArray( token,0,8 ) ) );
             return ( ret, id );
@@ -67,21 +40,15 @@ namespace Universal_Share.Net
             while ( readBytes != 0 ) {
                 readBytes = cl.Client.Receive( buffer, 0, buffer_size, SocketFlags.None, out errorCode );
                 if ( readBytes <= 0 ) break;
-                ( var message, var idRet ) = this.BufferBandServer( readBytes, buffer );
+                ( var message, var idRet ) = this.GlobalReversesProgresses( readBytes, buffer );
 
-                var option = message == SUCCESS ? options.SUCCESS : options.ERROR;
+                var option = message == SUCCESS ? Net.Option.SUCCESS : Net.Option.ERROR;
 
                 cl.Client.Send( Parts_To_Buffer( ßMainPoint.T, Encoding.UTF8.GetBytes( idRet.ToString() ),option , Encoding.UTF8.GetBytes( message ) ) );
 
                 blockCtr++;
                 totalReadBytes += readBytes;
             }
-
-            // if ( ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( id ) ) ) {
-            //     ßMainPoint.S.IdStreamsMap.Get( id ).Finished();
-            //     ßMainPoint.S.IdStreamsMap.Remove( id );
-            // }
         }
-
     }
 }

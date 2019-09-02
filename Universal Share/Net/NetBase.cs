@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Universal_Share.Interface;
+using Universal_Share.Options;
 using Universal_Share.ProgMain;
 using Universal_Share.Security;
 
@@ -40,7 +42,7 @@ namespace Universal_Share.Net {
 
             if ( ßMainPoint.S.ToakenList.ContainsKey( base64Key ) ) {
                 var ti = ßMainPoint.S.ToakenList.Get( base64Key );
-                options.isEqual( toaken, ti.TokenBytes );
+                Option.isEqual( toaken, ti.TokenBytes );
                 if ( ti.remember ) return ti.Trusted;
             }
 
@@ -85,5 +87,73 @@ namespace Universal_Share.Net {
             contendBytes.CopyTo( buffer, tokenBytes.Length + idBytes.Length + option.Length );
             return buffer;
         }
+
+        protected (string, int) GlobalReversesProgresses(int readBytes, byte[] buffer) {
+            ( var token, var idB, var option, var conetnd ) = Buffer_To_Parts( buffer, readBytes );
+
+            if ( !IsKeyVailed( token ) ) return ( TOKEN_NOT_ACCEPTED, -1 );
+            if ( !int.TryParse( Encoding.UTF8.GetString( idB ), out var id ) ) return ( ID_NOT_EXIST, -1 );
+
+            string message = "";
+            var    idBX    = 0;
+
+            switch (Option.OperationType( option )) {
+                case Option.Range.Server:
+                    ( message, idBX ) = processOptionsServer( token, id, option, conetnd );
+                    break;
+                case Option.Range.Client:
+                    ( message, idBX ) = processOptionsClient( token, id, option, conetnd );
+                    break;
+                case Option.Range.Special:
+                    ( message, idBX ) = processOptionsSpecial( token, id, option, conetnd );
+                    break;
+                case Option.Range.None: return ( UNKNOWN_ERROR, id );
+                default:                throw new ArgumentOutOfRangeException();
+            }
+
+            var ret = message == SUCCESS ? SUCCESS : message;
+            Console.WriteLine( "Paket: id = [{0}] , Token(0,8) = [{1}]", id, string.Join( ", ", SubArray( token, 0, 8 ) ) );
+            return ( ret, id );
+        }
+
+        protected (string, int) processOptionsSpecial(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
+            if ( Net.Option.isEqual( option, Net.Option.ERROR ) ) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine( Encoding.UTF8.GetString( contend ).Replace( Encoding.UTF8.GetString( new byte[] { 0 } ), "" ) );
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else if ( Net.Option.isEqual( option, Net.Option.SUCCESS ) ) {
+                //Console.WriteLine( Encoding.UTF8.GetString( contend ) );
+            }
+
+            return ( SUCCESS, id );
+        }
+
+        protected (string, int) processOptionsServer(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
+            try {
+                if ( Net.Option.isEqual( option, Net.Option.SAVE_TO_FILE ) ) {
+                    var regi = ßMainPoint.S.IdStreamsMap.Get( id );
+                    regi.CreateStream();
+                    regi.Stream.Write( contend, 0, contend.Length );
+                }
+                else if ( Net.Option.isEqual( option, Net.Option.CREATE_REGISTER ) ) {
+                    if ( ßMainPoint.S.IdStreamsMap.Contains( id ) ) return ( ID_ALREADY_EXISTS, id );
+
+                    var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( contend ) ) ).Split( Path.GetInvalidFileNameChars() ) );
+                    var finalSaveName = DEFAULT_SAVE_LOCATION + finalFileName;
+
+                    Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) );
+
+                    var regInfo = new RegInfo( null, id, finalSaveName, Convert.ToBase64String( tokenBytes ), RegInfo.TYPE.SINGLE_FILE );
+                    ßMainPoint.S.IdStreamsMap.Add( id, regInfo );
+                }
+            } catch (Exception e) {
+                return ( e.Message, id );
+            }
+
+            return ( SUCCESS, id );
+        }
+
+        protected (string, int) processOptionsClient(byte[] tokenBytes, int id, byte[] option, byte[] contend) { return ( SUCCESS, id ); }
     }
 }

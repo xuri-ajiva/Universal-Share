@@ -42,30 +42,19 @@ namespace Universal_Share.Net {
 
             if ( !int.TryParse( Encoding.UTF8.GetString( idArray ), out var id ) ) return ( ID_NOT_EXIST, -1 );
 
-            processOptionsClient( id, optionArray, contendArray );
+            processOptionsClient(tokenArray, id, optionArray, contendArray );
 
             Console.WriteLine( "Paket: id = [{0}] , Token(0,8) = [{1}]", string.Join( ", ", id ), string.Join( ", ", SubArray( tokenArray, 0, 8 ) ) );
             return ( SUCCESS, id );
         }
 
-        private (string, int) processOptionsClient(int id, byte[] option, byte[] contend) {
-            if ( options.isEqual( option, options.ERROR ) ) {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine( Encoding.UTF8.GetString( contend ).Replace( Encoding.UTF8.GetString( new byte[] { 0 } ), "" ) );
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-            else if ( options.isEqual( option, options.SUCCESS ) ) {
-                //Console.WriteLine( Encoding.UTF8.GetString( contend ) );
-            }
 
-            return ( SUCCESS, id );
-        }
 
         private (string, int) SendRegisterStream(TcpClient communicationSocket, String saveFileName, int id) {
             byte[] idB       = Encoding.UTF8.GetBytes( id.ToString() );
             byte[] filanemeB = Encoding.UTF8.GetBytes( saveFileName );
 
-            var b = Parts_To_Buffer( ßMainPoint.T, idB, options.CREATE_REGISTER, filanemeB );
+            var b = Parts_To_Buffer( ßMainPoint.T, idB, Option.CREATE_REGISTER, filanemeB );
 
             communicationSocket.Client.Send( b );
 
@@ -93,7 +82,7 @@ namespace Universal_Share.Net {
                 readerBytes = strm.Read( buffer, 0, buffer_size - heather_size );
                 if ( readerBytes == -1 ) break;
 
-                var ret = Parts_To_Buffer( ßMainPoint.T, idB, options.SAVE_TO_FILE, buffer );
+                var ret = Parts_To_Buffer( ßMainPoint.T, idB, Option.SAVE_TO_FILE, buffer );
 
                 cl.Client.Send( ret, SocketFlags.None );
 
@@ -103,7 +92,7 @@ namespace Universal_Share.Net {
 
                 //var sp = Buffer_To_Parts( buffer, readBytes2 );
 
-                var t = BufferBandClinet( readBytes2, buffer );
+                var t = GlobalReversesProgresses( readBytes2, buffer );
                 if ( t.Item2 == -1 ) Console.WriteLine( t.Item1 );
 
                 //Console.WriteLine( "Paket: id = " + id + "    | " + Encoding.UTF8.GetString( SubArray( buffer, 0, this.HeatherSize ) ) + "  :  [{0}]", string.Join( ", ", SubArray( buffer, 0, 8 ) ) );

@@ -1,17 +1,6 @@
 ﻿#region using
 
-using System;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using Universal_Share.Options;
-using Universal_Share.ProgMain;
-using Universal_Share.Security;
-using static Universal_Share.Net.options;
+
 
 // ReSharper disable UnusedMethodReturnValue.Global
 // ReSharper disable UnusedMethodReturnValue.Local
@@ -20,26 +9,7 @@ using static Universal_Share.Net.options;
 #endregion
 
 namespace Universal_Share.Net {
-    public class options {
-        public static readonly byte[] ERROR           = new byte[] { 255, 255, 255, 255 };
-        public static readonly byte[] SUCCESS         = new byte[] { 1, 1, 1, 1 };
-        public static readonly byte[] SAVE_TO_FILE    = new byte[] { 3, 2, 1, 1 };
-        public static readonly byte[] CREATE_REGISTER = new byte[] { 3, 4, 1, 1 };
-        public static readonly byte[] FILE_TYPE       = new byte[] { 9, 9, 0, 0 };
-
-        [DebuggerStepThrough]
-        public static bool isEqual(byte[] x1, byte[] x2) {
-            if ( x1 == null && x2 == null ) return false;
-            if ( x1.Length != x2.Length ) return false;
-            for ( int i = 0; i < x1.Length; i++ ) {
-                if ( x1[i] != x2[i] ) return false;
-            }
-
-            return true;
-        }
-    }
-
-    public partial class SharedComponents : NetworkFileSend {
+    public class SharedComponents : NetworkFileSend {
         //public int    BufferSize;
 
         public SharedComponents(int filePort = DEFAULT_FILE_PORT, int textPort = DEFAULT_TEXT_PORT, int bufferSize = DEFAULT_BUFFER_SIZE, string saveLocation = DEFAULT_SAVE_LOCATION) {

@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="Net\ClientBase.cs" />
     <Compile Include="Net\NetBase.cs" />
+    <Compile Include="Net\Option.cs" />
     <Compile Include="Net\ServerBase.cs" />
     <Compile Include="Options\RememberType.cs" />
     <Compile Include="ProgMain\MainPoint.cs" />
