@@ -8,21 +8,16 @@ using Universal_Share.Interface;
 namespace Universal_Share.Net {
     public class Server : SharedComponents {
         public void Start() {
-            TcpListener tcpFileListener = default;
-            tcpFileListener = new TcpListener( IPAddress.Any, this.FilePort );
+            var tcpFileListener = new TcpListener( IPAddress.Any, this.FilePort );
             tcpFileListener.Start();
             while ( true ) {
-                //try {
-                    SteamServer( tcpFileListener.AcceptTcpClient() );
-                //} catch (Exception e) {
-                //    Console.WriteLine( e.Message );
-                //}
+                SteamServer( tcpFileListener.AcceptTcpClient() );
             }
         }
 
-        public void CreateUI() {
+        public void CreateUi() {
             Application.EnableVisualStyles();
-            Application.Run(new ServerForm(this));
+            Application.Run( new ServerForm( this ) );
         }
     }
 }

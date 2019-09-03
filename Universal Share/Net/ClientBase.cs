@@ -29,28 +29,13 @@ namespace Universal_Share.Net {
 
                 Console.WriteLine( "Finished!" );
                 fileSocket.Close();
-                return ret1;
+                return ( ret1, id );
             } catch (Exception e) {
                 return ( e.Message, id );
             }
         }
 
-        public (string, int) BufferBandClinet(int readBytes, byte[] buffer) {
-            ( var tokenArray, var idArray, var optionArray, var contendArray ) = Buffer_To_Parts( buffer, readBytes );
-
-            if ( !IsKeyVailed( tokenArray ) ) return ( KEY_NOT_VALID, -1 );
-
-            if ( !int.TryParse( Encoding.UTF8.GetString( idArray ), out var id ) ) return ( ID_NOT_EXIST, -1 );
-
-            processOptionsClient(tokenArray, id, optionArray, contendArray );
-
-            Console.WriteLine( "Paket: id = [{0}] , Token(0,8) = [{1}]", string.Join( ", ", id ), string.Join( ", ", SubArray( tokenArray, 0, 8 ) ) );
-            return ( SUCCESS, id );
-        }
-
-
-
-        private (string, int) SendRegisterStream(TcpClient communicationSocket, String saveFileName, int id) {
+        private string SendRegisterStream(TcpClient communicationSocket, String saveFileName, int id) {
             byte[] idB       = Encoding.UTF8.GetBytes( id.ToString() );
             byte[] filanemeB = Encoding.UTF8.GetBytes( saveFileName );
 
@@ -63,7 +48,7 @@ namespace Universal_Share.Net {
 
             var t = Buffer_To_Parts( buffer, readet );
 
-            return ( Encoding.UTF8.GetString( t.Item4 ), id );
+            return ( Encoding.UTF8.GetString( t.Item4 ) );
         }
 
         public void SteamClient(TcpClient cl, string filename, int id) {

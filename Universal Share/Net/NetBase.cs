@@ -94,29 +94,28 @@ namespace Universal_Share.Net {
             if ( !IsKeyVailed( token ) ) return ( TOKEN_NOT_ACCEPTED, -1 );
             if ( !int.TryParse( Encoding.UTF8.GetString( idB ), out var id ) ) return ( ID_NOT_EXIST, -1 );
 
-            string message = "";
-            var    idBX    = 0;
+            string message;
 
             switch (Option.OperationType( option )) {
                 case Option.Range.Server:
-                    ( message, idBX ) = processOptionsServer( token, id, option, conetnd );
+                    ( message ) = processOptionsServer( token, id, option, conetnd );
                     break;
                 case Option.Range.Client:
-                    ( message, idBX ) = processOptionsClient( token, id, option, conetnd );
+                    ( message ) = processOptionsClient( token, id, option, conetnd );
                     break;
                 case Option.Range.Special:
-                    ( message, idBX ) = processOptionsSpecial( token, id, option, conetnd );
+                    ( message ) = processOptionsSpecial( token, id, option, conetnd );
                     break;
                 case Option.Range.None: return ( UNKNOWN_ERROR, id );
                 default:                throw new ArgumentOutOfRangeException();
             }
 
             var ret = message == SUCCESS ? SUCCESS : message;
-            Console.WriteLine( "Paket: id = [{0}] , Token(0,8) = [{1}]", id, string.Join( ", ", SubArray( token, 0, 8 ) ) );
+            Console.WriteLine( Resources.NetBase_PaketAndToaken, id, string.Join( ", ", SubArray( token, 0, 8 ) ) );
             return ( ret, id );
         }
 
-        protected (string, int) processOptionsSpecial(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
+        protected string processOptionsSpecial(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
             if ( Net.Option.isEqual( option, Net.Option.ERROR ) ) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine( Encoding.UTF8.GetString( contend ).Replace( Encoding.UTF8.GetString( new byte[] { 0 } ), "" ) );
@@ -126,10 +125,10 @@ namespace Universal_Share.Net {
                 //Console.WriteLine( Encoding.UTF8.GetString( contend ) );
             }
 
-            return ( SUCCESS, id );
+            return ( SUCCESS );
         }
 
-        protected (string, int) processOptionsServer(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
+        protected string processOptionsServer(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
             try {
                 if ( Net.Option.isEqual( option, Net.Option.SAVE_TO_FILE ) ) {
                     var regi = ßMainPoint.S.IdStreamsMap.Get( id );
@@ -137,7 +136,7 @@ namespace Universal_Share.Net {
                     regi.Stream.Write( contend, 0, contend.Length );
                 }
                 else if ( Net.Option.isEqual( option, Net.Option.CREATE_REGISTER ) ) {
-                    if ( ßMainPoint.S.IdStreamsMap.Contains( id ) ) return ( ID_ALREADY_EXISTS, id );
+                    if ( ßMainPoint.S.IdStreamsMap.Contains( id ) ) return ( ID_ALREADY_EXISTS );
 
                     var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( contend ) ) ).Split( Path.GetInvalidFileNameChars() ) );
                     var finalSaveName = DEFAULT_SAVE_LOCATION + finalFileName;
@@ -148,12 +147,12 @@ namespace Universal_Share.Net {
                     ßMainPoint.S.IdStreamsMap.Add( id, regInfo );
                 }
             } catch (Exception e) {
-                return ( e.Message, id );
+                return ( e.Message );
             }
 
-            return ( SUCCESS, id );
+            return ( SUCCESS );
         }
 
-        protected (string, int) processOptionsClient(byte[] tokenBytes, int id, byte[] option, byte[] contend) { return ( SUCCESS, id ); }
+        protected string processOptionsClient(byte[] tokenBytes, int id, byte[] option, byte[] contend) { return ( SUCCESS ); }
     }
 }

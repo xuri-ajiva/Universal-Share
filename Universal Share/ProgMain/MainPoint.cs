@@ -9,6 +9,7 @@ using Universal_Share.Interface;
 using Universal_Share.Net;
 using Universal_Share.Options;
 using Universal_Share.Security;
+#pragma warning disable 162
 
 //// ReSharper disable ConditionIsAlwaysTrueOrFalse
 //// ReSharper disable HeuristicUnreachableCode
@@ -20,21 +21,22 @@ namespace Universal_Share.ProgMain {
         private const bool SERVER         = true;
         private const bool START_OPPOSITE = true;
 
-        private static readonly ßProgram  _prgMain   = new ßProgram();
-        private static          UserInput _userInput = new UserInput();
-        private static          Auth      _auth      = new Auth();
-        private static          Editor    _editor    = new Editor();
+        private static ßProgram  _prgMain;
+        private static Auth      _auth;
+        private static Editor    _editor;
+        private static UserInput _userInput;
 
-        public static byte[]    K       { get => _auth.KeyBytes; }
-        public static byte[]    T       { get => _auth.TokenBytes; }
+        public static byte[]    K => _auth.KeyBytes;
+        public static byte[]    T => _auth.TokenBytes;
         public static Settings  S       { get => _prgMain.settings; set => _prgMain.settings = value; }
-        public static UserInput U       { get => _userInput;        set => _userInput = value; }
-        public static ßProgram  PrgMain => _prgMain;
-        public static Editor    E  => _editor;
+        public static UserInput U { get => _userInput; private set => _userInput = value; }
+        public static ßProgram  P => _prgMain;
+        public static Editor    E       => _editor;
 
         public static void Main(string[] args) {
             Application.EnableVisualStyles();
-            PreInizialze();
+            Application.SetCompatibleTextRenderingDefault( true );
+            PreInitialize();
 
             if ( DEBUG ) {
                 if ( args.Length == 0 ) {
@@ -42,15 +44,15 @@ namespace Universal_Share.ProgMain {
                         SettingsStatic.SAVE_PATH_S = "S_" + SettingsStatic.SAVE_PATH_S;
                         Console.WriteLine( "starting Server..." );
                         Console.Title = "server";
-                        InizialzeAll();
+                        InitializeAll();
                         if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "C" );
-                        new Server().CreateUI();
+                        new Server().CreateUi();
                     }
                     else {
                         SettingsStatic.SAVE_PATH_S = "C_" + SettingsStatic.SAVE_PATH_S;
                         Console.WriteLine( "starting Client..." );
                         Console.Title = "client";
-                        InizialzeAll();
+                        InitializeAll();
                         if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "S" );
                         new Client().Start();
                     }
@@ -63,7 +65,14 @@ namespace Universal_Share.ProgMain {
                 StartNormal( args );
         }
 
-        private static void PreInizialze() { hocks.Exit.CreateHock(); }
+        private static void PreInitialize() {
+            _prgMain   = new ßProgram();
+            U = new UserInput();
+            _auth      = new Auth();
+            _editor    = new Editor();
+
+            hocks.Exit.CreateHock();
+        }
 
         public static bool Exit(hocks.Exit.CtrlType sig = hocks.Exit.CtrlType.CTRL_BREAK_EVENT) {
             Console.WriteLine( sig.ToString() );
@@ -76,12 +85,12 @@ namespace Universal_Share.ProgMain {
             }
         }
 
-        public static void InizialzeAll() {
+        public static void InitializeAll() {
             try {
-                Settings.Load( PrgMain );
+                Settings.Load( P );
             } catch (Exception e) {
                 Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine( e.Message + "\n Die Settings Datei Wird Gelöscht..." );
+                Console.WriteLine( e.Message + Resources.XmlLoad_DeleatingFile );
                 Console.BackgroundColor = ConsoleColor.Black;
                 try {
                     File.Delete( SettingsStatic.SAVE_PATH_S );
@@ -94,7 +103,7 @@ namespace Universal_Share.ProgMain {
 
             var t = new Thread( () => {
                 while ( true ) {
-                    if ( S.Changed ) Settings.Save( PrgMain );
+                    if ( S.Changed ) Settings.Save( P );
                     Thread.Sleep( 1000 );
                 }
             } );
@@ -116,14 +125,14 @@ namespace Universal_Share.ProgMain {
                         SettingsStatic.SAVE_PATH_S = "S_" + SettingsStatic.SAVE_PATH_S;
                         Console.WriteLine( "starting Server..." );
                         Console.Title = "server";
-                        InizialzeAll();
+                        InitializeAll();
                         new Server().Start();
                         break;
                     case "c":
                         SettingsStatic.SAVE_PATH_S = "C_" + SettingsStatic.SAVE_PATH_S;
                         Console.WriteLine( "starting Client..." );
                         Console.Title = "client";
-                        InizialzeAll();
+                        InitializeAll();
                         new Client().Start();
                         break;
                 }
