@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -10,6 +11,7 @@ using Universal_Share.ProgMain;
 namespace Universal_Share.Net {
     public class ServerBase : NetBase {
         public void SteamServer(TcpClient cl) {
+            Console.WriteLine( "Server Started" );
             var errorCode = SocketError.NotConnected;
 
             var readBytes = -1;

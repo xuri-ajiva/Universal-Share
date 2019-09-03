@@ -9,6 +9,7 @@ using Universal_Share.Interface;
 using Universal_Share.Net;
 using Universal_Share.Options;
 using Universal_Share.Security;
+
 #pragma warning disable 162
 
 //// ReSharper disable ConditionIsAlwaysTrueOrFalse
@@ -28,10 +29,12 @@ namespace Universal_Share.ProgMain {
 
         public static byte[]    K => _auth.KeyBytes;
         public static byte[]    T => _auth.TokenBytes;
-        public static Settings  S       { get => _prgMain.settings; set => _prgMain.settings = value; }
-        public static UserInput U { get => _userInput; private set => _userInput = value; }
+        public static Settings  S { get => _prgMain.settings; set => _prgMain.settings = value; }
+        public static UserInput U { get => _userInput;        private set => _userInput = value; }
         public static ßProgram  P => _prgMain;
-        public static Editor    E       => _editor;
+        public static Editor    E => _editor;
+
+        private static ISharedAble CurrentState;
 
         public static void Main(string[] args) {
             Application.EnableVisualStyles();
@@ -46,7 +49,7 @@ namespace Universal_Share.ProgMain {
                         Console.Title = "server";
                         InitializeAll();
                         if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "C" );
-                        new Server().CreateUi();
+                        CreateUi( true );
                     }
                     else {
                         SettingsStatic.SAVE_PATH_S = "C_" + SettingsStatic.SAVE_PATH_S;
@@ -54,7 +57,7 @@ namespace Universal_Share.ProgMain {
                         Console.Title = "client";
                         InitializeAll();
                         if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "S" );
-                        new Client().Start();
+                        CreateUi( false );
                     }
                 }
                 else {
@@ -66,12 +69,23 @@ namespace Universal_Share.ProgMain {
         }
 
         private static void PreInitialize() {
-            _prgMain   = new ßProgram();
-            U = new UserInput();
-            _auth      = new Auth();
-            _editor    = new Editor();
+            _prgMain = new ßProgram();
+            U        = new UserInput();
+            _auth    = new Auth();
+            _editor  = new Editor();
 
             hocks.Exit.CreateHock();
+        }
+
+        public static void CreateUi(bool isServer) {
+            Application.EnableVisualStyles();
+            if ( isServer )
+                CurrentState = new Server();
+            else
+                CurrentState = new Client();
+
+            var form = new ServerForm( CurrentState, isServer ) { Text = CurrentState.GetType().Name };
+            Application.Run( form );
         }
 
         public static bool Exit(hocks.Exit.CtrlType sig = hocks.Exit.CtrlType.CTRL_BREAK_EVENT) {
@@ -126,14 +140,14 @@ namespace Universal_Share.ProgMain {
                         Console.WriteLine( "starting Server..." );
                         Console.Title = "server";
                         InitializeAll();
-                        new Server().Start();
+                        CreateUi( true );
                         break;
                     case "c":
                         SettingsStatic.SAVE_PATH_S = "C_" + SettingsStatic.SAVE_PATH_S;
                         Console.WriteLine( "starting Client..." );
                         Console.Title = "client";
                         InitializeAll();
-                        new Client().Start();
+                        CreateUi( false );
                         break;
                 }
             }

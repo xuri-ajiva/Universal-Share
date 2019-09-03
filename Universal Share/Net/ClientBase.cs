@@ -11,14 +11,17 @@ using Universal_Share.ProgMain;
 
 namespace Universal_Share.Net {
     public class ClientBase : ServerBase {
-        public (string, int) SendFile(IPAddress remoteHost, string fileName) {
+        public TcpClient OpenIpAddress(IPAddress ipAddress) {
+            var ipendF     = new IPEndPoint( ipAddress, FilePort );
+            var fileSocket = new TcpClient();
+            fileSocket.Connect( ipendF );
+            return fileSocket;
+        }
+
+
+        public (string, int) SendFile(TcpClient fileSocket, string fileName) {
             var id = 0;
             try {
-                var ipendF = new IPEndPoint( remoteHost, FilePort );
-
-                var fileSocket = new TcpClient();
-                fileSocket.Connect( ipendF );
-
                 id = new Random().Next( 10000000, 19999999 );
 
                 var ret1 = SendRegisterStream( fileSocket, Path.GetFileName( fileName ), id );
@@ -26,9 +29,6 @@ namespace Universal_Share.Net {
                 Thread.Sleep( 100 );
 
                 SteamClient( fileSocket, fileName, id );
-
-                Console.WriteLine( "Finished!" );
-                fileSocket.Close();
                 return ( ret1, id );
             } catch (Exception e) {
                 return ( e.Message, id );

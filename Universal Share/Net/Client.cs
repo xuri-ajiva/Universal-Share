@@ -1,22 +1,31 @@
 ﻿using System;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 
 namespace Universal_Share.Net {
-    public class Client : SharedComponents {
-        public void Start() {
-            var ip = IPAddress.Parse( "127.0.0.1" );
+    public class Client : SharedComponents, ISharedAble {
+        private TcpClient tcpClient;
 
+        public void Start(IPAddress ipAddress) {
+            //var ip = IPAddress.Parse( "127.0.0.1" );
+            this.tcpClient = OpenIpAddress( ipAddress );
             while ( true ) {
                 try {
-                    SendFile( ip, "..\\..\\..\\test.exe" );
+                    SendFile( this.tcpClient, "..\\..\\..\\test.exe" );
                     Thread.Sleep( 1000 );
                 } catch (Exception e) {
                     Console.WriteLine( e.Message );
                     Thread.Sleep( 1000 );
                 }
             }
+
             // ReSharper disable once FunctionNeverReturns
+        }
+
+        /// <inheritdoc />
+        public void Abort() {
+            this.tcpClient.Close();
         }
     }
 }

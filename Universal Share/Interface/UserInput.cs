@@ -49,6 +49,13 @@ namespace Universal_Share.Interface {
             ChackboxChecked        = false;
         }
 
+        public string getString(string description,string example) {
+            ResetAndInfo( description );
+            this._DescriptionBox.Text = example;
+            this.ShowDialog();
+            return this._DescriptionBox.Text;
+        }
+
         private void InitializeComponent() {
             this._noButton       = new System.Windows.Forms.Button();
             this._yesButton      = new System.Windows.Forms.Button();

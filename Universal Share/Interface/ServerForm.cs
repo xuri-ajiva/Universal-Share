@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,20 +17,21 @@ using Universal_Share.Security;
 
 namespace Universal_Share.Interface {
     public partial class ServerForm : Form {
-        private Server _server;
-        private Thread _serverThread;
+        private ISharedAble _server;
+        private Thread      _serverThread;
+        private bool        isServer;
 
         const string BASE_ITEM = "BASE_ITEM";
 
-        private void StartServer(Server s) {
-            s.Start();
-            Thread.Sleep( int.MaxValue );
+        private void StartServer(ISharedAble s, IPAddress ipAddress) {
+            s.Start( ipAddress );
+            //Thread.Sleep( int.MaxValue );
         }
 
-        public ServerForm(Server s) {
-            this._server = s;
-
-            this._serverThread = new Thread( () => StartServer( this._server ) );
+        public ServerForm(ISharedAble s, bool isServer) {
+            this._serverThread = new Thread( () => { } );
+            this._server       = s;
+            this.isServer      = isServer;
 
             InitializeComponent();
 
@@ -72,10 +74,37 @@ namespace Universal_Share.Interface {
         public static ListViewItem[] _tmp;
 
         private void B_StartServer_Click(object sender, EventArgs e) {
-            if ( !this._serverThread.IsAlive ) this._serverThread.Start();
+            if ( this.isServer ) {
+                if ( !this._serverThread.IsAlive ) {
+                    this._serverThread = null;
+                    GC.Collect();
+                    this._serverThread = new Thread( () => StartServer( this._server, IPAddress.Any ) );
+
+                    this._serverThread.Start();
+                }
+            }
+            else {
+                if ( !this._serverThread.IsAlive ) {
+                    try {
+                        this._serverThread = null;
+                        GC.Collect();
+                        var ip = ßMainPoint.U.getString( "Bitte IP Addresse Eintragen", "127.0.0.1" );
+                        this._serverThread = new Thread( () => StartServer( this._server, IPAddress.Parse( ip ) ) );
+
+                        this._serverThread.Start();
+                    } catch (Exception ex) {
+                        MessageBox.Show( ex.Message );
+                    }
+                }
+            }
         }
 
-        private void Stop_Click(object sender, EventArgs e) { this._serverThread.Abort(); }
+        private void Stop_Click(object sender, EventArgs e) {
+            if ( this._serverThread.IsAlive ) {
+                this._server.Abort();
+                this._serverThread.Abort();
+            }
+        }
 
         private ListView.SelectedListViewItemCollection currentItem;
 
