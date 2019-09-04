@@ -1,16 +1,15 @@
-﻿using Universal_Share.Net;
-using Universal_Share.Options;
+﻿using Universal_Share.Options;
 
 namespace Universal_Share.ProgMain
 {
    public class ßProgram {
-        private BuildId buildId;
+        //private BuildId _buildId;
+        //
+        //public ßProgram() {
+        //    this._buildId = new BuildId();
+        //}
 
-        public ßProgram() {
-            this.buildId = new BuildId();
-        }
-
-       public Settings settings = new Settings();
+       public Settings Settings = new Settings();
 
     }
 }

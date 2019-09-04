@@ -4,7 +4,8 @@ using System.Xml.Serialization;
 namespace Universal_Share.Options {
     [Serializable, XmlInclude( typeof(TypeHolder) )]
     public struct TypeHolder {
-        public static readonly TypeHolder Empty;
+        // ReSharper disable once UnusedMember.Global
+        public static readonly TypeHolder Empty = new TypeHolder();
 
         public TypeHolder(string openWith, string argumentsBeforePathToFile, string argumentsAfterPathToFile, bool userConfirm, string description, bool closeFileStream) {
             this.OpenWith                  = openWith;

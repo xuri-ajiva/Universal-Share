@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
@@ -11,9 +7,9 @@ namespace Universal_Share.Options {
     public struct RememberType {
         [XmlAttribute] public DialogResult Value;
         public                string       Description;
-        [XmlAttribute] public RegInfo.TYPE Type;
+        [XmlAttribute] public RegInfo.Type Type;
 
-        public RememberType(string description, DialogResult value, RegInfo.TYPE type) {
+        public RememberType(string description, DialogResult value, RegInfo.Type type) {
             this.Description = description;
             this.Value       = value;
             this.Type        = type;

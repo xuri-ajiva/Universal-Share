@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 using Universal_Share.ProgMain;
+// ReSharper disable InconsistentNaming
 
 namespace Universal_Share.hocks {
     public class Exit {
@@ -12,7 +8,7 @@ namespace Universal_Share.hocks {
 
         private delegate bool EventHandler(CtrlType sig);
 
-        static EventHandler _handler;
+        private static EventHandler _handler;
 
 
         public enum CtrlType {
@@ -26,7 +22,7 @@ namespace Universal_Share.hocks {
         private static bool Handler(CtrlType sig) { return ßMainPoint.Exit( sig ); }
 
         public static void CreateHock() {
-            _handler += new EventHandler( Handler );
+            _handler += Handler;
             SetConsoleCtrlHandler( _handler, true );
         }
     }

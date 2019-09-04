@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing.Design;
 using System.IO;
-using System.Threading;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 using Universal_Share.ProgMain;
 using Universal_Share.Security;
 
 namespace Universal_Share.Options {
     public partial class Settings {
-        [XmlIgnore] public bool Changed = false;
+        [XmlIgnore] public bool Changed;
 
 
-        public SerializableDictionary<RegInfo.TYPE, TypeHolder>   RegList      = new SerializableDictionary<RegInfo.TYPE, TypeHolder>();
-        public SerializableDictionary<RegInfo.TYPE, RememberType> RememberType = new SerializableDictionary<RegInfo.TYPE, RememberType>();
+        public SerializableDictionary<RegInfo.Type, TypeHolder>   RegList      = new SerializableDictionary<RegInfo.Type, TypeHolder>();
+        public SerializableDictionary<RegInfo.Type, RememberType> RememberType = new SerializableDictionary<RegInfo.Type, RememberType>();
         public SerializableDictionary<int, RegInfo>               IdStreamsMap = new SerializableDictionary<int, RegInfo>();
         public SerializableDictionary<string, TokenItem>          ToakenList   = new SerializableDictionary<string, TokenItem>();
 
         public Settings() { CreatedEventHandler(); }
 
-        public void CreatedEventHandler() {
+        private void CreatedEventHandler() {
             this.RegList.OnDictionaryChanged      += (sender, args) => ChangedEventHandler();
             this.RememberType.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
             this.IdStreamsMap.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
@@ -33,12 +30,12 @@ namespace Universal_Share.Options {
 
 
     public partial class Settings {
-        public bool execute(RegInfo regInfo) {
-            if ( this.RegList.Contains( regInfo.Type ) ) {
-                var t = this.RegList.Get( regInfo.Type );
+        public bool Execute(RegInfo regInfo) {
+            if ( this.RegList.ContainsKey( regInfo.TypeP ) ) {
+                var t = this.RegList.Get( regInfo.TypeP );
                 if ( t.UserConfirm ) {
-                    if ( this.RememberType.Contains( regInfo.Type ) )
-                        if ( this.RememberType.Get( regInfo.Type ).IsOkOrYes() )
+                    if ( this.RememberType.ContainsKey( regInfo.TypeP ) )
+                        if ( this.RememberType.Get( regInfo.TypeP ).IsOkOrYes() )
                             goto start;
                         else { return false; }
 
@@ -64,25 +61,23 @@ namespace Universal_Share.Options {
         }
 
         public static void Load(ßProgram p) {
-            p.settings = LOAD<Settings>( SettingsStatic.SAVE_PATH_S ) ?? throw new NullReferenceException();
-            p.settings.CreatedEventHandler();
+            p.Settings = Load<Settings>( SettingsStatic.SavePathS ) ?? throw new NullReferenceException();
+            p.Settings.CreatedEventHandler();
         }
 
-        public static void Save(ßProgram p) { SAVE( p.settings, SettingsStatic.SAVE_PATH_S ); }
+        public static void Save(ßProgram p) { Save( p.Settings, SettingsStatic.SavePathS ); }
 
 
-        public static T LOAD <T>(string path) {
-            XmlSerializer xmlSerializer = null;
+        private static T Load <T>(string path) {
             FileStream    fileStream    = null;
             try {
                 if ( !File.Exists( path ) ) throw new IOException( "File Dose Not Exists" );
-                xmlSerializer = new XmlSerializer( typeof(T) );
+                var xmlSerializer = new XmlSerializer( typeof(T) );
                 fileStream    = new FileStream( path, FileMode.Open, FileAccess.Read, FileShare.Read );
-                T obj = (T) xmlSerializer.Deserialize( fileStream );
+                var obj = (T) xmlSerializer.Deserialize( fileStream );
                 fileStream.Close();
                 return obj;
             } catch (Exception ex) {
-                xmlSerializer = null;
                 fileStream?.Close();
                 fileStream?.Dispose();
                 Console.WriteLine( ex.Message );
@@ -91,17 +86,15 @@ namespace Universal_Share.Options {
             return default;
         }
 
-        public static void SAVE <T>(T dataLayout, string path) {
-            XmlSerializer xmlSerializer = null;
+        private static void Save <T>(T dataLayout, string path) {
             TextWriter    textWriter    = null;
             try {
                 new FileInfo( path ).Directory?.Create();
-                xmlSerializer = new XmlSerializer( dataLayout.GetType() );
+                var xmlSerializer = new XmlSerializer( dataLayout.GetType() );
                 textWriter    = new StreamWriter( path );
                 xmlSerializer.Serialize( textWriter, dataLayout );
                 textWriter.Close();
             } catch (Exception ex) {
-                xmlSerializer = null;
                 textWriter?.Close();
                 textWriter?.Dispose();
                 Console.WriteLine( ex.Message );

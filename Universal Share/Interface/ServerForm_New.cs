@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Universal_Share.Options;
 using Universal_Share.ProgMain;
@@ -13,10 +9,10 @@ namespace Universal_Share.Interface {
     public partial class ServerForm {
         public ListViewItem ListViewFind(ListView ls, string key, bool sub) {
             if ( ls.InvokeRequired )
-                ls.Invoke( new Action( () => { _tmp = ls.Items.Find( key, sub ); } ) );
+                ls.Invoke( new Action( () => { Tmp = ls.Items.Find( key, sub ); } ) );
             else
-                _tmp = ls.Items.Find( key, sub );
-            return _tmp[0];
+                Tmp = ls.Items.Find( key, sub );
+            return Tmp[0];
         }
 
         public void ListViewAdd(ListView ls, ListViewItem item) {
@@ -44,14 +40,14 @@ namespace Universal_Share.Interface {
             var item = ls.SelectedItems[0];
             if ( item.Text == BASE_ITEM ) return;
 
-            ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( item.Text ) ) );
+            ßMainPoint.S.Execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( item.Text ) ) );
         }
 
         private void _TokenList_DoubleClick(object sender, EventArgs e) {
             if ( !( sender is ListView ls ) ) return;
             var item = ls.SelectedItems[0];
             if ( item.Text == BASE_ITEM ) return;
-            if ( MessageBox.Show( "Remove Toaken?\n" + item.Text, "", MessageBoxButtons.YesNoCancel ) == DialogResult.Yes ) {
+            if ( MessageBox.Show( Resources.ServerForm__TokenList_DoubleClick_ + item.Text, "", MessageBoxButtons.YesNoCancel ) == DialogResult.Yes ) {
                 ßMainPoint.S.ToakenList.Remove( item.Text );
             }
         }
@@ -60,8 +56,8 @@ namespace Universal_Share.Interface {
             if ( !( sender is ListView ls ) ) return;
             var item = ls.SelectedItems[0];
             if ( item.Text == BASE_ITEM ) return;
-            if ( MessageBox.Show( "Remove RememberAccess?\n" + item.Text, "", MessageBoxButtons.YesNoCancel ) == DialogResult.Yes ) {
-                if ( Enum.TryParse<RegInfo.TYPE>( item.Text, out var ty ) ) {
+            if ( MessageBox.Show( Resources.ServerForm__RememberList_DoubleClick_ + item.Text, "", MessageBoxButtons.YesNoCancel ) == DialogResult.Yes ) {
+                if ( Enum.TryParse<RegInfo.Type>( item.Text, out var ty ) ) {
                     ßMainPoint.S.RememberType.Remove( ty );
                 }
             }
@@ -71,8 +67,8 @@ namespace Universal_Share.Interface {
             if ( !( sender is ListView ls ) ) return;
             var item = ls.SelectedItems[0];
             if ( item.Text == BASE_ITEM ) return;
-            if ( MessageBox.Show( "Remove Reg?\n" + item.Text, "", MessageBoxButtons.YesNoCancel ) == DialogResult.Yes ) {
-                if ( Enum.TryParse<RegInfo.TYPE>( item.Text, out var ty ) ) {
+            if ( MessageBox.Show( Resources.ServerForm__RegList_DoubleClick_ + item.Text, "", MessageBoxButtons.YesNoCancel ) == DialogResult.Yes ) {
+                if ( Enum.TryParse<RegInfo.Type>( item.Text, out var ty ) ) {
                     ßMainPoint.S.RegList.Remove( ty );
                 }
             }
@@ -80,26 +76,18 @@ namespace Universal_Share.Interface {
     }
 
     public partial class ServerForm {
-        private void Changed <T, V>(DictChangedEventArgs<T, V> e) {
+        private void Changed <T, TV>(DictChangedEventArgs<T, TV> e) {
             switch (e.Type) {
                 case TypeE.AddItem:    break;
                 case TypeE.RemoveItem: break;
                 case TypeE.Clear:      break;
-                case TypeE.TryGetValue:
-                case TypeE.Contains:
-                case TypeE.ContainsKey:
-                case TypeE.CopyTo:
-                case TypeE.Count:
-                case TypeE.GetAt:
-                case TypeE.SetAt:
-                case TypeE.GetEnumerator:
-                default: return;
+                default:               return;
             }
 
             ListView ls = null;
 
-            if ( typeof(T) == typeof(RegInfo.TYPE) ) {
-                if ( typeof(V) == typeof(RememberType) ) {
+            if ( typeof(T) == typeof(RegInfo.Type) ) {
+                if ( typeof(TV) == typeof(RememberType) ) {
                     ls = this._RememberList;
                 }
                 else {
@@ -127,32 +115,24 @@ namespace Universal_Share.Interface {
             }
         }
 
-        private void RememberTypeOnOnDictionaryChanged(object sender, DictChangedEventArgs<RegInfo.TYPE, RememberType> e) { Changed( e ); }
+        private void RememberTypeOnOnDictionaryChanged(object sender, DictChangedEventArgs<RegInfo.Type, RememberType> e) { Changed( e ); }
 
         private void TokenListOnOnDictionaryChanged(object sender, DictChangedEventArgs<string, TokenItem> e) {
             switch (e.Type) {
                 case TypeE.AddItem:    break;
                 case TypeE.RemoveItem: break;
                 case TypeE.Clear:      break;
-                case TypeE.TryGetValue:
-                case TypeE.Contains:
-                case TypeE.ContainsKey:
-                case TypeE.CopyTo:
-                case TypeE.Count:
-                case TypeE.GetAt:
-                case TypeE.SetAt:
-                case TypeE.GetEnumerator:
                 default: return;
             }
 
             Changed( e );
         }
 
-        private void RegListOnOnDictionaryChanged(object    sender, DictChangedEventArgs<RegInfo.TYPE, TypeHolder> e) { Changed( e ); }
+        private void RegListOnOnDictionaryChanged(object    sender, DictChangedEventArgs<RegInfo.Type, TypeHolder> e) { Changed( e ); }
         private void IdStreamsMapOnDictionaryChanged(object sender, DictChangedEventArgs<int, RegInfo>             e) { Changed( e ); }
         private void ClearListItems(ListView                ls) { ls.Items.Clear(); }
 
-        private void RemoveListItem <T, V>(ListView ls, DictChangedEventArgs<T, V> e) {
+        private void RemoveListItem <T, TV>(ListView ls, DictChangedEventArgs<T, TV> e) {
             var x = ListViewFind( ls, CreateName( e.Key.ToString() ), true );
 
             ListViewRemove( ls, x );
@@ -160,6 +140,7 @@ namespace Universal_Share.Interface {
             //FullUpdate( ls );
         }
 
+/*
         private void FullUpdate(ListView ls) {
             ClearListItems( ls );
 
@@ -190,33 +171,34 @@ namespace Universal_Share.Interface {
                     break;
             }
         }
+*/
 
-        private void AddListItem <T, V>(ListView ls, DictChangedEventArgs<T, V> e) { ListViewAdd( ls, CreateFromDictChange( e ) ); }
+        private void AddListItem <T, TV>(ListView ls, DictChangedEventArgs<T, TV> e) { ListViewAdd( ls, CreateFromDictChange( e ) ); }
 
-        private ListViewItem CreateFromDictChange <T, V>(DictChangedEventArgs<T, V> e) {
+        private ListViewItem CreateFromDictChange <T, TV>(DictChangedEventArgs<T, TV> e) {
             var key = CreateName( e.Key.ToString() );
 
             var it = new ListViewItem( key );
             it.Name     = key;
             it.ImageKey = key;
             try {
-                if ( typeof(V) == typeof(RegInfo) && e.Value is RegInfo rg ) {
-                    it.SubItems.Add( rg.Type.ToString() );
+                if ( typeof(TV) == typeof(RegInfo) && e.Value is RegInfo rg ) {
+                    it.SubItems.Add( rg.TypeP.ToString() );
                     it.SubItems.Add( ( rg.Position.ToString() ) );
                     it.SubItems.Add( ( rg.SenderAuth ) );
                     it.SubItems.Add( ( rg.SaveFilePath ) );
                 }
-                else if ( typeof(V) == typeof(TokenItem) && e.Value is TokenItem ti ) {
+                else if ( typeof(TV) == typeof(TokenItem) && e.Value is TokenItem ti ) {
                     it.SubItems.Add( ti.Trusted.ToString() );
-                    it.SubItems.Add( ( ti.remember.ToString() ) );
+                    it.SubItems.Add( ( ti.Remember.ToString() ) );
                     it.SubItems.Add( ( ti.Description ) );
                 }
-                else if ( typeof(V) == typeof(RememberType) && e.Value is RememberType rm ) {
+                else if ( typeof(TV) == typeof(RememberType) && e.Value is RememberType rm ) {
                     it.SubItems.Add( rm.Type.ToString() );
                     it.SubItems.Add( ( rm.Value.ToString() ) );
                     it.SubItems.Add( ( rm.Description ) );
                 }
-                else if ( typeof(V) == typeof(TypeHolder) && e.Value is TypeHolder th ) {
+                else if ( typeof(TV) == typeof(TypeHolder) && e.Value is TypeHolder th ) {
                     it.SubItems.Add( th.CloseFileStream.ToString() );
                     it.SubItems.Add( ( th.UserConfirm.ToString() ) );
                     it.SubItems.Add( ( th.OpenWith ) );
@@ -240,11 +222,11 @@ namespace Universal_Share.Interface {
             }
 
             foreach ( var s in ßMainPoint.S.RegList ) {
-                this._RegList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<RegInfo.TYPE, TypeHolder>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                this._RegList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<RegInfo.Type, TypeHolder>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
             }
 
             foreach ( var s in ßMainPoint.S.RememberType ) {
-                this._RememberList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<RegInfo.TYPE, RememberType>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                this._RememberList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<RegInfo.Type, RememberType>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
             }
 
             foreach ( var s in ßMainPoint.S.ToakenList ) {

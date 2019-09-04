@@ -1,27 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Universal_Share.Net;
 using Universal_Share.Options;
 using Universal_Share.ProgMain;
-using Universal_Share.Security;
 
 namespace Universal_Share.Interface {
     public partial class ServerForm : Form {
-        private ISharedAble _server;
-        private Thread      _serverThread;
-        private bool        isServer;
+        private readonly ISharedAble _server;
+        private          Thread      _serverThread;
+        private readonly bool        _isServer;
 
-        const string BASE_ITEM = "BASE_ITEM";
+        private const string BASE_ITEM = "BASE_ITEM";
 
         private void StartServer(ISharedAble s, IPAddress ipAddress) {
             s.Start( ipAddress );
@@ -31,7 +22,7 @@ namespace Universal_Share.Interface {
         public ServerForm(ISharedAble s, bool isServer) {
             this._serverThread = new Thread( () => { } );
             this._server       = s;
-            this.isServer      = isServer;
+            this._isServer     = isServer;
 
             InitializeComponent();
 
@@ -71,10 +62,10 @@ namespace Universal_Share.Interface {
             ForceUpdateAll_Click( null, null );
         }
 
-        public static ListViewItem[] _tmp;
+        public static ListViewItem[] Tmp;
 
         private void B_StartServer_Click(object sender, EventArgs e) {
-            if ( this.isServer ) {
+            if ( this._isServer ) {
                 if ( !this._serverThread.IsAlive ) {
                     this._serverThread = null;
                     GC.Collect();
@@ -88,7 +79,7 @@ namespace Universal_Share.Interface {
                     try {
                         this._serverThread = null;
                         GC.Collect();
-                        var ip = ßMainPoint.U.getString( "Bitte IP Addresse Eintragen", "127.0.0.1" );
+                        var ip = ßMainPoint.U.GetString( "Bitte IP Addresse Eintragen", "127.0.0.1" );
                         this._serverThread = new Thread( () => StartServer( this._server, IPAddress.Parse( ip ) ) );
 
                         this._serverThread.Start();
@@ -106,15 +97,15 @@ namespace Universal_Share.Interface {
             }
         }
 
-        private ListView.SelectedListViewItemCollection currentItem;
+        private ListView.SelectedListViewItemCollection _currentItem;
 
         private void _idStreamMap_MouseClick(object sender, MouseEventArgs e) {
             if ( !( sender is ListView ls ) ) return;
             var item = ls.SelectedItems;
             if ( item[0].Text == BASE_ITEM ) return;
-            this.currentItem = item;
+            this._currentItem = item;
 
-            this.contextMenuStrip1.Items["newToolStripMenuItem"].Text = "Start";
+            this.contextMenuStrip1.Items["newToolStripMenuItem"].Text = @"Start";
             this.contextMenuStrip1.Show( Cursor.Position );
         }
 
@@ -122,9 +113,9 @@ namespace Universal_Share.Interface {
             if ( !( sender is ListView ls ) ) return;
             var item = ls.SelectedItems;
             if ( item[0].Text == BASE_ITEM ) return;
-            this.currentItem = item;
+            this._currentItem = item;
 
-            this.contextMenuStrip1.Items["newToolStripMenuItem"].Text = "New";
+            this.contextMenuStrip1.Items["newToolStripMenuItem"].Text = @"New";
             this.contextMenuStrip1.Show( Cursor.Position );
         }
 
@@ -132,9 +123,9 @@ namespace Universal_Share.Interface {
             if ( !( sender is ListView ls ) ) return;
             var item = ls.SelectedItems;
             if ( item[0].Text == BASE_ITEM ) return;
-            this.currentItem = item;
+            this._currentItem = item;
 
-            this.contextMenuStrip1.Items["newToolStripMenuItem"].Text = "New";
+            this.contextMenuStrip1.Items["newToolStripMenuItem"].Text = @"New";
             this.contextMenuStrip1.Show( Cursor.Position );
         }
 
@@ -142,65 +133,71 @@ namespace Universal_Share.Interface {
             if ( !( sender is ListView ls ) ) return;
             var item = ls.SelectedItems;
             if ( item[0].Text == BASE_ITEM ) return;
-            this.currentItem = item;
+            this._currentItem = item;
 
-            this.contextMenuStrip1.Items["newToolStripMenuItem"].Text = "New";
+            this.contextMenuStrip1.Items["newToolStripMenuItem"].Text = @"New";
             this.contextMenuStrip1.Show( Cursor.Position );
         }
 
         private void NewToolStripMenuItem_Click(object sender, EventArgs e) {
-            switch (this.currentItem[0].ListView.Name) {
+            switch (this._currentItem[0].ListView.Name) {
                 case "ID":
-                    ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( this.currentItem[0].Text ) ) );
+                    ßMainPoint.S.Execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( this._currentItem[0].Text ) ) );
                     break;
                 case "TO":
                     try {
                         ( var r20, var r10 ) = ßMainPoint.E.CreateNewTokenItem();
                         ßMainPoint.S.ToakenList.Add( r10, r20 );
-                    } catch { }
+                    } catch {
+                        // 
+                    }
 
                     break;
                 case "RE":
                     try {
                         ( var r21, var r11 ) = ßMainPoint.E.CreateNewRememberType();
                         ßMainPoint.S.RememberType.Add( r11, r21 );
-                    } catch { }
+                    } catch {
+                        //
+                    }
 
                     break;
                 case "RG":
                     try {
                         ( var r22, var r12 ) = ßMainPoint.E.CreateNewTypeHolder();
                         ßMainPoint.S.RegList.Add( r12, r22 );
-                    } catch { }
+                    } catch {
+                        //
+                    }
 
                     break;
             }
         }
 
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e) {
-            switch (this.currentItem[0].ListView.Name) {
+            switch (this._currentItem[0].ListView.Name) {
                 case "ID":
-                    foreach ( ListViewItem item in this.currentItem ) {
+                    foreach ( ListViewItem item in this._currentItem ) {
                         ßMainPoint.S.IdStreamsMap.Remove( int.Parse( item.Name ) );
                     }
 
                     break;
                 case "TO":
-                    foreach ( ListViewItem item in this.currentItem ) {
+                    foreach ( ListViewItem item in this._currentItem ) {
                         ßMainPoint.S.ToakenList.Remove( item.Name );
                     }
 
                     break;
                 case "RE":
-                    foreach ( ListViewItem item in this.currentItem ) {
-                        Enum.TryParse<RegInfo.TYPE>( item.Name, out var ty1 );
+                    foreach ( ListViewItem item in this._currentItem ) {
+                        Enum.TryParse<RegInfo.Type>( item.Name, out var ty1 );
                         ßMainPoint.S.RememberType.Remove( ty1 );
                     }
 
                     break;
                 case "RG":
-                    foreach ( ListViewItem item in this.currentItem ) {
-                        Enum.TryParse<RegInfo.TYPE>( item.Name, out var ty2 );
+                    foreach ( ListViewItem item in this._currentItem ) {
+                        Enum.TryParse<RegInfo.Type>( item.Name, out var ty2 );
                         ßMainPoint.S.RegList.Remove( ty2 );
                     }
 
@@ -209,36 +206,42 @@ namespace Universal_Share.Interface {
         }
 
         private void EditToolStripMenuItem_Click(object sender, EventArgs e) {
-            switch (this.currentItem[0].ListView.Name) {
+            switch (this._currentItem[0].ListView.Name) {
                 case "ID":
                     //ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( this.currentItem[0].Text ) ) );
                     break;
                 case "TO":
                     try {
-                        ( var r20, var r10 ) = ßMainPoint.E.EditTokenItem( ßMainPoint.S.ToakenList.Get( this.currentItem[0].Text ) );
-                        ßMainPoint.S.ToakenList.Remove( this.currentItem[0].Text );
+                        ( var r20, var r10 ) = ßMainPoint.E.EditTokenItem( ßMainPoint.S.ToakenList.Get( this._currentItem[0].Text ) );
+                        ßMainPoint.S.ToakenList.Remove( this._currentItem[0].Text );
                         ßMainPoint.S.ToakenList.Add( r10, r20 );
-                    } catch { }
+                    } catch {
+                        // ignored
+                    }
 
                     break;
                 case "RE":
                     try {
-                        if ( Enum.TryParse<RegInfo.TYPE>( this.currentItem[0].SubItems[0].Text, out var enu1 ) ) {
+                        if ( Enum.TryParse<RegInfo.Type>( this._currentItem[0].SubItems[0].Text, out var enu1 ) ) {
                             ( var r21, var r11 ) = ßMainPoint.E.EditRememberType( ßMainPoint.S.RememberType.Get( enu1 ) );
                             ßMainPoint.S.RememberType.Remove( enu1 );
                             ßMainPoint.S.RememberType.Add( r11, r21 );
                         }
-                    } catch { }
+                    } catch {
+                        // ignored
+                    }
 
                     break;
                 case "RG":
                     try {
-                        if ( Enum.TryParse<RegInfo.TYPE>( this.currentItem[0].SubItems[0].Text, out var enu2 ) ) {
+                        if ( Enum.TryParse<RegInfo.Type>( this._currentItem[0].SubItems[0].Text, out var enu2 ) ) {
                             ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder( ßMainPoint.S.RegList.Get( enu2 ), enu2 );
                             ßMainPoint.S.RegList.Remove( enu2 );
                             ßMainPoint.S.RegList.Add( r12, r22 );
                         }
-                    } catch { }
+                    } catch {
+                        // ignored
+                    }
 
                     break;
             }

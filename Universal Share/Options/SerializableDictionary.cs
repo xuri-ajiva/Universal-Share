@@ -15,10 +15,10 @@ namespace Universal_Share.Options {
         public System.Xml.Schema.XmlSchema GetSchema() { return null; }
 
         public void ReadXml(System.Xml.XmlReader reader) {
-            XmlSerializer keySerializer   = new XmlSerializer( typeof(TK) );
-            XmlSerializer valueSerializer = new XmlSerializer( typeof(TV) );
+            var keySerializer   = new XmlSerializer( typeof(TK) );
+            var valueSerializer = new XmlSerializer( typeof(TV) );
 
-            bool wasEmpty = reader.IsEmptyElement;
+            var wasEmpty = reader.IsEmptyElement;
             reader.Read();
 
             if ( wasEmpty ) return;
@@ -27,14 +27,14 @@ namespace Universal_Share.Options {
                 reader.ReadStartElement( "item" );
 
                 reader.ReadStartElement( "key" );
-                TK key = (TK) keySerializer.Deserialize( reader );
+                var key = (TK) keySerializer.Deserialize( reader );
                 reader.ReadEndElement();
 
                 reader.ReadStartElement( "value" );
-                TV value = (TV) valueSerializer.Deserialize( reader );
+                var value = (TV) valueSerializer.Deserialize( reader );
                 reader.ReadEndElement();
 
-                this.Add( key, value );
+                Add( key, value );
 
                 reader.ReadEndElement();
                 reader.MoveToContent();
@@ -44,10 +44,10 @@ namespace Universal_Share.Options {
         }
 
         public void WriteXml(System.Xml.XmlWriter writer) {
-            XmlSerializer keySerializer   = new XmlSerializer( typeof(TK) );
-            XmlSerializer valueSerializer = new XmlSerializer( typeof(TV) );
+            var keySerializer   = new XmlSerializer( typeof(TK) );
+            var valueSerializer = new XmlSerializer( typeof(TV) );
             try {
-                foreach ( TK key in this.Keys ) {
+                foreach ( var key in this.Keys ) {
                     writer.WriteStartElement( "item" );
 
                     writer.WriteStartElement( "key" );
@@ -55,7 +55,7 @@ namespace Universal_Share.Options {
                     writer.WriteEndElement();
 
                     writer.WriteStartElement( "value" );
-                    TV value = this[key];
+                    var value = this[key];
                     valueSerializer.Serialize( writer, value );
                     writer.WriteEndElement();
 
@@ -79,40 +79,29 @@ namespace Universal_Share.Options {
         #region Implementation of IEnumerable
 
         [DebuggerStepThrough]
-        /// <inheritdoc />
-        public bool Contains(TK key) {
-            Invoke( TypeE.ContainsKey, key );
-            return base.ContainsKey( key );
-        }
-
-        [DebuggerStepThrough]
         public new bool ContainsKey(TK key) {
             Invoke( TypeE.ContainsKey, key );
             return base.ContainsKey( key );
         }
 
         [DebuggerStepThrough]
-        /// <inheritdoc />
         public new void Add(TK key, TV value) {
             Invoke( TypeE.AddItem, key, value );
             base.Add( key, value );
         }
 
         [DebuggerStepThrough]
-        /// <inheritdoc />
         public new void Clear() {
             Invoke( TypeE.Clear );
             base.Clear();
         }
 
         [DebuggerStepThrough]
-        /// <inheritdoc />
         public new void Remove(TK key) {
             Invoke( TypeE.RemoveItem, key );
             base.Remove( key );
         }
 
-        /// <inheritdoc />
         [XmlIgnore]
         public new TV this[TK key] {
             [DebuggerStepThrough]
@@ -128,7 +117,6 @@ namespace Universal_Share.Options {
         }
 
         [DebuggerStepThrough]
-        /// <inheritdoc />
         public TV Get(TK key) {
             Invoke( TypeE.GetAt, key );
             return base[key];
@@ -137,17 +125,16 @@ namespace Universal_Share.Options {
         #endregion
 
 
-        /// <inheritdoc />
         [XmlIgnore]
-        public int TCount => this.Count;
+        public new int Count => base.Count;
     }
 
-    public class DictChangedEventArgs <K, V> : EventArgs {
+    public class DictChangedEventArgs <TK, TV> : EventArgs {
         public TypeE Type { get; set; }
 
-        public K Key { get; set; }
+        public TK Key { get; set; }
 
-        public V Value { get; set; }
+        public TV Value { get; set; }
     }
 
     public enum TypeE {

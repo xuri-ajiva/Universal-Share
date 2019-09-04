@@ -36,13 +36,13 @@ namespace Universal_Share.Net {
 
         private const int CHUNK = 4;
         private string Computeid() {
-            string ret = "";
+            var ret = "";
             GrabHdware();
             MakeId();
 
             var intervall = Sha512.ComputeHash( new[] { (byte) 000, (byte) 111, (byte) 222, (byte) 123 } ).Length / CHUNK;
 
-            for ( int i = 0; i < CHUNK; i++ ) {
+            for ( var i = 0; i < CHUNK; i++ ) {
 
                 var byt = Sha512.ComputeHash( Encoding.Unicode.GetBytes( this._id.Substring( intervall * i, intervall ) ) ).ToList();
                 byt.Add( 111 );

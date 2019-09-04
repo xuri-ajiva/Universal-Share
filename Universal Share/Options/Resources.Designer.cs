@@ -61,11 +61,149 @@ namespace Universal_Share.Options {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die DialogResult: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewRememberType_DialogResult_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewRememberType_DialogResult_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Base64Token: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTokenItem_Base64Token_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTokenItem_Base64Token_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Remember: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTokenItem_Remember_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTokenItem_Remember_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Trusted: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTokenItem_Trusted_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTokenItem_Trusted_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die  (0 or 1) ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTypeHolder___0_or_1_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTypeHolder___0_or_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 1 ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTypeHolder__True {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTypeHolder__True", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die ArgumentsAfterPathToFile: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTypeHolder_ArgumentsAfterPathToFile_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTypeHolder_ArgumentsAfterPathToFile_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die ArgumentsBeforePathToFile: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTypeHolder_ArgumentsBeforePathToFile_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTypeHolder_ArgumentsBeforePathToFile_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die CloseFileStream: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTypeHolder_CloseFileStream_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTypeHolder_CloseFileStream_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Description: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTypeHolder_Description_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTypeHolder_Description_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die OpenWith: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTypeHolder_OpenWith_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTypeHolder_OpenWith_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die UserConfirm: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTypeHolder_UserConfirm_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTypeHolder_UserConfirm_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Paket: id = [{0}], Token(0,8) = [{1}] ähnelt.
         /// </summary>
         internal static string NetBase_PaketAndToaken {
             get {
                 return ResourceManager.GetString("NetBase_PaketAndToaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Remove Reg?
+        /// ähnelt.
+        /// </summary>
+        internal static string ServerForm__RegList_DoubleClick_ {
+            get {
+                return ResourceManager.GetString("ServerForm__RegList_DoubleClick_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Remove RememberAccess?
+        /// ähnelt.
+        /// </summary>
+        internal static string ServerForm__RememberList_DoubleClick_ {
+            get {
+                return ResourceManager.GetString("ServerForm__RememberList_DoubleClick_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Remove Token?
+        /// ähnelt.
+        /// </summary>
+        internal static string ServerForm__TokenList_DoubleClick_ {
+            get {
+                return ResourceManager.GetString("ServerForm__TokenList_DoubleClick_", resourceCulture);
             }
         }
         

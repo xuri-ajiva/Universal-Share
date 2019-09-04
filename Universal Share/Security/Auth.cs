@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Security;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
 
 namespace Universal_Share.Security {
     public class Auth {
-        SHA512 _sha512 = SHA512.Create();
+        private readonly SHA512 _sha512 = SHA512.Create();
 
         public const byte LENGTH_B = 64;
 
@@ -33,7 +28,7 @@ namespace Universal_Share.Security {
         public TokenItem(byte[] tokenBytes, bool trusted, bool remember, string description = "") {
             this.TokenBytes = tokenBytes;
             this.Trusted    = trusted;
-            this.remember   = remember;
+            this.Remember   = remember;
             this.Description = description;
         }
 
@@ -42,6 +37,6 @@ namespace Universal_Share.Security {
         public string Base64Key { get => Convert.ToBase64String( this.TokenBytes ); set => this.TokenBytes = Convert.FromBase64String( value ); }
 
         public bool Trusted;
-        public bool remember;
+        public bool Remember;
     }
 }

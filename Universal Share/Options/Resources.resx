@@ -124,4 +124,52 @@
     <value>
 Die Settings Datei Wird Gelöscht...</value>
   </data>
+  <data name="Editor_CreateNewTypeHolder_OpenWith_" xml:space="preserve">
+    <value>OpenWith:</value>
+  </data>
+  <data name="Editor_CreateNewTypeHolder_ArgumentsBeforePathToFile_" xml:space="preserve">
+    <value>ArgumentsBeforePathToFile:</value>
+  </data>
+  <data name="Editor_CreateNewTypeHolder_ArgumentsAfterPathToFile_" xml:space="preserve">
+    <value>ArgumentsAfterPathToFile:</value>
+  </data>
+  <data name="Editor_CreateNewTypeHolder_UserConfirm_" xml:space="preserve">
+    <value>UserConfirm:</value>
+  </data>
+  <data name="Editor_CreateNewTypeHolder___0_or_1_" xml:space="preserve">
+    <value> (0 or 1)</value>
+  </data>
+  <data name="Editor_CreateNewTypeHolder_Description_" xml:space="preserve">
+    <value>Description:</value>
+  </data>
+  <data name="Editor_CreateNewTypeHolder_CloseFileStream_" xml:space="preserve">
+    <value>CloseFileStream:</value>
+  </data>
+  <data name="Editor_CreateNewRememberType_DialogResult_" xml:space="preserve">
+    <value>DialogResult:</value>
+  </data>
+  <data name="Editor_CreateNewTokenItem_Base64Token_" xml:space="preserve">
+    <value>Base64Token:</value>
+  </data>
+  <data name="Editor_CreateNewTokenItem_Trusted_" xml:space="preserve">
+    <value>Trusted:</value>
+  </data>
+  <data name="Editor_CreateNewTokenItem_Remember_" xml:space="preserve">
+    <value>Remember:</value>
+  </data>
+  <data name="Editor_CreateNewTypeHolder__True" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ServerForm__TokenList_DoubleClick_" xml:space="preserve">
+    <value>Remove Token?
+</value>
+  </data>
+  <data name="ServerForm__RememberList_DoubleClick_" xml:space="preserve">
+    <value>Remove RememberAccess?
+</value>
+  </data>
+  <data name="ServerForm__RegList_DoubleClick_" xml:space="preserve">
+    <value>Remove Reg?
+</value>
+  </data>
 </root>

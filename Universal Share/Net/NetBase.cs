@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using Universal_Share.Interface;
 using Universal_Share.Options;
 using Universal_Share.ProgMain;
 using Universal_Share.Security;
@@ -15,7 +11,7 @@ namespace Universal_Share.Net {
     public class NetBase {
         [DebuggerStepThrough]
         public static T[] SubArray <T>(T[] data, int index, int length) {
-            T[] result = new T[length];
+            var result = new T[length];
             Array.Copy( data, index, result, 0, length );
             return result;
         }
@@ -42,8 +38,8 @@ namespace Universal_Share.Net {
 
             if ( ßMainPoint.S.ToakenList.ContainsKey( base64Key ) ) {
                 var ti = ßMainPoint.S.ToakenList.Get( base64Key );
-                Option.isEqual( toaken, ti.TokenBytes );
-                if ( ti.remember ) return ti.Trusted;
+                Option.IsEqual( toaken, ti.TokenBytes );
+                if ( ti.Remember ) return ti.Trusted;
             }
 
             if ( ßMainPoint.U.GetConfirm( new TokenItem( toaken, false, false ) ) ) {
@@ -55,12 +51,12 @@ namespace Universal_Share.Net {
 
         public int FilePort;
 
-        protected const int buffer_size = DEFAULT_BUFFER_SIZE;
+        protected const int BUFFER_SIZE = DEFAULT_BUFFER_SIZE;
 
-        protected const int Id_size      = DEFAULT_HEATHER_SIZE;
-        protected const int key_size     = Auth.LENGTH_B;
-        protected const int option_size  = 4;
-        protected const int heather_size = key_size + Id_size + option_size;
+        protected const int ID_SIZE      = DEFAULT_HEATHER_SIZE;
+        protected const int KEY_SIZE     = Auth.LENGTH_B;
+        protected const int OPTION_SIZE  = 4;
+        protected const int HEATHER_SIZE = KEY_SIZE + ID_SIZE + OPTION_SIZE;
 
 
         /// <summary>
@@ -71,16 +67,16 @@ namespace Universal_Share.Net {
         /// <returns>return new Tuple&amp;lt;byte[], byte[], byte[], byte[]&amp;gt;( tokenArray, idArray, optionArray, contendArray );</returns>
         [DebuggerStepThrough]
         protected (byte[], byte[], byte[], byte[]) Buffer_To_Parts(byte[] buffer, int readBytes) {
-            byte[] tokenArray   = SubArray( buffer, 0,                                key_size );
-            byte[] idArray      = SubArray( buffer, key_size,                         Id_size );
-            byte[] optionArray  = SubArray( buffer, key_size           + Id_size,     option_size );
-            byte[] contendArray = SubArray( buffer, key_size + Id_size + option_size, readBytes - ( key_size + Id_size + option_size ) );
+            var tokenArray   = SubArray( buffer, 0,                                KEY_SIZE );
+            var idArray      = SubArray( buffer, KEY_SIZE,                         ID_SIZE );
+            var optionArray  = SubArray( buffer, KEY_SIZE           + ID_SIZE,     OPTION_SIZE );
+            var contendArray = SubArray( buffer, KEY_SIZE + ID_SIZE + OPTION_SIZE, readBytes - ( KEY_SIZE + ID_SIZE + OPTION_SIZE ) );
             return ( tokenArray, idArray, optionArray, contendArray );
         }
 
         [DebuggerStepThrough]
         protected byte[] Parts_To_Buffer(byte[] tokenBytes, byte[] idBytes, byte[] option, byte[] contendBytes) {
-            var buffer = new byte[buffer_size];
+            var buffer = new byte[BUFFER_SIZE];
             tokenBytes.CopyTo( buffer, 0 );
             idBytes.CopyTo( buffer, tokenBytes.Length );
             option.CopyTo( buffer, tokenBytes.Length                        + idBytes.Length );
@@ -98,13 +94,13 @@ namespace Universal_Share.Net {
 
             switch (Option.OperationType( option )) {
                 case Option.Range.Server:
-                    ( message ) = processOptionsServer( token, id, option, conetnd );
+                    ( message ) = ProcessOptionsServer( token, id, option, conetnd );
                     break;
                 case Option.Range.Client:
-                    ( message ) = processOptionsClient( token, id, option, conetnd );
+                    ( message ) = ProcessOptionsClient( token, id, option, conetnd );
                     break;
                 case Option.Range.Special:
-                    ( message ) = processOptionsSpecial( token, id, option, conetnd );
+                    ( message ) = ProcessOptionsSpecial( token, id, option, conetnd );
                     break;
                 case Option.Range.None: return ( UNKNOWN_ERROR, id );
                 default:                throw new ArgumentOutOfRangeException();
@@ -115,35 +111,35 @@ namespace Universal_Share.Net {
             return ( ret, id );
         }
 
-        protected string processOptionsSpecial(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
-            if ( Net.Option.isEqual( option, Net.Option.ERROR ) ) {
+        protected string ProcessOptionsSpecial(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
+            if ( Option.IsEqual( option, Option.Error ) ) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine( Encoding.UTF8.GetString( contend ).Replace( Encoding.UTF8.GetString( new byte[] { 0 } ), "" ) );
                 Console.ForegroundColor = ConsoleColor.White;
             }
-            else if ( Net.Option.isEqual( option, Net.Option.SUCCESS ) ) {
+            else if ( Option.IsEqual( option, Option.Success ) ) {
                 //Console.WriteLine( Encoding.UTF8.GetString( contend ) );
             }
 
             return ( SUCCESS );
         }
 
-        protected string processOptionsServer(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
+        protected string ProcessOptionsServer(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
             try {
-                if ( Net.Option.isEqual( option, Net.Option.SAVE_TO_FILE ) ) {
+                if ( Option.IsEqual( option, Option.SaveToFile ) ) {
                     var regi = ßMainPoint.S.IdStreamsMap.Get( id );
                     regi.CreateStream();
                     regi.Stream.Write( contend, 0, contend.Length );
                 }
-                else if ( Net.Option.isEqual( option, Net.Option.CREATE_REGISTER ) ) {
-                    if ( ßMainPoint.S.IdStreamsMap.Contains( id ) ) return ( ID_ALREADY_EXISTS );
+                else if ( Option.IsEqual( option, Option.CreateRegister ) ) {
+                    if ( ßMainPoint.S.IdStreamsMap.ContainsKey( id ) ) return ( ID_ALREADY_EXISTS );
 
                     var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( contend ) ) ).Split( Path.GetInvalidFileNameChars() ) );
                     var finalSaveName = DEFAULT_SAVE_LOCATION + finalFileName;
 
-                    Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) );
+                    Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) ?? throw new InvalidOperationException() );
 
-                    var regInfo = new RegInfo( null, id, finalSaveName, Convert.ToBase64String( tokenBytes ), RegInfo.TYPE.SINGLE_FILE );
+                    var regInfo = new RegInfo( null, id, finalSaveName, Convert.ToBase64String( tokenBytes ), RegInfo.Type.SingleFile );
                     ßMainPoint.S.IdStreamsMap.Add( id, regInfo );
                 }
             } catch (Exception e) {
@@ -153,6 +149,6 @@ namespace Universal_Share.Net {
             return ( SUCCESS );
         }
 
-        protected string processOptionsClient(byte[] tokenBytes, int id, byte[] option, byte[] contend) { return ( SUCCESS ); }
+        protected string ProcessOptionsClient(byte[] tokenBytes, int id, byte[] option, byte[] contend) { return ( SUCCESS ); }
     }
 }

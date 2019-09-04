@@ -3,6 +3,6 @@
 namespace Universal_Share.Options {
     public static class SettingsStatic {
         
-        [XmlIgnore] public static string SAVE_PATH_S = "config.xml";
+        [XmlIgnore] public static string SavePathS = "config.xml";
     }
 }

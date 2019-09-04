@@ -5,14 +5,14 @@ using System.Threading;
 
 namespace Universal_Share.Net {
     public class Client : SharedComponents, ISharedAble {
-        private TcpClient tcpClient;
+        private TcpClient _tcpClient;
 
         public void Start(IPAddress ipAddress) {
             //var ip = IPAddress.Parse( "127.0.0.1" );
-            this.tcpClient = OpenIpAddress( ipAddress );
+            this._tcpClient = OpenIpAddress( ipAddress );
             while ( true ) {
                 try {
-                    SendFile( this.tcpClient, "..\\..\\..\\test.exe" );
+                    SendFile( this._tcpClient, "..\\..\\..\\test.exe" );
                     Thread.Sleep( 1000 );
                 } catch (Exception e) {
                     Console.WriteLine( e.Message );
@@ -25,7 +25,7 @@ namespace Universal_Share.Net {
 
         /// <inheritdoc />
         public void Abort() {
-            this.tcpClient.Close();
+            this._tcpClient.Close();
         }
     }
 }

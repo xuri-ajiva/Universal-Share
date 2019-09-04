@@ -1,117 +1,113 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Universal_Share.Options;
 using Universal_Share.Security;
 
 namespace Universal_Share.Interface {
     public class Editor : Form {
         [DebuggerStepThrough]
-        private void resetAcc() {
-            this.textBox1.Text = "";
-            this.textBox2.Text = "";
-            this.textBox3.Text = "";
-            this.textBox4.Text = "";
-            this.textBox5.Text = "";
-            this.textBox6.Text = "";
-            this.label1.Text   = "";
-            this.label2.Text   = "";
-            this.label3.Text   = "";
-            this.label4.Text   = "";
-            this.label5.Text   = "";
-            this.label6.Text   = "";
-            this.label7.Text   = "";
+        private void ResetAcc() {
+            this._textBox1.Text = "";
+            this._textBox2.Text = "";
+            this._textBox3.Text = "";
+            this._textBox4.Text = "";
+            this._textBox5.Text = "";
+            this._textBox6.Text = "";
+            this._label1.Text   = "";
+            this._label2.Text   = "";
+            this._label3.Text   = "";
+            this._label4.Text   = "";
+            this._label5.Text   = "";
+            this._label6.Text   = "";
+            this._label7.Text   = "";
             try {
-                this.comboBox1.DataSource = null;
-                this.comboBox1.Items.Clear();
-            } catch { }
+                this._comboBox1.DataSource = null;
+                this._comboBox1.Items.Clear();
+            } catch {
+                // ignored
+            }
         }
 
-        public (TypeHolder, RegInfo.TYPE) CreateNewTypeHolder() {
-            resetAcc();
-            this.comboBox1.DataSource = Enum.GetValues( typeof(RegInfo.TYPE) );
+        public (TypeHolder, RegInfo.Type) CreateNewTypeHolder() {
+            ResetAcc();
+            this._comboBox1.DataSource = Enum.GetValues( typeof(RegInfo.Type) );
 
-            this.label1.Text = "OpenWith:";
-            this.label2.Text = "ArgumentsBeforePathToFile:";
-            this.label3.Text = "ArgumentsAfterPathToFile:";
-            this.label4.Text = "UserConfirm: (0 or 1)";
-            this.label5.Text = "Description:";
-            this.label6.Text = "CloseFileStream: (0 or 1)";
+            this._label1.Text = Resources.Editor_CreateNewTypeHolder_OpenWith_;
+            this._label2.Text = Resources.Editor_CreateNewTypeHolder_ArgumentsBeforePathToFile_;
+            this._label3.Text = Resources.Editor_CreateNewTypeHolder_ArgumentsAfterPathToFile_;
+            this._label4.Text = Resources.Editor_CreateNewTypeHolder_UserConfirm_ +  Resources.Editor_CreateNewTypeHolder___0_or_1_;
+            this._label5.Text = Resources.Editor_CreateNewTypeHolder_Description_;
+            this._label6.Text = Resources.Editor_CreateNewTypeHolder_CloseFileStream_+Resources.Editor_CreateNewTypeHolder___0_or_1_;
 
             var ret = ShowDialog();
 
-            if ( Enum.TryParse<RegInfo.TYPE>( this.comboBox1.Text, out var eum ) )
+            if ( Enum.TryParse<RegInfo.Type>( this._comboBox1.Text, out var eum ) )
                 if ( ret == DialogResult.Yes )
-                    return ( new TypeHolder( this.textBox1.Text, this.textBox2.Text, this.textBox3.Text, this.textBox4.Text == "1", this.textBox5.Text, this.textBox6.Text == "1" ), eum );
+                    return ( new TypeHolder( this._textBox1.Text, this._textBox2.Text, this._textBox3.Text, this._textBox4.Text == Resources.Editor_CreateNewTypeHolder__True, this._textBox5.Text, this._textBox6.Text == Resources.Editor_CreateNewTypeHolder__True ), eum );
             throw new NotSupportedException();
         }
 
-        public (RememberType, RegInfo.TYPE) CreateNewRememberType() {
-            resetAcc();
-            this.comboBox1.DataSource = Enum.GetValues( typeof(RegInfo.TYPE) );
+        public (RememberType, RegInfo.Type) CreateNewRememberType() {
+            ResetAcc();
+            this._comboBox1.DataSource = Enum.GetValues( typeof(RegInfo.Type) );
 
-            this.label1.Text = "DialogResult: (1 or 0)";
-            this.label2.Text = "Description:";
+            this._label1.Text = Resources.Editor_CreateNewRememberType_DialogResult_+Resources.Editor_CreateNewTypeHolder___0_or_1_;
+            this._label2.Text = Resources.Editor_CreateNewTypeHolder_Description_;
 
             var ret = ShowDialog();
             this.DialogResult = DialogResult.Retry;
 
-            if ( Enum.TryParse<RegInfo.TYPE>( this.comboBox1.Text, out var enu ) )
+            if ( Enum.TryParse<RegInfo.Type>( this._comboBox1.Text, out var enu ) )
                 if ( ret == DialogResult.Yes )
-                    return ( new RememberType( this.textBox2.Text, ( this.textBox2.Text == "1" ) ? DialogResult.Yes : DialogResult.No, enu ), enu );
+                    return ( new RememberType( this._textBox2.Text, ( this._textBox2.Text == Resources.Editor_CreateNewTypeHolder__True ) ? DialogResult.Yes : DialogResult.No, enu ), enu );
             throw new NotSupportedException();
         }
 
         public (TokenItem, string) CreateNewTokenItem() {
-            resetAcc();
+            ResetAcc();
             //this.comboBox1.DataSource = Enum.GetValues( typeof(RegInfo.TYPE) );
 
-            this.label1.Text = "Base64Token:";
-            this.label2.Text = "Trusted: (1 or 0)";
-            this.label3.Text = "Remember: (1 or 0)";
+            this._label1.Text = Resources.Editor_CreateNewTokenItem_Base64Token_;
+            this._label2.Text = Resources.Editor_CreateNewTokenItem_Trusted_+Resources.Editor_CreateNewTypeHolder___0_or_1_;
+            this._label3.Text = Resources.Editor_CreateNewTokenItem_Remember_+Resources.Editor_CreateNewTypeHolder___0_or_1_;
 
             var ret = ShowDialog();
             this.DialogResult = DialogResult.Retry;
 
             if ( ret == DialogResult.Yes ) {
-                var token = new TokenItem( new Byte[64], ( this.textBox2.Text == "1" ), ( this.textBox3.Text == "1" ) );
+                var token = new TokenItem( new Byte[64], ( this._textBox2.Text == Resources.Editor_CreateNewTypeHolder__True ), ( this._textBox3.Text == Resources.Editor_CreateNewTypeHolder__True ) );
                 try {
-                    token.Base64Key = this.textBox1.Text;
+                    token.Base64Key = this._textBox1.Text;
                 } catch (Exception e) {
                     MessageBox.Show( e.Message );
                     throw new NotSupportedException();
                 }
 
-                return ( token, this.textBox1.Text );
+                return ( token, this._textBox1.Text );
             }
 
             throw new NotSupportedException();
         }
 
-        public (RememberType, RegInfo.TYPE) EditRememberType(RememberType baseType) {
-            resetAcc();
-            this.comboBox1.DataSource   = Enum.GetValues( typeof(RegInfo.TYPE) );
-            this.comboBox1.SelectedItem = baseType.Type;
+        public (RememberType, RegInfo.Type) EditRememberType(RememberType baseType) {
+            ResetAcc();
+            this._comboBox1.DataSource   = Enum.GetValues( typeof(RegInfo.Type) );
+            this._comboBox1.SelectedItem = baseType.Type;
 
-            this.comboBox1.SelectedItem = baseType.Type.ToString();
+            this._comboBox1.SelectedItem = baseType.Type.ToString();
 
-            this.label1.Text   = "DialogResult: (1 or 0)";
-            this.textBox1.Text = baseType.IsOkOrYes() ? "1" : "0";
-            this.label2.Text   = "Description:";
-            this.textBox2.Text = baseType.Description;
+            this._label1.Text   = Resources.Editor_CreateNewRememberType_DialogResult_;
+            this._textBox1.Text = baseType.IsOkOrYes() ? Resources.Editor_CreateNewTypeHolder__True : "0";
+            this._label2.Text   = Resources.Editor_CreateNewTypeHolder_Description_;
+            this._textBox2.Text = baseType.Description;
 
             var ret = ShowDialog();
             this.DialogResult = DialogResult.Retry;
 
-            if ( Enum.TryParse<RegInfo.TYPE>( this.comboBox1.Text, out var enu ) )
+            if ( Enum.TryParse<RegInfo.Type>( this._comboBox1.Text, out var enu ) )
                 if ( ret == DialogResult.Yes )
-                    return ( new RememberType( this.textBox2.Text, ( this.textBox1.Text == "1" ) ? DialogResult.Yes : DialogResult.No, enu ), enu );
+                    return ( new RememberType( this._textBox2.Text, ( this._textBox1.Text == Resources.Editor_CreateNewTypeHolder__True ) ? DialogResult.Yes : DialogResult.No, enu ), enu );
                 else {
                     return ( baseType, baseType.Type );
                 }
@@ -119,58 +115,58 @@ namespace Universal_Share.Interface {
             throw new NotSupportedException();
         }
 
-        public (TypeHolder, RegInfo.TYPE) EditTypeHolder(TypeHolder baseTypeHolder, RegInfo.TYPE currenType) {
-            resetAcc();
-            this.comboBox1.DataSource   = Enum.GetValues( typeof(RegInfo.TYPE) );
-            this.comboBox1.SelectedItem = currenType;
+        public (TypeHolder, RegInfo.Type) EditTypeHolder(TypeHolder baseTypeHolder, RegInfo.Type currenType) {
+            ResetAcc();
+            this._comboBox1.DataSource   = Enum.GetValues( typeof(RegInfo.Type) );
+            this._comboBox1.SelectedItem = currenType;
 
-            this.label1.Text   = "OpenWith:";
-            this.textBox1.Text = baseTypeHolder.OpenWith;
-            this.label2.Text   = "ArgumentsBeforePathToFile:";
-            this.textBox2.Text = baseTypeHolder.ArgumentsBeforePathToFile;
-            this.label3.Text   = "ArgumentsAfterPathToFile:";
-            this.textBox3.Text = baseTypeHolder.ArgumentsAfterPathToFile;
-            this.label4.Text   = "UserConfirm: (0 or 1)";
-            this.textBox4.Text = baseTypeHolder.UserConfirm ? "0" : "1";
-            this.label5.Text   = "Description:";
-            this.textBox5.Text = baseTypeHolder.Description;
-            this.label6.Text   = "CloseFileStream: (0 or 1)";
-            this.textBox6.Text = baseTypeHolder.CloseFileStream ? "0" : "1";
+            this._label1.Text   = Resources.Editor_CreateNewTypeHolder_OpenWith_;
+            this._textBox1.Text = baseTypeHolder.OpenWith;
+            this._label2.Text   = Resources.Editor_CreateNewTypeHolder_ArgumentsBeforePathToFile_;
+            this._textBox2.Text = baseTypeHolder.ArgumentsBeforePathToFile;
+            this._label3.Text   = Resources.Editor_CreateNewTypeHolder_ArgumentsAfterPathToFile_;
+            this._textBox3.Text = baseTypeHolder.ArgumentsAfterPathToFile;
+            this._label4.Text   = Resources.Editor_CreateNewTypeHolder_UserConfirm_ +Resources.Editor_CreateNewTypeHolder___0_or_1_;
+            this._textBox4.Text = baseTypeHolder.UserConfirm ? "0" : Resources.Editor_CreateNewTypeHolder__True;
+            this._label5.Text   = Resources.Editor_CreateNewTypeHolder_Description_;
+            this._textBox5.Text = baseTypeHolder.Description;
+            this._label6.Text   = Resources.Editor_CreateNewTypeHolder_CloseFileStream_ +Resources.Editor_CreateNewTypeHolder___0_or_1_;
+            this._textBox6.Text = baseTypeHolder.CloseFileStream ? "0" : Resources.Editor_CreateNewTypeHolder__True;
 
             var ret = ShowDialog();
 
-            if ( Enum.TryParse<RegInfo.TYPE>( this.comboBox1.Text, out var eum ) )
+            if ( Enum.TryParse<RegInfo.Type>( this._comboBox1.Text, out var eum ) )
                 if ( ret == DialogResult.Yes )
-                    return ( new TypeHolder( this.textBox1.Text, this.textBox2.Text, this.textBox3.Text, this.textBox4.Text == "1", this.textBox5.Text, this.textBox6.Text == "1" ), eum );
+                    return ( new TypeHolder( this._textBox1.Text, this._textBox2.Text, this._textBox3.Text, this._textBox4.Text == Resources.Editor_CreateNewTypeHolder__True, this._textBox5.Text, this._textBox6.Text == Resources.Editor_CreateNewTypeHolder__True ), eum );
                 else
                     return ( baseTypeHolder, eum );
             throw new NotSupportedException();
         }
 
         public (TokenItem, string) EditTokenItem(TokenItem baseTokenItem) {
-            resetAcc();
+            ResetAcc();
             //this.comboBox1.DataSource = Enum.GetValues( typeof(RegInfo.TYPE) );
 
-            this.label1.Text   = "Base64Token:";
-            this.textBox1.Text = baseTokenItem.Base64Key;
-            this.label2.Text   = "Trusted: (1 or 0)";
-            this.textBox2.Text = baseTokenItem.Trusted ? "1" : "0";
-            this.label3.Text   = "Remember: (1 or 0)";
-            this.textBox3.Text = baseTokenItem.remember ? "1" : "0";
+            this._label1.Text   = Resources.Editor_CreateNewTokenItem_Base64Token_;
+            this._textBox1.Text = baseTokenItem.Base64Key;
+            this._label2.Text   = Resources.Editor_CreateNewTokenItem_Trusted_ +Resources.Editor_CreateNewTypeHolder___0_or_1_;
+            this._textBox2.Text = baseTokenItem.Trusted ? Resources.Editor_CreateNewTypeHolder__True : "0";
+            this._label3.Text   = Resources.Editor_CreateNewTokenItem_Remember_ +Resources.Editor_CreateNewTypeHolder___0_or_1_;
+            this._textBox3.Text = baseTokenItem.Remember ? Resources.Editor_CreateNewTypeHolder__True : "0";
 
             var ret = ShowDialog();
             this.DialogResult = DialogResult.Retry;
 
             if ( ret == DialogResult.Yes ) {
-                var token = new TokenItem( new Byte[64], ( this.textBox2.Text == "1" ), ( this.textBox3.Text == "1" ) );
+                var token = new TokenItem( new Byte[64], ( this._textBox2.Text == Resources.Editor_CreateNewTypeHolder__True ), ( this._textBox3.Text == Resources.Editor_CreateNewTypeHolder__True ) );
                 try {
-                    token.Base64Key = this.textBox1.Text;
+                    token.Base64Key = this._textBox1.Text;
                 } catch (Exception e) {
                     MessageBox.Show( e.Message );
                     return ( baseTokenItem, baseTokenItem.Base64Key );
                 }
 
-                return ( token, this.textBox1.Text );
+                return ( token, this._textBox1.Text );
             }
 
             return ( baseTokenItem, baseTokenItem.Base64Key );
@@ -187,351 +183,353 @@ namespace Universal_Share.Interface {
         }
 
         #region UXDesiner
-
+        
+        // ReSharper disable RedundantDelegateCreation
         public Editor() { InitializeComponent(); }
 
-        private Panel    panel1;
-        private Panel    panel2;
+        private Panel    _panel1;
+        private Panel    _panel2;
         private Button   _yesButton;
-        private Panel    mArea;
-        private Panel    panel8;
-        private TextBox  textBox6;
-        private Label    label6;
-        private Panel    panel7;
-        private TextBox  textBox5;
-        private Label    label5;
-        private Panel    panel6;
-        private TextBox  textBox4;
-        private Label    label4;
-        private Panel    panel4;
-        private TextBox  textBox3;
-        private Label    label3;
-        private Panel    panel3;
-        private TextBox  textBox2;
-        private Label    label2;
-        private Panel    panel5;
-        private TextBox  textBox1;
-        private Label    label1;
-        private Panel    panel9;
-        private Label    label7;
-        private ComboBox comboBox1;
+        private Panel    _mArea;
+        private Panel    _panel8;
+        private TextBox  _textBox6;
+        private Label    _label6;
+        private Panel    _panel7;
+        private TextBox  _textBox5;
+        private Label    _label5;
+        private Panel    _panel6;
+        private TextBox  _textBox4;
+        private Label    _label4;
+        private Panel    _panel4;
+        private TextBox  _textBox3;
+        private Label    _label3;
+        private Panel    _panel3;
+        private TextBox  _textBox2;
+        private Label    _label2;
+        private Panel    _panel5;
+        private TextBox  _textBox1;
+        private Label    _label1;
+        private Panel    _panel9;
+        private Label    _label7;
+        private ComboBox _comboBox1;
         private Button   _noButton;
 
         private void InitializeComponent() {
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.mArea = new System.Windows.Forms.Panel();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this._yesButton = new System.Windows.Forms.Button();
-            this._noButton = new System.Windows.Forms.Button();
-            this.panel1.SuspendLayout();
-            this.mArea.SuspendLayout();
-            this.panel8.SuspendLayout();
-            this.panel7.SuspendLayout();
-            this.panel6.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel5.SuspendLayout();
-            this.panel9.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.SuspendLayout();
+            this._panel1 = new Panel();
+            this._mArea = new Panel();
+            this._panel8 = new Panel();
+            this._textBox6 = new TextBox();
+            this._label6 = new Label();
+            this._panel7 = new Panel();
+            this._textBox5 = new TextBox();
+            this._label5 = new Label();
+            this._panel6 = new Panel();
+            this._textBox4 = new TextBox();
+            this._label4 = new Label();
+            this._panel4 = new Panel();
+            this._textBox3 = new TextBox();
+            this._label3 = new Label();
+            this._panel3 = new Panel();
+            this._textBox2 = new TextBox();
+            this._label2 = new Label();
+            this._panel5 = new Panel();
+            this._textBox1 = new TextBox();
+            this._label1 = new Label();
+            this._panel9 = new Panel();
+            this._comboBox1 = new ComboBox();
+            this._label7 = new Label();
+            this._panel2 = new Panel();
+            this._yesButton = new Button();
+            this._noButton = new Button();
+            this._panel1.SuspendLayout();
+            this._mArea.SuspendLayout();
+            this._panel8.SuspendLayout();
+            this._panel7.SuspendLayout();
+            this._panel6.SuspendLayout();
+            this._panel4.SuspendLayout();
+            this._panel3.SuspendLayout();
+            this._panel5.SuspendLayout();
+            this._panel9.SuspendLayout();
+            this._panel2.SuspendLayout();
+            SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.mArea);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(543, 277);
-            this.panel1.TabIndex = 0;
+            this._panel1.Controls.Add(this._mArea);
+            this._panel1.Dock = DockStyle.Fill;
+            this._panel1.Location = new System.Drawing.Point(0, 0);
+            this._panel1.Name = "_panel1";
+            this._panel1.Size = new System.Drawing.Size(543, 277);
+            this._panel1.TabIndex = 0;
             // 
             // mArea
             // 
-            this.mArea.Controls.Add(this.panel8);
-            this.mArea.Controls.Add(this.panel7);
-            this.mArea.Controls.Add(this.panel6);
-            this.mArea.Controls.Add(this.panel4);
-            this.mArea.Controls.Add(this.panel3);
-            this.mArea.Controls.Add(this.panel5);
-            this.mArea.Controls.Add(this.panel9);
-            this.mArea.Location = new System.Drawing.Point(12, 12);
-            this.mArea.Name = "mArea";
-            this.mArea.Size = new System.Drawing.Size(519, 207);
-            this.mArea.TabIndex = 4;
+            this._mArea.Controls.Add(this._panel8);
+            this._mArea.Controls.Add(this._panel7);
+            this._mArea.Controls.Add(this._panel6);
+            this._mArea.Controls.Add(this._panel4);
+            this._mArea.Controls.Add(this._panel3);
+            this._mArea.Controls.Add(this._panel5);
+            this._mArea.Controls.Add(this._panel9);
+            this._mArea.Location = new System.Drawing.Point(12, 12);
+            this._mArea.Name = "_mArea";
+            this._mArea.Size = new System.Drawing.Size(519, 207);
+            this._mArea.TabIndex = 4;
             // 
             // panel8
             // 
-            this.panel8.Controls.Add(this.textBox6);
-            this.panel8.Controls.Add(this.label6);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel8.Location = new System.Drawing.Point(0, 166);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(519, 27);
-            this.panel8.TabIndex = 3;
+            this._panel8.Controls.Add(this._textBox6);
+            this._panel8.Controls.Add(this._label6);
+            this._panel8.Dock = DockStyle.Top;
+            this._panel8.Location = new System.Drawing.Point(0, 166);
+            this._panel8.Name = "_panel8";
+            this._panel8.Size = new System.Drawing.Size(519, 27);
+            this._panel8.TabIndex = 3;
             // 
             // textBox6
             // 
-            this.textBox6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox6.Location = new System.Drawing.Point(249, 0);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(270, 27);
-            this.textBox6.TabIndex = 0;
+            this._textBox6.Dock = DockStyle.Fill;
+            this._textBox6.Location = new System.Drawing.Point(249, 0);
+            this._textBox6.Name = "_textBox6";
+            this._textBox6.Size = new System.Drawing.Size(270, 27);
+            this._textBox6.TabIndex = 0;
             // 
             // label6
             // 
-            this.label6.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label6.Location = new System.Drawing.Point(0, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(249, 27);
-            this.label6.TabIndex = 1;
-            this.label6.Text = "label6";
+            this._label6.Dock = DockStyle.Left;
+            this._label6.Location = new System.Drawing.Point(0, 0);
+            this._label6.Name = "_label6";
+            this._label6.Size = new System.Drawing.Size(249, 27);
+            this._label6.TabIndex = 1;
+            this._label6.Text = @"label6";
             // 
             // panel7
             // 
-            this.panel7.Controls.Add(this.textBox5);
-            this.panel7.Controls.Add(this.label5);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel7.Location = new System.Drawing.Point(0, 139);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(519, 27);
-            this.panel7.TabIndex = 3;
+            this._panel7.Controls.Add(this._textBox5);
+            this._panel7.Controls.Add(this._label5);
+            this._panel7.Dock = DockStyle.Top;
+            this._panel7.Location = new System.Drawing.Point(0, 139);
+            this._panel7.Name = "_panel7";
+            this._panel7.Size = new System.Drawing.Size(519, 27);
+            this._panel7.TabIndex = 3;
             // 
             // textBox5
             // 
-            this.textBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox5.Location = new System.Drawing.Point(249, 0);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(270, 27);
-            this.textBox5.TabIndex = 0;
+            this._textBox5.Dock = DockStyle.Fill;
+            this._textBox5.Location = new System.Drawing.Point(249, 0);
+            this._textBox5.Name = "_textBox5";
+            this._textBox5.Size = new System.Drawing.Size(270, 27);
+            this._textBox5.TabIndex = 0;
             // 
             // label5
             // 
-            this.label5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label5.Location = new System.Drawing.Point(0, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(249, 27);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "label5";
+            this._label5.Dock = DockStyle.Left;
+            this._label5.Location = new System.Drawing.Point(0, 0);
+            this._label5.Name = "_label5";
+            this._label5.Size = new System.Drawing.Size(249, 27);
+            this._label5.TabIndex = 1;
+            this._label5.Text = @"label5";
             // 
             // panel6
             // 
-            this.panel6.Controls.Add(this.textBox4);
-            this.panel6.Controls.Add(this.label4);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(0, 112);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(519, 27);
-            this.panel6.TabIndex = 3;
+            this._panel6.Controls.Add(this._textBox4);
+            this._panel6.Controls.Add(this._label4);
+            this._panel6.Dock = DockStyle.Top;
+            this._panel6.Location = new System.Drawing.Point(0, 112);
+            this._panel6.Name = "_panel6";
+            this._panel6.Size = new System.Drawing.Size(519, 27);
+            this._panel6.TabIndex = 3;
             // 
             // textBox4
             // 
-            this.textBox4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox4.Location = new System.Drawing.Point(249, 0);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(270, 27);
-            this.textBox4.TabIndex = 0;
+            this._textBox4.Dock = DockStyle.Fill;
+            this._textBox4.Location = new System.Drawing.Point(249, 0);
+            this._textBox4.Name = "_textBox4";
+            this._textBox4.Size = new System.Drawing.Size(270, 27);
+            this._textBox4.TabIndex = 0;
             // 
             // label4
             // 
-            this.label4.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label4.Location = new System.Drawing.Point(0, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(249, 27);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "label4";
+            this._label4.Dock = DockStyle.Left;
+            this._label4.Location = new System.Drawing.Point(0, 0);
+            this._label4.Name = "_label4";
+            this._label4.Size = new System.Drawing.Size(249, 27);
+            this._label4.TabIndex = 1;
+            this._label4.Text = @"label4";
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.textBox3);
-            this.panel4.Controls.Add(this.label3);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(0, 85);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(519, 27);
-            this.panel4.TabIndex = 3;
+            this._panel4.Controls.Add(this._textBox3);
+            this._panel4.Controls.Add(this._label3);
+            this._panel4.Dock = DockStyle.Top;
+            this._panel4.Location = new System.Drawing.Point(0, 85);
+            this._panel4.Name = "_panel4";
+            this._panel4.Size = new System.Drawing.Size(519, 27);
+            this._panel4.TabIndex = 3;
             // 
             // textBox3
             // 
-            this.textBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox3.Location = new System.Drawing.Point(249, 0);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(270, 27);
-            this.textBox3.TabIndex = 0;
+            this._textBox3.Dock = DockStyle.Fill;
+            this._textBox3.Location = new System.Drawing.Point(249, 0);
+            this._textBox3.Name = "_textBox3";
+            this._textBox3.Size = new System.Drawing.Size(270, 27);
+            this._textBox3.TabIndex = 0;
             // 
             // label3
             // 
-            this.label3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label3.Location = new System.Drawing.Point(0, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(249, 27);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "label3";
+            this._label3.Dock = DockStyle.Left;
+            this._label3.Location = new System.Drawing.Point(0, 0);
+            this._label3.Name = "_label3";
+            this._label3.Size = new System.Drawing.Size(249, 27);
+            this._label3.TabIndex = 1;
+            this._label3.Text = @"label3";
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.textBox2);
-            this.panel3.Controls.Add(this.label2);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 58);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(519, 27);
-            this.panel3.TabIndex = 3;
+            this._panel3.Controls.Add(this._textBox2);
+            this._panel3.Controls.Add(this._label2);
+            this._panel3.Dock = DockStyle.Top;
+            this._panel3.Location = new System.Drawing.Point(0, 58);
+            this._panel3.Name = "_panel3";
+            this._panel3.Size = new System.Drawing.Size(519, 27);
+            this._panel3.TabIndex = 3;
             // 
             // textBox2
             // 
-            this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox2.Location = new System.Drawing.Point(249, 0);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(270, 27);
-            this.textBox2.TabIndex = 0;
+            this._textBox2.Dock = DockStyle.Fill;
+            this._textBox2.Location = new System.Drawing.Point(249, 0);
+            this._textBox2.Name = "_textBox2";
+            this._textBox2.Size = new System.Drawing.Size(270, 27);
+            this._textBox2.TabIndex = 0;
             // 
             // label2
             // 
-            this.label2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label2.Location = new System.Drawing.Point(0, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(249, 27);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "label2";
+            this._label2.Dock = DockStyle.Left;
+            this._label2.Location = new System.Drawing.Point(0, 0);
+            this._label2.Name = "_label2";
+            this._label2.Size = new System.Drawing.Size(249, 27);
+            this._label2.TabIndex = 1;
+            this._label2.Text = @"label2";
             // 
             // panel5
             // 
-            this.panel5.Controls.Add(this.textBox1);
-            this.panel5.Controls.Add(this.label1);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(0, 31);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(519, 27);
-            this.panel5.TabIndex = 2;
+            this._panel5.Controls.Add(this._textBox1);
+            this._panel5.Controls.Add(this._label1);
+            this._panel5.Dock = DockStyle.Top;
+            this._panel5.Location = new System.Drawing.Point(0, 31);
+            this._panel5.Name = "_panel5";
+            this._panel5.Size = new System.Drawing.Size(519, 27);
+            this._panel5.TabIndex = 2;
             // 
             // textBox1
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(249, 0);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(270, 27);
-            this.textBox1.TabIndex = 0;
+            this._textBox1.Dock = DockStyle.Fill;
+            this._textBox1.Location = new System.Drawing.Point(249, 0);
+            this._textBox1.Name = "_textBox1";
+            this._textBox1.Size = new System.Drawing.Size(270, 27);
+            this._textBox1.TabIndex = 0;
             // 
             // label1
             // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(249, 27);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "label1";
+            this._label1.Dock = DockStyle.Left;
+            this._label1.Location = new System.Drawing.Point(0, 0);
+            this._label1.Name = "_label1";
+            this._label1.Size = new System.Drawing.Size(249, 27);
+            this._label1.TabIndex = 1;
+            this._label1.Text = @"label1";
             // 
             // panel9
             // 
-            this.panel9.Controls.Add(this.comboBox1);
-            this.panel9.Controls.Add(this.label7);
-            this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel9.Location = new System.Drawing.Point(0, 0);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(519, 31);
-            this.panel9.TabIndex = 2;
+            this._panel9.Controls.Add(this._comboBox1);
+            this._panel9.Controls.Add(this._label7);
+            this._panel9.Dock = DockStyle.Top;
+            this._panel9.Location = new System.Drawing.Point(0, 0);
+            this._panel9.Name = "_panel9";
+            this._panel9.Size = new System.Drawing.Size(519, 31);
+            this._panel9.TabIndex = 2;
             // 
             // comboBox1
             // 
-            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(249, 0);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(270, 28);
-            this.comboBox1.TabIndex = 1;
+            this._comboBox1.Dock = DockStyle.Fill;
+            this._comboBox1.FormattingEnabled = true;
+            this._comboBox1.Location = new System.Drawing.Point(249, 0);
+            this._comboBox1.Name = "_comboBox1";
+            this._comboBox1.Size = new System.Drawing.Size(270, 28);
+            this._comboBox1.TabIndex = 1;
             // 
             // label7
             // 
-            this.label7.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label7.Location = new System.Drawing.Point(0, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(249, 31);
-            this.label7.TabIndex = 2;
-            this.label7.Text = "label7";
+            this._label7.Dock = DockStyle.Left;
+            this._label7.Location = new System.Drawing.Point(0, 0);
+            this._label7.Name = "_label7";
+            this._label7.Size = new System.Drawing.Size(249, 31);
+            this._label7.TabIndex = 2;
+            this._label7.Text = @"label7";
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this._yesButton);
-            this.panel2.Controls.Add(this._noButton);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 232);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(543, 45);
-            this.panel2.TabIndex = 0;
+            this._panel2.Controls.Add(this._yesButton);
+            this._panel2.Controls.Add(this._noButton);
+            this._panel2.Dock = DockStyle.Bottom;
+            this._panel2.Location = new System.Drawing.Point(0, 232);
+            this._panel2.Name = "_panel2";
+            this._panel2.Size = new System.Drawing.Size(543, 45);
+            this._panel2.TabIndex = 0;
             // 
             // _yesButton
             // 
-            this._yesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(254)));
+            this._yesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 254);
             this._yesButton.Location = new System.Drawing.Point(14, 8);
-            this._yesButton.Margin = new System.Windows.Forms.Padding(5);
+            this._yesButton.Margin = new Padding(5);
             this._yesButton.Name = "_yesButton";
             this._yesButton.Size = new System.Drawing.Size(85, 30);
             this._yesButton.TabIndex = 3;
-            this._yesButton.Text = "YES";
+            this._yesButton.Text = @"YES";
             this._yesButton.UseVisualStyleBackColor = true;
-            this._yesButton.Click += new System.EventHandler(this._yesButton_Click);
+            this._yesButton.Click += new EventHandler(_yesButton_Click);
             // 
             // _noButton
             // 
-            this._noButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(254)));
+            this._noButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 254);
             this._noButton.Location = new System.Drawing.Point(109, 8);
-            this._noButton.Margin = new System.Windows.Forms.Padding(5);
+            this._noButton.Margin = new Padding(5);
             this._noButton.Name = "_noButton";
             this._noButton.Size = new System.Drawing.Size(85, 30);
             this._noButton.TabIndex = 2;
-            this._noButton.Text = "NO";
+            this._noButton.Text = @"NO";
             this._noButton.UseVisualStyleBackColor = true;
-            this._noButton.Click += new System.EventHandler(this._noButton_Click);
+            this._noButton.Click += new EventHandler(_noButton_Click);
             // 
             // Editor
             // 
             this.ClientSize = new System.Drawing.Size(543, 277);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(254)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Controls.Add(this._panel2);
+            this.Controls.Add(this._panel1);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 254);
+            this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
             this.Name = "Editor";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Editor_FormClosing);
-            this.panel1.ResumeLayout(false);
-            this.mArea.ResumeLayout(false);
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
-            this.panel9.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.ResumeLayout(false);
+            this.FormClosing += new FormClosingEventHandler(Editor_FormClosing);
+            this._panel1.ResumeLayout(false);
+            this._mArea.ResumeLayout(false);
+            this._panel8.ResumeLayout(false);
+            this._panel8.PerformLayout();
+            this._panel7.ResumeLayout(false);
+            this._panel7.PerformLayout();
+            this._panel6.ResumeLayout(false);
+            this._panel6.PerformLayout();
+            this._panel4.ResumeLayout(false);
+            this._panel4.PerformLayout();
+            this._panel3.ResumeLayout(false);
+            this._panel3.PerformLayout();
+            this._panel5.ResumeLayout(false);
+            this._panel5.PerformLayout();
+            this._panel9.ResumeLayout(false);
+            this._panel2.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
-
+        
+        // ReSharper restore RedundantDelegateCreation
         #endregion
 
         private void Editor_FormClosing(object sender, FormClosingEventArgs e) {

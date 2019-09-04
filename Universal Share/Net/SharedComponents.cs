@@ -6,7 +6,6 @@
 
 #endregion
 
-using System;
 using System.Net;
 
 namespace Universal_Share.Net {

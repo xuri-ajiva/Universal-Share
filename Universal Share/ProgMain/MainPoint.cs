@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
-using Universal_Share.hocks;
 using Universal_Share.Interface;
 using Universal_Share.Net;
 using Universal_Share.Options;
@@ -29,12 +27,12 @@ namespace Universal_Share.ProgMain {
 
         public static byte[]    K => _auth.KeyBytes;
         public static byte[]    T => _auth.TokenBytes;
-        public static Settings  S { get => _prgMain.settings; set => _prgMain.settings = value; }
+        public static Settings  S { get => _prgMain.Settings; set => _prgMain.Settings = value; }
         public static UserInput U { get => _userInput;        private set => _userInput = value; }
         public static ßProgram  P => _prgMain;
         public static Editor    E => _editor;
 
-        private static ISharedAble CurrentState;
+        private static ISharedAble _currentState;
 
         public static void Main(string[] args) {
             Application.EnableVisualStyles();
@@ -44,17 +42,17 @@ namespace Universal_Share.ProgMain {
             if ( DEBUG ) {
                 if ( args.Length == 0 ) {
                     if ( SERVER ) {
-                        SettingsStatic.SAVE_PATH_S = "S_" + SettingsStatic.SAVE_PATH_S;
-                        Console.WriteLine( "starting Server..." );
-                        Console.Title = "server";
+                        SettingsStatic.SavePathS = "S_" + SettingsStatic.SavePathS;
+                        Console.WriteLine( @"starting Server..." );
+                        Console.Title = @"server";
                         InitializeAll();
                         if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "C" );
                         CreateUi( true );
                     }
                     else {
-                        SettingsStatic.SAVE_PATH_S = "C_" + SettingsStatic.SAVE_PATH_S;
-                        Console.WriteLine( "starting Client..." );
-                        Console.Title = "client";
+                        SettingsStatic.SavePathS = "C_" + SettingsStatic.SavePathS;
+                        Console.WriteLine( @"starting Client..." );
+                        Console.Title = @"client";
                         InitializeAll();
                         if ( START_OPPOSITE ) Process.Start( System.Reflection.Assembly.GetEntryAssembly()?.Location, "S" );
                         CreateUi( false );
@@ -80,11 +78,11 @@ namespace Universal_Share.ProgMain {
         public static void CreateUi(bool isServer) {
             Application.EnableVisualStyles();
             if ( isServer )
-                CurrentState = new Server();
+                _currentState = new Server();
             else
-                CurrentState = new Client();
+                _currentState = new Client();
 
-            var form = new ServerForm( CurrentState, isServer ) { Text = CurrentState.GetType().Name };
+            var form = new ServerForm( _currentState, isServer ) { Text = _currentState.GetType().Name };
             Application.Run( form );
         }
 
@@ -107,7 +105,7 @@ namespace Universal_Share.ProgMain {
                 Console.WriteLine( e.Message + Resources.XmlLoad_DeleatingFile );
                 Console.BackgroundColor = ConsoleColor.Black;
                 try {
-                    File.Delete( SettingsStatic.SAVE_PATH_S );
+                    File.Delete( SettingsStatic.SavePathS );
                 } catch (Exception ex) {
                     Console.BackgroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine( ex.Message );
@@ -120,42 +118,45 @@ namespace Universal_Share.ProgMain {
                     if ( S.Changed ) Settings.Save( P );
                     Thread.Sleep( 1000 );
                 }
+                // ReSharper disable once FunctionNeverReturns
             } );
             t.Start();
 
-            _auth = new Auth( SettingsStatic.SAVE_PATH_S );
+            _auth = new Auth( SettingsStatic.SavePathS );
             try {
-                S.RegList.Add( RegInfo.TYPE.SINGLE_FILE, new TypeHolder( "cmd", "/c echo", " && timeout 3", true, "descript", false ) );
-            } catch { }
+                S.RegList.Add( RegInfo.Type.SingleFile, new TypeHolder( "cmd", "/c echo", " && timeout 3", true, "descript", false ) );
+            } catch {
+                // ignored
+            }
         }
 
         private static void StartNormal(string[] args) {
             if ( args.Length > 0 ) {
-                Console.WriteLine( "Normal Start" );
+                Console.WriteLine( @"Normal Start" );
                 Console.WriteLine( args[0] );
                 // ReSharper disable once SwitchStatementMissingSomeCases
                 switch (args[0].ToLower()) {
                     case "s":
-                        SettingsStatic.SAVE_PATH_S = "S_" + SettingsStatic.SAVE_PATH_S;
-                        Console.WriteLine( "starting Server..." );
-                        Console.Title = "server";
+                        SettingsStatic.SavePathS = "S_" + SettingsStatic.SavePathS;
+                        Console.WriteLine( @"starting Server..." );
+                        Console.Title = @"server";
                         InitializeAll();
                         CreateUi( true );
                         break;
                     case "c":
-                        SettingsStatic.SAVE_PATH_S = "C_" + SettingsStatic.SAVE_PATH_S;
-                        Console.WriteLine( "starting Client..." );
-                        Console.Title = "client";
+                        SettingsStatic.SavePathS = "C_" + SettingsStatic.SavePathS;
+                        Console.WriteLine( @"starting Client..." );
+                        Console.Title = @"client";
                         InitializeAll();
                         CreateUi( false );
                         break;
                 }
             }
             else {
-                Console.WriteLine( "C / S" );
+                Console.WriteLine( @"C / S" );
             }
 
-            Console.WriteLine( "Pause ..." );
+            Console.WriteLine( @"Pause ..." );
             Console.ReadKey();
         }
     }

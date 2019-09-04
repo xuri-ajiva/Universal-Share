@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Universal_Share.ProgMain;
 
 namespace Universal_Share.Net {
     public class ClientBase : ServerBase {
-        public TcpClient OpenIpAddress(IPAddress ipAddress) {
-            var ipendF     = new IPEndPoint( ipAddress, FilePort );
+        protected TcpClient OpenIpAddress(IPAddress ipAddress) {
+            var ipendF     = new IPEndPoint( ipAddress, this.FilePort );
             var fileSocket = new TcpClient();
             fileSocket.Connect( ipendF );
             return fileSocket;
         }
 
 
-        public (string, int) SendFile(TcpClient fileSocket, string fileName) {
+        protected (string, int) SendFile(TcpClient fileSocket, string fileName) {
             var id = 0;
             try {
                 id = new Random().Next( 10000000, 19999999 );
@@ -36,14 +33,14 @@ namespace Universal_Share.Net {
         }
 
         private string SendRegisterStream(TcpClient communicationSocket, String saveFileName, int id) {
-            byte[] idB       = Encoding.UTF8.GetBytes( id.ToString() );
-            byte[] filanemeB = Encoding.UTF8.GetBytes( saveFileName );
+            var idB       = Encoding.UTF8.GetBytes( id.ToString() );
+            var filanemeB = Encoding.UTF8.GetBytes( saveFileName );
 
-            var b = Parts_To_Buffer( ßMainPoint.T, idB, Option.CREATE_REGISTER, filanemeB );
+            var b = Parts_To_Buffer( ßMainPoint.T, idB, Option.CreateRegister, filanemeB );
 
             communicationSocket.Client.Send( b );
 
-            var buffer = new byte[buffer_size];
+            var buffer = new byte[BUFFER_SIZE];
             var readet = communicationSocket.Client.Receive( buffer, SocketFlags.None );
 
             var t = Buffer_To_Parts( buffer, readet );
@@ -52,28 +49,27 @@ namespace Universal_Share.Net {
         }
 
         public void SteamClient(TcpClient cl, string filename, int id) {
-            int    readerBytes = -1;
-            byte[] buffer      = new byte[buffer_size - heather_size];
+            var    readerBytes = -1;
 
-            byte[] idB = Encoding.UTF8.GetBytes( id.ToString() );
+            var idB = Encoding.UTF8.GetBytes( id.ToString() );
 
             Stream strm = new FileStream( filename, FileMode.Open );
 
-            var blockCtr       = 0;
-            var totalReadBytes = 0;
+            //var blockCtr       = 0;
+            //var totalReadBytes = 0;
 
             while ( readerBytes != 0 ) {
-                buffer      = new byte[buffer_size - heather_size];
-                readerBytes = strm.Read( buffer, 0, buffer_size - heather_size );
+                var buffer = new byte[BUFFER_SIZE - HEATHER_SIZE];
+                readerBytes = strm.Read( buffer, 0, BUFFER_SIZE - HEATHER_SIZE );
                 if ( readerBytes == -1 ) break;
 
-                var ret = Parts_To_Buffer( ßMainPoint.T, idB, Option.SAVE_TO_FILE, buffer );
+                var ret = Parts_To_Buffer( ßMainPoint.T, idB, Option.SaveToFile, buffer );
 
                 cl.Client.Send( ret, SocketFlags.None );
 
-                buffer = new byte[buffer_size];
+                buffer = new byte[BUFFER_SIZE];
 
-                int readBytes2 = cl.Client.Receive( buffer, 0, buffer_size, SocketFlags.None );
+                var readBytes2 = cl.Client.Receive( buffer, 0, BUFFER_SIZE, SocketFlags.None );
 
                 //var sp = Buffer_To_Parts( buffer, readBytes2 );
 
@@ -81,8 +77,8 @@ namespace Universal_Share.Net {
                 if ( t.Item2 == -1 ) Console.WriteLine( t.Item1 );
 
                 //Console.WriteLine( "Paket: id = " + id + "    | " + Encoding.UTF8.GetString( SubArray( buffer, 0, this.HeatherSize ) ) + "  :  [{0}]", string.Join( ", ", SubArray( buffer, 0, 8 ) ) );
-                blockCtr++;
-                totalReadBytes += readerBytes;
+                //blockCtr++;
+                //totalReadBytes += readerBytes;
             }
 
             strm.Close();

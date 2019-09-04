@@ -2,17 +2,17 @@
 
 namespace Universal_Share.Net {
     public class Option {
-        public static readonly byte[] ERROR           = { 255, 255, 255, 255 };
-        public static readonly byte[] SUCCESS         = { 201, 201, 201, 201 };
-        public static readonly byte[] SAVE_TO_FILE    = { 103, 2, 1, 1 };
-        public static readonly byte[] CREATE_REGISTER = { 103, 4, 1, 1 };
-        public static readonly byte[] FILE_TYPE       = { 109, 9, 0, 0 };
+        public static readonly byte[] Error           = { 255, 255, 255, 255 };
+        public static readonly byte[] Success         = { 201, 201, 201, 201 };
+        public static readonly byte[] SaveToFile    = { 103, 2, 1, 1 };
+        public static readonly byte[] CreateRegister = { 103, 4, 1, 1 };
+        public static readonly byte[] FileType       = { 109, 9, 0, 0 };
 
         [DebuggerStepThrough]
-        public static bool isEqual(byte[] x1, byte[] x2) {
-            if ( x1 == null && x2 == null ) return false;
+        public static bool IsEqual(byte[] x1, byte[] x2) {
+            if ( x1 == null || x2 == null ) return false;
             if ( x1.Length != x2.Length ) return false;
-            for ( int i = 0; i < x1.Length; i++ ) {
+            for ( var i = 0; i < x1.Length; i++ ) {
                 if ( x1[i] != x2[i] ) return false;
             }
 
