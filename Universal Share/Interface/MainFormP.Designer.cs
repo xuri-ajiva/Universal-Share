@@ -51,6 +51,9 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
+            this.b_SendFile = new System.Windows.Forms.Button();
+            this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -79,6 +82,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.b_SendFile);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -100,7 +105,7 @@
             // 
             this.Stop.Location = new System.Drawing.Point(6, 41);
             this.Stop.Name = "Stop";
-            this.Stop.Size = new System.Drawing.Size(75, 23);
+            this.Stop.Size = new System.Drawing.Size(182, 23);
             this.Stop.TabIndex = 1;
             this.Stop.Text = "Stop";
             this.Stop.UseVisualStyleBackColor = true;
@@ -120,7 +125,7 @@
             // 
             this.B_StartServer.Location = new System.Drawing.Point(6, 12);
             this.B_StartServer.Name = "B_StartServer";
-            this.B_StartServer.Size = new System.Drawing.Size(75, 23);
+            this.B_StartServer.Size = new System.Drawing.Size(182, 23);
             this.B_StartServer.TabIndex = 0;
             this.B_StartServer.Text = "Start";
             this.B_StartServer.UseVisualStyleBackColor = true;
@@ -243,29 +248,47 @@
             this.deleateToolStripMenuItem,
             this.newToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(114, 70);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.EditToolStripMenuItem_Click);
             // 
             // deleateToolStripMenuItem
             // 
             this.deleateToolStripMenuItem.Name = "deleateToolStripMenuItem";
-            this.deleateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleateToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.deleateToolStripMenuItem.Text = "Deleate";
             this.deleateToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.ImageKey = "NEW";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(6, 41);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(182, 23);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // b_SendFile
+            // 
+            this.b_SendFile.Location = new System.Drawing.Point(6, 12);
+            this.b_SendFile.Name = "b_SendFile";
+            this.b_SendFile.Size = new System.Drawing.Size(182, 23);
+            this.b_SendFile.TabIndex = 2;
+            this.b_SendFile.Text = "SendFile";
+            this.b_SendFile.UseVisualStyleBackColor = true;
+            this.b_SendFile.Click += new System.EventHandler(this.B_SendFile_Click);
             // 
             // MainFormP
             // 
@@ -280,6 +303,7 @@
             this.Text = "MainFormP";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ColsingHandler);
             this.Load += new System.EventHandler(this.ServerForm_Load);
+            this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
@@ -311,5 +335,7 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button b_SendFile;
     }
 }

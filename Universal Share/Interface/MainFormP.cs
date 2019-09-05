@@ -8,9 +8,9 @@ using Universal_Share.ProgMain;
 
 namespace Universal_Share.Interface {
     public partial class MainFormP : Form {
-        private readonly ISharedAble _server;
-        private          Thread      _serverThread;
-        private readonly bool        _isServer;
+        private readonly NetworkFileSend _server;
+        private          Thread          _serverThread;
+        private readonly bool            _isServer;
 
         private const string BASE_ITEM = "BASE_ITEM";
 
@@ -21,8 +21,17 @@ namespace Universal_Share.Interface {
 
         public MainFormP(ISharedAble s, bool isServer) {
             this._serverThread = new Thread( () => { } );
-            this._server       = s;
-            this._isServer     = isServer;
+
+            switch (s) {
+                case Client c:
+                    this._server = c;
+                    break;
+                case Server se:
+                    this._server = se;
+                    break;
+            }
+
+            this._isServer = isServer;
 
             InitializeComponent();
 
@@ -46,6 +55,8 @@ namespace Universal_Share.Interface {
             this._TokenList.Name    = "TO";
             this._RememberList.Name = "RE";
             this._RegList.Name      = "RG";
+
+            this.B_StartServer.Text = "Start " + s.GetType().Name;
         }
 
         private void ServerForm_Load(object sender, EventArgs e) {
@@ -69,7 +80,7 @@ namespace Universal_Share.Interface {
                 if ( !this._serverThread.IsAlive ) {
                     this._serverThread = null;
                     GC.Collect();
-                    this._serverThread = new Thread( () => StartServer( this._server, IPAddress.Any ) );
+                    this._serverThread = new Thread( () => StartServer( this._server as ISharedAble, IPAddress.Any ) );
 
                     this._serverThread.Start();
                 }
@@ -80,7 +91,7 @@ namespace Universal_Share.Interface {
                         this._serverThread = null;
                         GC.Collect();
                         var ip = ßMainPoint.U.GetString( "Bitte IP Addresse Eintragen", "127.0.0.1" );
-                        this._serverThread = new Thread( () => StartServer( this._server, IPAddress.Parse( ip ) ) );
+                        this._serverThread = new Thread( () => StartServer( this._server as ISharedAble, IPAddress.Parse( ip ) ) );
 
                         this._serverThread.Start();
                     } catch (Exception ex) {
@@ -92,7 +103,9 @@ namespace Universal_Share.Interface {
 
         private void Stop_Click(object sender, EventArgs e) {
             if ( this._serverThread.IsAlive ) {
-                this._server.Abort();
+                var s = this._server as ISharedAble;
+                s.Abort();
+
                 this._serverThread.Abort();
             }
         }
@@ -247,6 +260,18 @@ namespace Universal_Share.Interface {
             }
 
             ForceUpdateAll_Click( null, null );
+        }
+
+        [STAThread]
+        private void B_SendFile_Click(object sender, EventArgs e) {
+            if ( !( this._server is ISharedAble server ) ) return;
+            using ( OpenFileDialog f = new OpenFileDialog { Multiselect = true } ) {
+                if ( f.ShowDialog( this ) == DialogResult.OK ) {
+                    foreach ( var s in f.FileNames ) {
+                        this._server.SendFile( server.GetTcpClient(), s );
+                    }
+                }
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ using Universal_Share.Security;
 namespace Universal_Share.ProgMain {
     public static class ßMainPoint {
         private const bool DEBUG          = true;
-        private const bool SERVER         = true;
+        private const bool SERVER         = false;
         private const bool START_OPPOSITE = true;
 
         private static ßProgram  _prgMain;
@@ -75,6 +75,7 @@ namespace Universal_Share.ProgMain {
             hocks.Exit.CreateHock();
         }
 
+        [STAThread]
         public static void CreateUi(bool isServer) {
             Application.EnableVisualStyles();
             if ( isServer )
@@ -83,7 +84,13 @@ namespace Universal_Share.ProgMain {
                 _currentState = new Client();
 
             var form = new MainFormP( _currentState, isServer ) { Text = _currentState.GetType().Name };
-            Application.Run( form );
+
+            var t = new Thread( () => {
+                Application.Run( form );
+            } );
+
+            t.SetApartmentState( ApartmentState.STA );
+            t.Start();
         }
 
         public static bool Exit(hocks.Exit.CtrlType sig = hocks.Exit.CtrlType.CTRL_BREAK_EVENT) {
@@ -118,6 +125,7 @@ namespace Universal_Share.ProgMain {
                     if ( S.Changed ) Settings.Save( P );
                     Thread.Sleep( 1000 );
                 }
+
                 // ReSharper disable once FunctionNeverReturns
             } );
             t.Start();

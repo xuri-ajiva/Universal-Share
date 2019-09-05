@@ -16,7 +16,7 @@ namespace Universal_Share.Net {
         }
 
 
-        protected (string, int) SendFile(TcpClient fileSocket, string fileName) {
+        public (string, int) SendFile(TcpClient fileSocket, string fileName) {
             var id = 0;
             try {
                 id = new Random().Next( 10000000, 19999999 );

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -31,5 +32,11 @@ namespace Universal_Share.Net {
 
         /// <inheritdoc />
         public void Abort() { this._tcpFileListener.Stop(); }
+
+        /// <inheritdoc />
+        public TcpClient GetTcpClient() => throw new NotSupportedException();
+
+        /// <inheritdoc />
+        public TcpListener GetTcpListener() => this._tcpFileListener;
     }
 }

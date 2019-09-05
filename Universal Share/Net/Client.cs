@@ -10,7 +10,7 @@ namespace Universal_Share.Net {
         public void Start(IPAddress ipAddress) {
             //var ip = IPAddress.Parse( "127.0.0.1" );
             this._tcpClient = OpenIpAddress( ipAddress );
-            while ( true ) {
+            //while ( true ) {
                 try {
                     SendFile( this._tcpClient, "..\\..\\..\\test.exe" );
                     Thread.Sleep( 1000 );
@@ -18,14 +18,18 @@ namespace Universal_Share.Net {
                     Console.WriteLine( e.Message );
                     Thread.Sleep( 1000 );
                 }
-            }
+            //}
 
             // ReSharper disable once FunctionNeverReturns
         }
 
         /// <inheritdoc />
-        public void Abort() {
-            this._tcpClient.Close();
-        }
+        public void Abort() { this._tcpClient.Close(); }
+
+        /// <inheritdoc />
+        public TcpClient GetTcpClient() => this._tcpClient;
+
+        /// <inheritdoc />
+        public TcpListener GetTcpListener() => throw new NotSupportedException();
     }
 }
