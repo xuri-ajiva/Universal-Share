@@ -57,11 +57,11 @@
     <Compile Include="Interface\Editor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Interface\ServerForm.cs">
+    <Compile Include="Interface\MainFormP.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Interface\ServerForm.Designer.cs">
-      <DependentUpon>ServerForm.cs</DependentUpon>
+    <Compile Include="Interface\MainFormP.Designer.cs">
+      <DependentUpon>MainFormP.cs</DependentUpon>
     </Compile>
     <Compile Include="Interface\ServerForm_New.cs">
       <SubType>Form</SubType>
@@ -96,14 +96,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Interface\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Interface\ServerForm.resx">
-      <DependentUpon>ServerForm.cs</DependentUpon>
+    <EmbeddedResource Include="Interface\MainFormP.resx">
+      <DependentUpon>MainFormP.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interface\UserInput.resx" />
     <EmbeddedResource Include="Options\Resources.resx">

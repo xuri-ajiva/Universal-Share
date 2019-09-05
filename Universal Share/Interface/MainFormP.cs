@@ -7,7 +7,7 @@ using Universal_Share.Options;
 using Universal_Share.ProgMain;
 
 namespace Universal_Share.Interface {
-    public partial class ServerForm : Form {
+    public partial class MainFormP : Form {
         private readonly ISharedAble _server;
         private          Thread      _serverThread;
         private readonly bool        _isServer;
@@ -19,7 +19,7 @@ namespace Universal_Share.Interface {
             //Thread.Sleep( int.MaxValue );
         }
 
-        public ServerForm(ISharedAble s, bool isServer) {
+        public MainFormP(ISharedAble s, bool isServer) {
             this._serverThread = new Thread( () => { } );
             this._server       = s;
             this._isServer     = isServer;

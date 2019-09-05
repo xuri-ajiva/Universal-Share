@@ -1,6 +1,6 @@
 ﻿namespace Universal_Share.Interface
 {
-    partial class ServerForm
+    partial class MainFormP
     {
         /// <summary>
         /// Required designer variable.
@@ -267,7 +267,7 @@
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
             // 
-            // ServerForm
+            // MainFormP
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -276,8 +276,8 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel3);
-            this.Name = "ServerForm";
-            this.Text = "ServerForm";
+            this.Name = "MainFormP";
+            this.Text = "MainFormP";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ColsingHandler);
             this.Load += new System.EventHandler(this.ServerForm_Load);
             this.panel2.ResumeLayout(false);

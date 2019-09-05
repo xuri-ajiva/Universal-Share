@@ -82,7 +82,7 @@ namespace Universal_Share.ProgMain {
             else
                 _currentState = new Client();
 
-            var form = new ServerForm( _currentState, isServer ) { Text = _currentState.GetType().Name };
+            var form = new MainFormP( _currentState, isServer ) { Text = _currentState.GetType().Name };
             Application.Run( form );
         }
 

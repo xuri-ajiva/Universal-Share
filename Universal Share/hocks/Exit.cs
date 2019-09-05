@@ -10,7 +10,6 @@ namespace Universal_Share.hocks {
 
         private static EventHandler _handler;
 
-
         public enum CtrlType {
             CTRL_C_EVENT        = 0,
             CTRL_BREAK_EVENT    = 1,

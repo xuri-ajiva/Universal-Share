@@ -9,12 +9,10 @@
 using System.Net;
 
 namespace Universal_Share.Net {
-    public class SharedComponents : NetworkFileSend{
-
-    }
+    public class SharedComponents : NetworkFileSend { }
 
     public interface ISharedAble {
-       void Start(IPAddress ipAddress);
-       void Abort();
+        void Start(IPAddress ipAddress);
+        void Abort();
     }
 }

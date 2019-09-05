@@ -6,7 +6,7 @@ using Universal_Share.ProgMain;
 using Universal_Share.Security;
 
 namespace Universal_Share.Interface {
-    public partial class ServerForm {
+    public partial class MainFormP {
         public ListViewItem ListViewFind(ListView ls, string key, bool sub) {
             if ( ls.InvokeRequired )
                 ls.Invoke( new Action( () => { Tmp = ls.Items.Find( key, sub ); } ) );
@@ -75,7 +75,7 @@ namespace Universal_Share.Interface {
         }
     }
 
-    public partial class ServerForm {
+    public partial class MainFormP {
         private void Changed <T, TV>(DictChangedEventArgs<T, TV> e) {
             switch (e.Type) {
                 case TypeE.AddItem:    break;

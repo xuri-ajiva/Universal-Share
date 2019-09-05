@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Universal_Share.hocks.Exit">
+    <Position X="11.5" Y="4" Width="4.25" />
+    <NestedTypes>
+      <Delegate Name="Universal_Share.hocks.Exit.EventHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>hocks\Exit.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="Universal_Share.hocks.Exit.CtrlType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>hocks\Exit.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAEAAAAAAAABAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>hocks\Exit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Interface.Editor">
+    <Position X="26" Y="12" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AQACCAAA7zAAAOGPAACCCAACAEAAAAAAFBBAABAAAAg=</HashCode>
+      <FileName>Interface\Editor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Interface.ServerForm">
+    <Position X="18.25" Y="12" Width="7" />
+    <TypeIdentifier>
+      <HashCode>KBAQAIAgiCIADADgxAyBoJHHA4AjQAAAIoAQAQgBJBo=</HashCode>
+      <FileName>Interface\ServerForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Interface.UserInput">
+    <Position X="13.25" Y="12" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAACCAAYEABAQCIAAEABAACAAABAAAAAAAAkAAAACA=</HashCode>
+      <FileName>Interface\UserInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Net.BuildId">
+    <Position X="23.5" Y="4" Width="3" />
+    <TypeIdentifier>
+      <HashCode>UAAAAAAAAAACAgAAAAFQAAAAAIAAQAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Net\BuildId.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Net.Client">
+    <Position X="8.25" Y="19.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAACAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Net\Client.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Universal_Share.Net.ClientBase">
+    <Position X="5" Y="13.25" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABIAAAAIAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\ClientBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Net.NetBase">
+    <Position X="5" Y="4" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>wAABQIqAUBIAAFAgAgAgAAAAGAAEAAAABAAAADgEgAA=</HashCode>
+      <FileName>Net\NetBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Net.NetworkFileSend">
+    <Position X="7" Y="15.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\NetworkFileSend.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Net.Option">
+    <Position X="27.25" Y="4" Width="2.75" />
+    <NestedTypes>
+      <Enum Name="Universal_Share.Net.Option.Range" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Net\Option.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAgAgAAAAAQAAAQAAAAAAAgAAAAAQAABAAAAAAAA=</HashCode>
+      <FileName>Net\Option.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Net.Server">
+    <Position X="5" Y="19.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQCQAACAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\Server.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Universal_Share.Net.ServerBase">
+    <Position X="6.5" Y="11.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\ServerBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Net.SharedComponents">
+    <Position X="7" Y="17.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\SharedComponents.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Options.EventStream" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="4" Width="3.75" />
+    <NestedTypes>
+      <Delegate Name="Universal_Share.Options.EventStream.DictionaryChanged" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Options\regInfo.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="Universal_Share.Options.EventStream.TypeE" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Options\regInfo.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAABCAAQAAgGAAAAAhgAAAAAAAIAAAAAAGKAKA=</HashCode>
+      <FileName>Options\regInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Universal_Share.Options.Resources">
+    <Position X="35.75" Y="4" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AIgQABCAAAEAAggCDAABEAAAAQABAAAAIAAgAAAAJJA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Options.SerializableDictionary&lt;TK, TV&gt;" BaseTypeListCollapsed="true">
+    <Position X="1.75" Y="28.75" Width="3" />
+    <NestedTypes>
+      <Delegate Name="Universal_Share.Options.SerializableDictionary&lt;TK, TV&gt;.DictionaryChanged" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Options\SerializableDictionary.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAMAABACAAABAQCAABAAAAAAAAAgBBAAAA=</HashCode>
+      <FileName>Options\SerializableDictionary.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Universal_Share.Options.DictChangedEventArgs&lt;TK, TV&gt;" Collapsed="true">
+    <Position X="41.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAgAAAAAAA=</HashCode>
+      <FileName>Options\SerializableDictionary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Options.Settings">
+    <Position X="30.75" Y="4" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAAAAAAAAQABCACAAAAAAAAgAAAEQAAAgAAAAA=</HashCode>
+      <FileName>Options\Settings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Options.SettingsStatic" Collapsed="true">
+    <Position X="43.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Options\SettingsStatic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.ProgMain.ßMainPoint" Collapsed="true">
+    <Position X="41.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAABQAgAgCAEAAAgAAAAQAAAAAAAAAIIACBoDGABA=</HashCode>
+      <FileName>ProgMain\MainPoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.ProgMain.ßProgram">
+    <Position X="21" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>ProgMain\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Universal_Share.Security.Auth">
+    <Position X="2.25" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAACABBAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Security\Auth.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Universal_Share.Options.RegInfo" BaseTypeListCollapsed="true">
+    <Position X="41.25" Y="8.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Universal_Share.Options.RegInfo.Type" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Options\regInfo.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CAACAAAAICAAAAAkAAYAAAAAAAAIAAAgAAAFAAAAAIA=</HashCode>
+      <FileName>Options\regInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Struct Name="Universal_Share.Options.RememberType" Collapsed="true">
+    <Position X="43.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAEAAAQAgAAAAAAA=</HashCode>
+      <FileName>Options\RememberType.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Universal_Share.Options.TypeHolder" Collapsed="true">
+    <Position X="43.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAABBAAIIAAAAAAAAAAAABBAAAAAAAAA=</HashCode>
+      <FileName>Options\TypeHolder.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Universal_Share.Security.TokenItem" Collapsed="true">
+    <Position X="41.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAgAAAAAAAAEABAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Security\Auth.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="Universal_Share.Net.ISharedAble">
+    <Position X="44.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Net\SharedComponents.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Universal_Share.Options.TypeE" Collapsed="true">
+    <Position X="41.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAAAAAAAAAAEABAAAAAAAAQAgAIAAAAEAAAAAABQIAA=</HashCode>
+      <FileName>Options\SerializableDictionary.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
