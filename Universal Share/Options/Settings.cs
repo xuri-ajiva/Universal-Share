@@ -10,10 +10,10 @@ namespace Universal_Share.Options {
         [XmlIgnore] public bool Changed;
 
 
-        public SerializableDictionary<RegInfo.Type, TypeHolder>   RegList      = new SerializableDictionary<RegInfo.Type, TypeHolder>();
-        public SerializableDictionary<RegInfo.Type, RememberType> RememberType = new SerializableDictionary<RegInfo.Type, RememberType>();
-        public SerializableDictionary<int, RegInfo>               IdStreamsMap = new SerializableDictionary<int, RegInfo>();
-        public SerializableDictionary<string, TokenItem>          ToakenList   = new SerializableDictionary<string, TokenItem>();
+        public SerializableDictionary<string, TypeHolder>   RegList      = new SerializableDictionary<string, TypeHolder>();
+        public SerializableDictionary<string, RememberType> RememberType = new SerializableDictionary<string, RememberType>();
+        public SerializableDictionary<int, RegInfo>         IdStreamsMap = new SerializableDictionary<int, RegInfo>();
+        public SerializableDictionary<string, TokenItem>    ToakenList   = new SerializableDictionary<string, TokenItem>();
 
         public Settings() { CreatedEventHandler(); }
 
@@ -31,11 +31,11 @@ namespace Universal_Share.Options {
 
     public partial class Settings {
         public bool Execute(RegInfo regInfo) {
-            if ( this.RegList.ContainsKey( regInfo.TypeP ) ) {
-                var t = this.RegList.Get( regInfo.TypeP );
+            if ( this.RegList.ContainsKey( regInfo.Extension ) ) {
+                var t = this.RegList.Get( regInfo.Extension );
                 if ( t.UserConfirm ) {
-                    if ( this.RememberType.ContainsKey( regInfo.TypeP ) )
-                        if ( this.RememberType.Get( regInfo.TypeP ).IsOkOrYes() )
+                    if ( this.RememberType.ContainsKey( regInfo.Extension ) )
+                        if ( this.RememberType.Get( regInfo.Extension ).IsOkOrYes() )
                             goto start;
                         else { return false; }
 
@@ -49,17 +49,33 @@ namespace Universal_Share.Options {
                 start:
                 try {
                     if ( t.CloseFileStream ) regInfo.Stream?.Close();
-                    Process.Start( t.OpenWith, t.ArgumentsBeforePathToFile + " " + regInfo.SaveFilePath + " " + t.ArgumentsAfterPathToFile );
+
+                    this.currentMapStr = "%V%";
+                    this.currentRep    = regInfo.SaveFilePath;
+
+                    Process.Start( Map( t.OpenWith ), Map( t.Arguments) );
                     return true;
                 } catch (Exception e) {
                     Console.WriteLine( e );
                     return false;
                 }
             }
+            else {
+                ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder(new TypeHolder("","",true,"",true),regInfo.Extension );
+                ßMainPoint.S.RegList.Add( r12, r22 );
+                Execute( regInfo );
+            }
 
             return false;
         }
 
+        private string currentMapStr;
+        private string currentRep;
+
+        [DebuggerStepThrough] private string Map(string s)                            { return map( s, this.currentMapStr, this.currentRep ); }
+        private static                string map(string s, string mapStr, string rep) { return s.Replace( mapStr, rep ); }
+
+        [DebuggerStepThrough]
         public static void Load(ßProgram p) {
             p.Settings = Load<Settings>( SettingsStatic.SavePathS ) ?? throw new NullReferenceException();
             p.Settings.CreatedEventHandler();
@@ -69,11 +85,11 @@ namespace Universal_Share.Options {
 
 
         private static T Load <T>(string path) {
-            FileStream    fileStream    = null;
+            FileStream fileStream = null;
             try {
                 if ( !File.Exists( path ) ) throw new IOException( "File Dose Not Exists" );
                 var xmlSerializer = new XmlSerializer( typeof(T) );
-                fileStream    = new FileStream( path, FileMode.Open, FileAccess.Read, FileShare.Read );
+                fileStream = new FileStream( path, FileMode.Open, FileAccess.Read, FileShare.Read );
                 var obj = (T) xmlSerializer.Deserialize( fileStream );
                 fileStream.Close();
                 return obj;
@@ -87,11 +103,11 @@ namespace Universal_Share.Options {
         }
 
         private static void Save <T>(T dataLayout, string path) {
-            TextWriter    textWriter    = null;
+            TextWriter textWriter = null;
             try {
                 new FileInfo( path ).Directory?.Create();
                 var xmlSerializer = new XmlSerializer( dataLayout.GetType() );
-                textWriter    = new StreamWriter( path );
+                textWriter = new StreamWriter( path );
                 xmlSerializer.Serialize( textWriter, dataLayout );
                 textWriter.Close();
             } catch (Exception ex) {

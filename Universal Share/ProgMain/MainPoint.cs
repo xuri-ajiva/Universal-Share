@@ -17,7 +17,7 @@ using Universal_Share.Security;
 namespace Universal_Share.ProgMain {
     public static class ßMainPoint {
         private const bool DEBUG          = true;
-        private const bool SERVER         = false;
+        private const bool SERVER         = true;
         private const bool START_OPPOSITE = true;
 
         private static ßProgram  _prgMain;
@@ -122,7 +122,8 @@ namespace Universal_Share.ProgMain {
 
             var t = new Thread( () => {
                 while ( true ) {
-                    if ( S.Changed ) Settings.Save( P );
+                    if ( S.Changed ) 
+                        Settings.Save( P );
                     Thread.Sleep( 1000 );
                 }
 
@@ -132,7 +133,7 @@ namespace Universal_Share.ProgMain {
 
             _auth = new Auth( SettingsStatic.SavePathS );
             try {
-                S.RegList.Add( RegInfo.Type.SingleFile, new TypeHolder( "cmd", "/c echo", " && timeout 3", true, "descript", false ) );
+                S.RegList.Add( ".exe", new TypeHolder( "cmd", "/c echo %V% && timeout 3", true, "descript", false ) );
             } catch {
                 // ignored
             }

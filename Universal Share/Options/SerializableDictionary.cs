@@ -69,12 +69,35 @@ namespace Universal_Share.Options {
 
         public delegate void DictionaryChanged(object sender, DictChangedEventArgs<TK, TV> e);
 
-        public event DictionaryChanged     OnDictionaryChanged;
-        [DebuggerStepThrough] private void Invoke(TypeE type, TK key, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key, Value = value } );
-        [DebuggerStepThrough] private void Invoke(TypeE type, TK key) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key } );
-        [DebuggerStepThrough] private void Invoke(TypeE type)           => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type } );
-        [DebuggerStepThrough] private void Invoke(TypeE type, TV value) => this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Value = value } );
+        public event DictionaryChanged OnDictionaryChanged;
 
+        [DebuggerStepThrough]
+        private void Invoke(TypeE type, TK key, TV value) {
+            try { this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key, Value = value } ); } catch (Exception e) {
+                Console.WriteLine( e );
+            }
+        }
+
+        [DebuggerStepThrough]
+        private void Invoke(TypeE type, TK key) {
+            try { this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Key = key } ); } catch (Exception e) {
+                Console.WriteLine( e );
+            }
+        }
+
+        [DebuggerStepThrough]
+        private void Invoke(TypeE type) {
+            try { this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type } ); } catch (Exception e) {
+                Console.WriteLine( e );
+            }
+        }
+
+        [DebuggerStepThrough]
+        private void Invoke(TypeE type, TV value) {
+            try { this.OnDictionaryChanged?.Invoke( this, new DictChangedEventArgs<TK, TV> { Type = type, Value = value } ); } catch (Exception e) {
+                Console.WriteLine( e );
+            }
+        }
 
         #region Implementation of IEnumerable
 
@@ -125,8 +148,7 @@ namespace Universal_Share.Options {
         #endregion
 
 
-        [XmlIgnore]
-        public new int Count => base.Count;
+        [XmlIgnore] public new int Count => base.Count;
     }
 
     public class DictChangedEventArgs <TK, TV> : EventArgs {

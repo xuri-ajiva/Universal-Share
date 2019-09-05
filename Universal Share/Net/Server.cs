@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -7,7 +8,8 @@ using System.Threading;
 
 namespace Universal_Share.Net {
     public class Server : SharedComponents, ISharedAble {
-        private TcpListener _tcpFileListener;
+        private         TcpListener     _tcpFileListener;
+        public readonly List<TcpClient> tcpClients = new List<TcpClient>();
 
         private readonly List<Thread> _serverThreads = new List<Thread>();
         private readonly List<Thread> _closedThreads = new List<Thread>();
@@ -21,12 +23,15 @@ namespace Universal_Share.Net {
                 this._closedThreads.RemoveAll( x => !x.IsAlive );
 
                 var ls = this._tcpFileListener.AcceptTcpClient();
+                this.tcpClients.Add( ls );
 
+                Console.WriteLine( "New Socket!" );
                 var t = new Thread( () => SteamServer( ls ) );
 
                 this._serverThreads.Add( t );
                 t.Start();
             }
+
             // ReSharper disable once FunctionNeverReturns
         }
 
@@ -34,7 +39,7 @@ namespace Universal_Share.Net {
         public void Abort() { this._tcpFileListener.Stop(); }
 
         /// <inheritdoc />
-        public TcpClient GetTcpClient() => throw new NotSupportedException();
+        public TcpClient GetTcpClient() => this.tcpClients.Count > 0 ? this.tcpClients[0] : null;
 
         /// <inheritdoc />
         public TcpListener GetTcpListener() => this._tcpFileListener;

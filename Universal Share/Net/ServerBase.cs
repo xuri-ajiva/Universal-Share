@@ -18,11 +18,13 @@ namespace Universal_Share.Net {
             while ( readBytes != 0 ) {
                 readBytes = cl.Client.Receive( buffer, 0, BUFFER_SIZE, SocketFlags.None/*, out errorCode*/ );
                 if ( readBytes <= 0 ) break;
-                ( var message, var idRet ) = GlobalReversesProgresses( readBytes, buffer );
+                ( var message, var idRet ) = GlobalReversesProgresses( buffer, readBytes );
 
                 var option = message == SUCCESS ? Option.Success : Option.Error;
 
-                cl.Client.Send( Parts_To_Buffer( ßMainPoint.T, Encoding.UTF8.GetBytes( idRet.ToString() ), option, Encoding.UTF8.GetBytes( message ) ) );
+                var messageBytesResponce = Encoding.UTF8.GetBytes( message );
+
+                cl.Client.Send( Parts_To_Buffer( ßMainPoint.T, Encoding.UTF8.GetBytes( idRet.ToString() ), option, messageBytesResponce, messageBytesResponce.Length ) );
 
                 //blockCtr++;
                 //totalReadBytes += readBytes;

@@ -36,7 +36,7 @@ namespace Universal_Share.Net {
             var idB       = Encoding.UTF8.GetBytes( id.ToString() );
             var filanemeB = Encoding.UTF8.GetBytes( saveFileName );
 
-            var b = Parts_To_Buffer( ßMainPoint.T, idB, Option.CreateRegister, filanemeB );
+            var b = Parts_To_Buffer( ßMainPoint.T, idB, Option.CreateRegister, filanemeB,filanemeB.Length );
 
             communicationSocket.Client.Send( b );
 
@@ -61,9 +61,10 @@ namespace Universal_Share.Net {
             while ( readerBytes != 0 ) {
                 var buffer = new byte[BUFFER_SIZE - HEATHER_SIZE];
                 readerBytes = strm.Read( buffer, 0, BUFFER_SIZE - HEATHER_SIZE );
-                if ( readerBytes == -1 ) break;
+                if ( readerBytes <= 0 ) break;
+                buffer = SubArray( buffer, 0, readerBytes );
 
-                var ret = Parts_To_Buffer( ßMainPoint.T, idB, Option.SaveToFile, buffer );
+                var ret = Parts_To_Buffer( ßMainPoint.T, idB, Option.SaveToFile, buffer ,readerBytes);
 
                 cl.Client.Send( ret, SocketFlags.None );
 
@@ -73,7 +74,7 @@ namespace Universal_Share.Net {
 
                 //var sp = Buffer_To_Parts( buffer, readBytes2 );
 
-                var t = GlobalReversesProgresses( readBytes2, buffer );
+                var t = GlobalReversesProgresses( buffer, readBytes2 );
                 if ( t.Item2 == -1 ) Console.WriteLine( t.Item1 );
 
                 //Console.WriteLine( "Paket: id = " + id + "    | " + Encoding.UTF8.GetString( SubArray( buffer, 0, this.HeatherSize ) ) + "  :  [{0}]", string.Join( ", ", SubArray( buffer, 0, 8 ) ) );

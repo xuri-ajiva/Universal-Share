@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using Universal_Share.Options;
@@ -29,7 +30,7 @@ namespace Universal_Share.Net {
         public const int    DEFAULT_FILE_PORT     = 4333;
         public const int    DEFAULT_TEXT_PORT     = 9999;
         public const string DEFAULT_SAVE_LOCATION = ".\\saved\\";
-        public const int    DEFAULT_BUFFER_SIZE   = 32768;
+        public const int    DEFAULT_BUFFER_SIZE   = 16777216;
         public const int    DEFAULT_HEATHER_SIZE  = 8;
 
 
@@ -75,8 +76,8 @@ namespace Universal_Share.Net {
         }
 
         [DebuggerStepThrough]
-        protected byte[] Parts_To_Buffer(byte[] tokenBytes, byte[] idBytes, byte[] option, byte[] contendBytes) {
-            var buffer = new byte[BUFFER_SIZE];
+        protected byte[] Parts_To_Buffer(byte[] tokenBytes, byte[] idBytes, byte[] option, byte[] contendBytes, int ContenLength) {
+            var buffer = new byte[ContenLength + HEATHER_SIZE];
             tokenBytes.CopyTo( buffer, 0 );
             idBytes.CopyTo( buffer, tokenBytes.Length );
             option.CopyTo( buffer, tokenBytes.Length                        + idBytes.Length );
@@ -84,7 +85,9 @@ namespace Universal_Share.Net {
             return buffer;
         }
 
-        protected (string, int) GlobalReversesProgresses(int readBytes, byte[] buffer) {
+        protected (string, int) GlobalReversesProgresses(byte[] buffer, int readBytes) {
+            buffer = SubArray( buffer, 0, readBytes );
+
             ( var token, var idB, var option, var conetnd ) = Buffer_To_Parts( buffer, readBytes );
 
             if ( !IsKeyVailed( token ) ) return ( TOKEN_NOT_ACCEPTED, -1 );
@@ -94,13 +97,13 @@ namespace Universal_Share.Net {
 
             switch (Option.OperationType( option )) {
                 case Option.Range.Server:
-                    ( message ) = ProcessOptionsServer( token, id, option, conetnd );
+                    ( message ) = ProcessOptionsServer( token, id, option, conetnd, readBytes );
                     break;
                 case Option.Range.Client:
-                    ( message ) = ProcessOptionsClient( token, id, option, conetnd );
+                    ( message ) = ProcessOptionsClient( token, id, option, conetnd, readBytes );
                     break;
                 case Option.Range.Special:
-                    ( message ) = ProcessOptionsSpecial( token, id, option, conetnd );
+                    ( message ) = ProcessOptionsSpecial( token, id, option, conetnd, readBytes );
                     break;
                 case Option.Range.None: return ( UNKNOWN_ERROR, id );
                 default:                throw new ArgumentOutOfRangeException();
@@ -111,7 +114,7 @@ namespace Universal_Share.Net {
             return ( ret, id );
         }
 
-        protected string ProcessOptionsSpecial(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
+        protected string ProcessOptionsSpecial(byte[] tokenBytes, int id, byte[] option, byte[] contend, int readBytes) {
             if ( Option.IsEqual( option, Option.Error ) ) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine( Encoding.UTF8.GetString( contend ).Replace( Encoding.UTF8.GetString( new byte[] { 0 } ), "" ) );
@@ -124,12 +127,13 @@ namespace Universal_Share.Net {
             return ( SUCCESS );
         }
 
-        protected string ProcessOptionsServer(byte[] tokenBytes, int id, byte[] option, byte[] contend) {
+        protected string ProcessOptionsServer(byte[] tokenBytes, int id, byte[] option, byte[] contend, int readBytes) {
             try {
                 if ( Option.IsEqual( option, Option.SaveToFile ) ) {
                     var regi = ßMainPoint.S.IdStreamsMap.Get( id );
                     regi.CreateStream();
-                    regi.Stream.Write( contend, 0, contend.Length );
+                    regi.Stream.Write( contend, 0, readBytes - ( KEY_SIZE + ID_SIZE + OPTION_SIZE ) );
+                    regi.Stream.Flush();
                 }
                 else if ( Option.IsEqual( option, Option.CreateRegister ) ) {
                     if ( ßMainPoint.S.IdStreamsMap.ContainsKey( id ) ) return ( ID_ALREADY_EXISTS );
@@ -139,7 +143,7 @@ namespace Universal_Share.Net {
 
                     Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) ?? throw new InvalidOperationException() );
 
-                    var regInfo = new RegInfo( null, id, finalSaveName, Convert.ToBase64String( tokenBytes ), RegInfo.Type.SingleFile );
+                    var regInfo = new RegInfo( null, id, finalSaveName, Convert.ToBase64String( tokenBytes ) );
                     ßMainPoint.S.IdStreamsMap.Add( id, regInfo );
                 }
             } catch (Exception e) {
@@ -149,6 +153,6 @@ namespace Universal_Share.Net {
             return ( SUCCESS );
         }
 
-        protected string ProcessOptionsClient(byte[] tokenBytes, int id, byte[] option, byte[] contend) { return ( SUCCESS ); }
+        protected string ProcessOptionsClient(byte[] tokenBytes, int id, byte[] option, byte[] contend, int readBytes) { return ( SUCCESS ); }
     }
 }

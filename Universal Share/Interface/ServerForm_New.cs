@@ -12,7 +12,7 @@ namespace Universal_Share.Interface {
                 ls.Invoke( new Action( () => { Tmp = ls.Items.Find( key, sub ); } ) );
             else
                 Tmp = ls.Items.Find( key, sub );
-            return Tmp[0];
+            return Tmp?.Length > 0 ? Tmp?[0] : null;
         }
 
         public void ListViewAdd(ListView ls, ListViewItem item) {
@@ -57,9 +57,7 @@ namespace Universal_Share.Interface {
             var item = ls.SelectedItems[0];
             if ( item.Text == BASE_ITEM ) return;
             if ( MessageBox.Show( Resources.ServerForm__RememberList_DoubleClick_ + item.Text, "", MessageBoxButtons.YesNoCancel ) == DialogResult.Yes ) {
-                if ( Enum.TryParse<RegInfo.Type>( item.Text, out var ty ) ) {
-                    ßMainPoint.S.RememberType.Remove( ty );
-                }
+                ßMainPoint.S.RememberType.Remove( item.Text );
             }
         }
 
@@ -68,9 +66,7 @@ namespace Universal_Share.Interface {
             var item = ls.SelectedItems[0];
             if ( item.Text == BASE_ITEM ) return;
             if ( MessageBox.Show( Resources.ServerForm__RegList_DoubleClick_ + item.Text, "", MessageBoxButtons.YesNoCancel ) == DialogResult.Yes ) {
-                if ( Enum.TryParse<RegInfo.Type>( item.Text, out var ty ) ) {
-                    ßMainPoint.S.RegList.Remove( ty );
-                }
+                ßMainPoint.S.RegList.Remove( item.Text );
             }
         }
     }
@@ -115,63 +111,28 @@ namespace Universal_Share.Interface {
             }
         }
 
-        private void RememberTypeOnOnDictionaryChanged(object sender, DictChangedEventArgs<RegInfo.Type, RememberType> e) { Changed( e ); }
+        private void RememberTypeOnOnDictionaryChanged(object sender, DictChangedEventArgs<string, RememberType> e) { Changed( e ); }
 
         private void TokenListOnOnDictionaryChanged(object sender, DictChangedEventArgs<string, TokenItem> e) {
             switch (e.Type) {
                 case TypeE.AddItem:    break;
                 case TypeE.RemoveItem: break;
                 case TypeE.Clear:      break;
-                default: return;
+                default:               return;
             }
 
             Changed( e );
         }
 
-        private void RegListOnOnDictionaryChanged(object    sender, DictChangedEventArgs<RegInfo.Type, TypeHolder> e) { Changed( e ); }
-        private void IdStreamsMapOnDictionaryChanged(object sender, DictChangedEventArgs<int, RegInfo>             e) { Changed( e ); }
+        private void RegListOnOnDictionaryChanged(object    sender, DictChangedEventArgs<string, TypeHolder> e) { Changed( e ); }
+        private void IdStreamsMapOnDictionaryChanged(object sender, DictChangedEventArgs<int, RegInfo>       e) { Changed( e ); }
         private void ClearListItems(ListView                ls) { ls.Items.Clear(); }
 
         private void RemoveListItem <T, TV>(ListView ls, DictChangedEventArgs<T, TV> e) {
             var x = ListViewFind( ls, CreateName( e.Key.ToString() ), true );
 
             ListViewRemove( ls, x );
-
-            //FullUpdate( ls );
         }
-
-/*
-        private void FullUpdate(ListView ls) {
-            ClearListItems( ls );
-
-            switch (ls.Name) {
-                case "ID":
-                    foreach ( var s in ßMainPoint.S.IdStreamsMap ) {
-                        this._idStreamMap.Items.Add( CreateFromDictChange( new DictChangedEventArgs<int, RegInfo>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
-                    }
-
-                    break;
-                case "TO":
-                    foreach ( var s in ßMainPoint.S.ToakenList ) {
-                        this._TokenList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, TokenItem>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
-                    }
-
-                    break;
-                case "RE":
-                    foreach ( var s in ßMainPoint.S.RememberType ) {
-                        this._RememberList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<RegInfo.TYPE, RememberType>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
-                    }
-
-                    break;
-                case "RG":
-                    foreach ( var s in ßMainPoint.S.RegList ) {
-                        this._RegList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<RegInfo.TYPE, TypeHolder>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
-                    }
-
-                    break;
-            }
-        }
-*/
 
         private void AddListItem <T, TV>(ListView ls, DictChangedEventArgs<T, TV> e) { ListViewAdd( ls, CreateFromDictChange( e ) ); }
 
@@ -183,7 +144,7 @@ namespace Universal_Share.Interface {
             it.ImageKey = key;
             try {
                 if ( typeof(TV) == typeof(RegInfo) && e.Value is RegInfo rg ) {
-                    it.SubItems.Add( rg.TypeP.ToString() );
+                    it.SubItems.Add( rg.Extension.ToString() );
                     it.SubItems.Add( ( rg.Position.ToString() ) );
                     it.SubItems.Add( ( rg.SenderAuth ) );
                     it.SubItems.Add( ( rg.SaveFilePath ) );
@@ -202,7 +163,7 @@ namespace Universal_Share.Interface {
                     it.SubItems.Add( th.CloseFileStream.ToString() );
                     it.SubItems.Add( ( th.UserConfirm.ToString() ) );
                     it.SubItems.Add( ( th.OpenWith ) );
-                    it.SubItems.Add( ( th.ArgumentsBeforePathToFile + " %V% " + th.ArgumentsAfterPathToFile ) );
+                    it.SubItems.Add( ( th.Arguments ) );
                     it.SubItems.Add( ( th.Description ) );
                 }
             } catch { it.SubItems.AddRange( new[] { "error", "error", "error", "error", "error" } ); }
@@ -222,11 +183,11 @@ namespace Universal_Share.Interface {
             }
 
             foreach ( var s in ßMainPoint.S.RegList ) {
-                this._RegList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<RegInfo.Type, TypeHolder>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                this._RegList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, TypeHolder>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
             }
 
             foreach ( var s in ßMainPoint.S.RememberType ) {
-                this._RememberList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<RegInfo.Type, RememberType>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                this._RememberList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, RememberType>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
             }
 
             foreach ( var s in ßMainPoint.S.ToakenList ) {

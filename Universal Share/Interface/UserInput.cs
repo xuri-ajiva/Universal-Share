@@ -21,11 +21,11 @@ namespace Universal_Share.Interface {
 
         //Console.WriteLine(us.GetConfirm( new RegInfo(null,-1,@"..\\..\\..\\test.txt", RegInfo.TYPE.SINGLE_FILE), new TypeHolder(@"C:\windows\system32\cmd.exe","-c pause",true," descript",false)));
         public bool GetConfirm(RegInfo reg, TypeHolder th) {
-            ResetAndInfo( th.Description + "\nFileType: " + reg.TypeP + "     ID: " + reg.Id + "\nOpenWith: " + th.OpenWith );
+            ResetAndInfo( th.Description + "\nFileType: " + reg.Extension + "     ID: " + reg.Id + "\nOpenWith: " + th.OpenWith );
 
             var ret  = ShowDialog();
             var bret = ret == DialogResult.Yes || ret == DialogResult.OK;
-            if ( ChackboxChecked ) ßMainPoint.S.RememberType.Add( reg.TypeP, new RememberType( this._descriptionBox.Text, ret, reg.TypeP ) );
+            if ( ChackboxChecked ) ßMainPoint.S.RememberType.Add( reg.Extension, new RememberType( this._descriptionBox.Text, ret, reg.Extension ) );
 
             return bret;
         }

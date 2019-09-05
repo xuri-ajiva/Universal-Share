@@ -70,6 +70,15 @@ namespace Universal_Share.Options {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Extension: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewRememberType_Extension_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewRememberType_Extension_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Base64Token: ähnelt.
         /// </summary>
         internal static string Editor_CreateNewTokenItem_Base64Token_ {
@@ -111,6 +120,15 @@ namespace Universal_Share.Options {
         internal static string Editor_CreateNewTypeHolder__True {
             get {
                 return ResourceManager.GetString("Editor_CreateNewTypeHolder__True", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Arguments: ähnelt.
+        /// </summary>
+        internal static string Editor_CreateNewTypeHolder_Arguments_ {
+            get {
+                return ResourceManager.GetString("Editor_CreateNewTypeHolder_Arguments_", resourceCulture);
             }
         }
         

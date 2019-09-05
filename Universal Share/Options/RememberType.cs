@@ -7,9 +7,9 @@ namespace Universal_Share.Options {
     public struct RememberType {
         [XmlAttribute] public DialogResult Value;
         public                string       Description;
-        [XmlAttribute] public RegInfo.Type Type;
+        [XmlAttribute] public string Type;
 
-        public RememberType(string description, DialogResult value, RegInfo.Type type) {
+        public RememberType(string description, DialogResult value, string type) {
             this.Description = description;
             this.Value       = value;
             this.Type        = type;

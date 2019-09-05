@@ -172,4 +172,10 @@ Die Settings Datei Wird Gelöscht...</value>
     <value>Remove Reg?
 </value>
   </data>
+  <data name="Editor_CreateNewRememberType_Extension_" xml:space="preserve">
+    <value>Extension:</value>
+  </data>
+  <data name="Editor_CreateNewTypeHolder_Arguments_" xml:space="preserve">
+    <value>Arguments:</value>
+  </data>
 </root>

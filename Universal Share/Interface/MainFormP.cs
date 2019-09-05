@@ -60,11 +60,6 @@ namespace Universal_Share.Interface {
         }
 
         private void ServerForm_Load(object sender, EventArgs e) {
-            //this._RegList.Items.Add( BASE_ITEM ).SubItems.AddRange( new[] { "-", "", "", "", "", "" } );
-            //this._RememberList.Items.Add( BASE_ITEM ).SubItems.AddRange( new[] { "-", "", "", "", "", "" } );
-            //this._TokenList.Items.Add( BASE_ITEM ).SubItems.AddRange( new[] { "-", "", "", "", "", "" } );
-            //this._idStreamMap.Items.Add( BASE_ITEM ).SubItems.AddRange( new[] { "-", "", "", "", "", "" } );
-
             ßMainPoint.S.IdStreamsMap.OnDictionaryChanged += IdStreamsMapOnDictionaryChanged;
             ßMainPoint.S.RegList.OnDictionaryChanged      += RegListOnOnDictionaryChanged;
             ßMainPoint.S.ToakenList.OnDictionaryChanged   += TokenListOnOnDictionaryChanged;
@@ -203,15 +198,13 @@ namespace Universal_Share.Interface {
                     break;
                 case "RE":
                     foreach ( ListViewItem item in this._currentItem ) {
-                        Enum.TryParse<RegInfo.Type>( item.Name, out var ty1 );
-                        ßMainPoint.S.RememberType.Remove( ty1 );
+                        ßMainPoint.S.RememberType.Remove( item.Name );
                     }
 
                     break;
                 case "RG":
                     foreach ( ListViewItem item in this._currentItem ) {
-                        Enum.TryParse<RegInfo.Type>( item.Name, out var ty2 );
-                        ßMainPoint.S.RegList.Remove( ty2 );
+                        ßMainPoint.S.RegList.Remove( item.Name );
                     }
 
                     break;
@@ -235,11 +228,10 @@ namespace Universal_Share.Interface {
                     break;
                 case "RE":
                     try {
-                        if ( Enum.TryParse<RegInfo.Type>( this._currentItem[0].SubItems[0].Text, out var enu1 ) ) {
-                            ( var r21, var r11 ) = ßMainPoint.E.EditRememberType( ßMainPoint.S.RememberType.Get( enu1 ) );
-                            ßMainPoint.S.RememberType.Remove( enu1 );
-                            ßMainPoint.S.RememberType.Add( r11, r21 );
-                        }
+                        var name = this._currentItem[0].SubItems[0].Text;
+                            ( var r21, var r11 ) = ßMainPoint.E.EditRememberType( ßMainPoint.S.RememberType.Get( name ) );
+                            ßMainPoint.S.RememberType.Remove( name );
+                            ßMainPoint.S.RememberType.Add( name, r21 );
                     } catch {
                         // ignored
                     }
@@ -247,12 +239,12 @@ namespace Universal_Share.Interface {
                     break;
                 case "RG":
                     try {
-                        if ( Enum.TryParse<RegInfo.Type>( this._currentItem[0].SubItems[0].Text, out var enu2 ) ) {
-                            ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder( ßMainPoint.S.RegList.Get( enu2 ), enu2 );
-                            ßMainPoint.S.RegList.Remove( enu2 );
+                        var name = this._currentItem[0].SubItems[0].Text;
+                            ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder( ßMainPoint.S.RegList.Get( name ), name );
+                            ßMainPoint.S.RegList.Remove( r12 );
                             ßMainPoint.S.RegList.Add( r12, r22 );
-                        }
-                    } catch {
+                        
+                    } catch (Exception exsa) {
                         // ignored
                     }
 

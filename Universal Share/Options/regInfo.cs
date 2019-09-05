@@ -130,19 +130,19 @@ namespace Universal_Share.Options {
         public                 int         Id;
         public                 string      SaveFilePath;
         public                 string      SenderAuth;
+        public                 string      Extension;
 
         public long Position;
-
-        public Type TypeP;
     }
 
     public partial struct RegInfo {
-        public RegInfo(Stream stream, int id, string saveFilePath, string senderAuth, Type type, int positionInStream = 0) {
-            this.TypeP         = type;
+        public RegInfo(Stream stream, int id, string saveFilePath, string senderAuth, int positionInStream = 0, string extension = "") {
             this.Id           = id;
             this.SaveFilePath = saveFilePath;
             this.Position     = positionInStream;
             this.SenderAuth   = senderAuth;
+
+            this.Extension = extension == "" ? Path.GetExtension( saveFilePath ) : extension;
 
             this.Stream = (EventStream) stream;
             ForceCreateStream();
@@ -166,7 +166,7 @@ namespace Universal_Share.Options {
             }
         }
 
-        public override string ToString() => "ID: " + this.Id + "  | FilePath: " + this.SaveFilePath + "  | Type: " + this.TypeP;
+        public override string ToString() => "ID: " + this.Id + "  | FilePath: " + this.SaveFilePath + "  | Extension: " + this.Extension;
 
         public void Finished() {
             this.Stream?.Close();
@@ -200,6 +200,5 @@ namespace Universal_Share.Options {
             Archife,
             Text
         }
-
     }
 }
