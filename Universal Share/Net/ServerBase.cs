@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using Universal_Share.ProgMain;
 
 namespace Universal_Share.Net {
     public class ServerBase : NetBase {
-        public void SteamServer(TcpClient cl) {
+        public void SteamServer(TcpClient cl, bool replyOnSUCCESS) {
+            //while ( LOCKED ) Thread.Sleep( 100 );
+            //LOCKED = true;
+
             Console.WriteLine( @"Server Started" );
             //var errorCode = SocketError.NotConnected;
 
@@ -16,19 +20,22 @@ namespace Universal_Share.Net {
             //var totalReadBytes = 0;
 
             while ( readBytes != 0 ) {
-                readBytes = cl.Client.Receive( buffer, 0, BUFFER_SIZE, SocketFlags.None/*, out errorCode*/ );
+                readBytes = cl.Client.Receive( buffer, 0, BUFFER_SIZE, SocketFlags.None /*, out errorCode*/ );
                 if ( readBytes <= 0 ) break;
                 ( var message, var idRet ) = GlobalReversesProgresses( buffer, readBytes );
 
+                if ( !replyOnSUCCESS ) continue;
+
+
                 var option = message == SUCCESS ? Option.Success : Option.Error;
-
                 var messageBytesResponce = Encoding.UTF8.GetBytes( message );
-
                 cl.Client.Send( Parts_To_Buffer( ßMainPoint.T, Encoding.UTF8.GetBytes( idRet.ToString() ), option, messageBytesResponce, messageBytesResponce.Length ) );
 
                 //blockCtr++;
                 //totalReadBytes += readBytes;
             }
+
+            //LOCKED = false;
         }
     }
 }

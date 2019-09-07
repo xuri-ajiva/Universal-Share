@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
@@ -229,9 +230,9 @@ namespace Universal_Share.Interface {
                 case "RE":
                     try {
                         var name = this._currentItem[0].SubItems[0].Text;
-                            ( var r21, var r11 ) = ßMainPoint.E.EditRememberType( ßMainPoint.S.RememberType.Get( name ) );
-                            ßMainPoint.S.RememberType.Remove( name );
-                            ßMainPoint.S.RememberType.Add( name, r21 );
+                        ( var r21, var r11 ) = ßMainPoint.E.EditRememberType( ßMainPoint.S.RememberType.Get( name ) );
+                        ßMainPoint.S.RememberType.Remove( name );
+                        ßMainPoint.S.RememberType.Add( name, r21 );
                     } catch {
                         // ignored
                     }
@@ -240,10 +241,9 @@ namespace Universal_Share.Interface {
                 case "RG":
                     try {
                         var name = this._currentItem[0].SubItems[0].Text;
-                            ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder( ßMainPoint.S.RegList.Get( name ), name );
-                            ßMainPoint.S.RegList.Remove( r12 );
-                            ßMainPoint.S.RegList.Add( r12, r22 );
-                        
+                        ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder( ßMainPoint.S.RegList.Get( name ), name );
+                        ßMainPoint.S.RegList.Remove( r12 );
+                        ßMainPoint.S.RegList.Add( r12, r22 );
                     } catch (Exception exsa) {
                         // ignored
                     }
@@ -259,9 +259,22 @@ namespace Universal_Share.Interface {
             if ( !( this._server is ISharedAble server ) ) return;
             using ( OpenFileDialog f = new OpenFileDialog { Multiselect = true } ) {
                 if ( f.ShowDialog( this ) == DialogResult.OK ) {
-                    foreach ( var s in f.FileNames ) {
-                        this._server.SendFile( server.GetTcpClient(), s );
-                    }
+                    var t = new Thread( () => {
+                        foreach ( var s in f.FileNames ) {
+                            this._server.SendFile( server.GetTcpClient(), s );
+                        }
+                    } );
+                    t.Start();
+                }
+            }
+        }
+
+        private void B_Settings_Click(object sender, EventArgs e) { ßMainPoint.SF.ShowDialog( this ); }
+
+        private void B_clodeStreams_Click(object sender, EventArgs e) {
+            lock (ßMainPoint.S.IdStreamsMap) {
+                foreach ( var s in ßMainPoint.S.IdStreamsMap ) {
+                    s.Value.CloseStream();
                 }
             }
         }

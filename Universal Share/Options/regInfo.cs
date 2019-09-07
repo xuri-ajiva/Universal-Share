@@ -25,6 +25,8 @@ namespace Universal_Share.Options {
             Interrupt( TypeE.Flush );
         }
 
+        public void FlushWithoutEvent() { this._selfStream.Flush(); }
+
         public long Seek(long offset, SeekOrigin origin) {
             var re = this._selfStream.Seek( offset, origin );
             Interrupt( TypeE.Seek );
@@ -110,6 +112,8 @@ namespace Universal_Share.Options {
             this._selfStream.Close();
         }
 
+        public void CloseWithoutEvent() { this._selfStream.Close(); }
+
         #endregion
 
         #region Implementation of IDisposable
@@ -118,6 +122,8 @@ namespace Universal_Share.Options {
             Interrupt( TypeE.Dispose );
             this._selfStream?.Dispose();
         }
+
+        public void DisposeWithoutEvent() { this._selfStream?.Dispose(); }
 
         #endregion
     }
@@ -167,6 +173,14 @@ namespace Universal_Share.Options {
         }
 
         public override string ToString() => "ID: " + this.Id + "  | FilePath: " + this.SaveFilePath + "  | Extension: " + this.Extension;
+
+        public void CloseStream() {
+            if(this.Stream == null) return;
+            this.Position = this.Stream.PositionWithoutEvent;
+            this.Stream?.FlushWithoutEvent();
+            this.Stream?.CloseWithoutEvent();
+            this.Stream?.DisposeWithoutEvent();
+        }
 
         public void Finished() {
             this.Stream?.Close();

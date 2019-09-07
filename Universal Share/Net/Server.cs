@@ -26,7 +26,7 @@ namespace Universal_Share.Net {
                 this.tcpClients.Add( ls );
 
                 Console.WriteLine( "New Socket!" );
-                var t = new Thread( () => SteamServer( ls ) );
+                var t = new Thread( () => SteamServer( ls,true ) );
 
                 this._serverThreads.Add( t );
                 t.Start();

@@ -1,5 +1,11 @@
-﻿namespace Universal_Share.Net {
+﻿using Universal_Share.ProgMain;
+
+namespace Universal_Share.Net {
     public class NetworkFileSend : ClientBase {
-        public NetworkFileSend() { this.FilePort = 9999; }
+        public NetworkFileSend() {
+
+            this.BUFFER_SIZE = ßMainPoint.ST.BufferSize;
+            this.FilePort = ßMainPoint.ST.Port;
+        }
     }
 }

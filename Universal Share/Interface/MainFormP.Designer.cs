@@ -32,6 +32,8 @@
             this._idStreamMap = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.b_Settings = new System.Windows.Forms.Button();
+            this.b_SendFile = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.Stop = new System.Windows.Forms.Button();
             this.ForceUpdateAll = new System.Windows.Forms.Button();
@@ -51,8 +53,7 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
-            this.b_SendFile = new System.Windows.Forms.Button();
+            this.b_clodeStreams = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -82,13 +83,34 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.b_clodeStreams);
+            this.panel1.Controls.Add(this.b_Settings);
             this.panel1.Controls.Add(this.b_SendFile);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(194, 858);
             this.panel1.TabIndex = 1;
+            // 
+            // b_Settings
+            // 
+            this.b_Settings.Location = new System.Drawing.Point(6, 41);
+            this.b_Settings.Name = "b_Settings";
+            this.b_Settings.Size = new System.Drawing.Size(182, 23);
+            this.b_Settings.TabIndex = 3;
+            this.b_Settings.Text = "SavePropagation";
+            this.b_Settings.UseVisualStyleBackColor = true;
+            this.b_Settings.Click += new System.EventHandler(this.B_Settings_Click);
+            // 
+            // b_SendFile
+            // 
+            this.b_SendFile.Location = new System.Drawing.Point(6, 12);
+            this.b_SendFile.Name = "b_SendFile";
+            this.b_SendFile.Size = new System.Drawing.Size(182, 23);
+            this.b_SendFile.TabIndex = 2;
+            this.b_SendFile.Text = "SendFile";
+            this.b_SendFile.UseVisualStyleBackColor = true;
+            this.b_SendFile.Click += new System.EventHandler(this.B_SendFile_Click);
             // 
             // panel2
             // 
@@ -271,24 +293,15 @@
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
             // 
-            // button1
+            // b_clodeStreams
             // 
-            this.button1.Location = new System.Drawing.Point(6, 41);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(182, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // b_SendFile
-            // 
-            this.b_SendFile.Location = new System.Drawing.Point(6, 12);
-            this.b_SendFile.Name = "b_SendFile";
-            this.b_SendFile.Size = new System.Drawing.Size(182, 23);
-            this.b_SendFile.TabIndex = 2;
-            this.b_SendFile.Text = "SendFile";
-            this.b_SendFile.UseVisualStyleBackColor = true;
-            this.b_SendFile.Click += new System.EventHandler(this.B_SendFile_Click);
+            this.b_clodeStreams.Location = new System.Drawing.Point(6, 70);
+            this.b_clodeStreams.Name = "b_clodeStreams";
+            this.b_clodeStreams.Size = new System.Drawing.Size(182, 23);
+            this.b_clodeStreams.TabIndex = 4;
+            this.b_clodeStreams.Text = "CloseAllStreams";
+            this.b_clodeStreams.UseVisualStyleBackColor = true;
+            this.b_clodeStreams.Click += new System.EventHandler(this.B_clodeStreams_Click);
             // 
             // MainFormP
             // 
@@ -335,7 +348,8 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button b_Settings;
         private System.Windows.Forms.Button b_SendFile;
+        private System.Windows.Forms.Button b_clodeStreams;
     }
 }

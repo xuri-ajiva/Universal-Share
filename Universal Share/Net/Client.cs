@@ -11,13 +11,18 @@ namespace Universal_Share.Net {
             //var ip = IPAddress.Parse( "127.0.0.1" );
             this._tcpClient = OpenIpAddress( ipAddress );
             //while ( true ) {
-                try {
-                    SendFile( this._tcpClient, "..\\..\\..\\test.exe" );
-                    Thread.Sleep( 1000 );
-                } catch (Exception e) {
-                    Console.WriteLine( e.Message );
-                    Thread.Sleep( 1000 );
-                }
+            try {
+                SendFile( this._tcpClient, "..\\..\\..\\test.exe" );
+                Thread.Sleep( 1000 );
+            } catch (Exception e) {
+                Console.WriteLine( e.Message );
+                Thread.Sleep( 1000 );
+            }
+
+            //}
+
+            //while ( true ) {
+            //    SteamServer( this._tcpClient,false );
             //}
 
             // ReSharper disable once FunctionNeverReturns

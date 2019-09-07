@@ -10,6 +10,8 @@ using Universal_Share.Security;
 
 namespace Universal_Share.Net {
     public class NetBase {
+        //public static bool LOCKED = false;
+
         [DebuggerStepThrough]
         public static T[] SubArray <T>(T[] data, int index, int length) {
             var result = new T[length];
@@ -33,7 +35,7 @@ namespace Universal_Share.Net {
         public const int    DEFAULT_BUFFER_SIZE   = 16777216;
         public const int    DEFAULT_HEATHER_SIZE  = 8;
 
-
+        [DebuggerStepThrough]
         protected bool IsKeyVailed(byte[] toaken) {
             var base64Key = Convert.ToBase64String( toaken );
 
@@ -52,7 +54,7 @@ namespace Universal_Share.Net {
 
         public int FilePort;
 
-        protected const int BUFFER_SIZE = DEFAULT_BUFFER_SIZE;
+        protected int BUFFER_SIZE = DEFAULT_BUFFER_SIZE;
 
         protected const int ID_SIZE      = DEFAULT_HEATHER_SIZE;
         protected const int KEY_SIZE     = Auth.LENGTH_B;

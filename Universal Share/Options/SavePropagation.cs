@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
@@ -6,7 +7,7 @@ using Universal_Share.ProgMain;
 using Universal_Share.Security;
 
 namespace Universal_Share.Options {
-    public partial class Settings {
+    public partial class SavePropagation {
         [XmlIgnore] public bool Changed;
 
 
@@ -15,8 +16,11 @@ namespace Universal_Share.Options {
         public SerializableDictionary<int, RegInfo>         IdStreamsMap = new SerializableDictionary<int, RegInfo>();
         public SerializableDictionary<string, TokenItem>    ToakenList   = new SerializableDictionary<string, TokenItem>();
 
-        public Settings() { CreatedEventHandler(); }
+        private readonly List<Process> _processes = new List<Process>();
 
+        public SavePropagation() { CreatedEventHandler(); }
+
+        [DebuggerStepThrough]
         private void CreatedEventHandler() {
             this.RegList.OnDictionaryChanged      += (sender, args) => ChangedEventHandler();
             this.RememberType.OnDictionaryChanged += (sender, args) => ChangedEventHandler();
@@ -24,12 +28,10 @@ namespace Universal_Share.Options {
             this.ToakenList.OnDictionaryChanged   += (sender, args) => ChangedEventHandler();
         }
 
-        //[DebuggerStepThrough]
-        private void ChangedEventHandler() { this.Changed = true; }
+        [DebuggerStepThrough] private void ChangedEventHandler() { this.Changed = true; }
     }
 
-
-    public partial class Settings {
+    public partial class SavePropagation {
         public bool Execute(RegInfo regInfo) {
             if ( this.RegList.ContainsKey( regInfo.Extension ) ) {
                 var t = this.RegList.Get( regInfo.Extension );
@@ -50,10 +52,12 @@ namespace Universal_Share.Options {
                 try {
                     if ( t.CloseFileStream ) regInfo.Stream?.Close();
 
-                    this.currentMapStr = "%V%";
+                    this.currentMapStr = ßMainPoint.ST.ReplaceString;
                     this.currentRep    = regInfo.SaveFilePath;
+                    ProcessStartInfo info = new ProcessStartInfo( Map( t.OpenWith ), Map( t.Arguments ) ) { ErrorDialog = true, UseShellExecute = true };
 
-                    Process.Start( Map( t.OpenWith ), Map( t.Arguments) );
+                    var neP = Process.Start( info );
+                    this._processes.Add( neP );
                     return true;
                 } catch (Exception e) {
                     Console.WriteLine( e );
@@ -61,7 +65,7 @@ namespace Universal_Share.Options {
                 }
             }
             else {
-                ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder(new TypeHolder("","",true,"",true),regInfo.Extension );
+                ( var r22, var r12 ) = ßMainPoint.E.EditTypeHolder( new TypeHolder( "", "", true, "", true ), regInfo.Extension );
                 ßMainPoint.S.RegList.Add( r12, r22 );
                 Execute( regInfo );
             }
@@ -75,14 +79,48 @@ namespace Universal_Share.Options {
         [DebuggerStepThrough] private string Map(string s)                            { return map( s, this.currentMapStr, this.currentRep ); }
         private static                string map(string s, string mapStr, string rep) { return s.Replace( mapStr, rep ); }
 
-        [DebuggerStepThrough]
+        //[DebuggerStepThrough]
         public static void Load(ßProgram p) {
-            p.Settings = Load<Settings>( SettingsStatic.SavePathS ) ?? throw new NullReferenceException();
-            p.Settings.CreatedEventHandler();
+            try {
+                p.SavePropagation = Load<SavePropagation>( SettingsStatic.SavePathS ) ?? throw new NullReferenceException();
+            } catch (Exception e) {
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write( e.Message  );
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine( Resources.XmlLoad_DeleatingFile + SettingsStatic.SavePathS );
+                Console.BackgroundColor = ConsoleColor.Black;
+                try {
+                    File.Delete( SettingsStatic.SavePathS );
+                } catch (Exception ex) {
+                    Console.BackgroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine( ex.Message );
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+            }
+
+            try {            p.SettingsStatic = Load<SettingsStatic>( SettingsStatic.SavePathStaticS ) ?? throw new NullReferenceException();
+            } catch (Exception e) {
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.WriteLine( e.Message + Resources.XmlLoad_DeleatingFile + SettingsStatic.SavePathStaticS);
+                Console.BackgroundColor = ConsoleColor.Black;
+                try {
+                    File.Delete( SettingsStatic.SavePathStaticS );
+                } catch (Exception ex) {
+                    Console.BackgroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine( ex.Message );
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+            }
+
+
+            p.SavePropagation.CreatedEventHandler();
         }
 
-        public static void Save(ßProgram p) { Save( p.Settings, SettingsStatic.SavePathS ); }
-
+        public static void Save(ßProgram p) {
+            Save( p.SavePropagation, SettingsStatic.SavePathS );
+            Save( p.SettingsStatic,  SettingsStatic.SavePathStaticS );
+        }
 
         private static T Load <T>(string path) {
             FileStream fileStream = null;

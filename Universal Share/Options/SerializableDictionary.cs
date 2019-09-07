@@ -10,10 +10,17 @@ using System.Diagnostics;
 namespace Universal_Share.Options {
     [XmlRoot( "dictionary" )]
     public class SerializableDictionary <TK, TV> : Dictionary<TK, TV>, IXmlSerializable {
+        public SerializableDictionary(IDictionary<TK, TV>            bases) : base( bases ) { }
+        public SerializableDictionary(int                            capacity) : base( capacity ) { }
+        public SerializableDictionary(SerializableDictionary<TK, TV> bases) : base( bases ) { }
+
+        public SerializableDictionary() : base() { }
+
         #region IXmlSerializable Members
 
         public System.Xml.Schema.XmlSchema GetSchema() { return null; }
 
+        [DebuggerStepThrough]
         public void ReadXml(System.Xml.XmlReader reader) {
             var keySerializer   = new XmlSerializer( typeof(TK) );
             var valueSerializer = new XmlSerializer( typeof(TV) );
@@ -43,6 +50,7 @@ namespace Universal_Share.Options {
             reader.ReadEndElement();
         }
 
+        [DebuggerStepThrough]
         public void WriteXml(System.Xml.XmlWriter writer) {
             var keySerializer   = new XmlSerializer( typeof(TK) );
             var valueSerializer = new XmlSerializer( typeof(TV) );

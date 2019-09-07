@@ -227,7 +227,8 @@ namespace Universal_Share.Options {
         
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die 
-        ///Die Settings Datei Wird Gelöscht... ähnelt.
+        ///Die XMl Datei wird aufgrund eines fehlers Gelöscht...
+        ///File:  ähnelt.
         /// </summary>
         internal static string XmlLoad_DeleatingFile {
             get {

@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
@@ -66,6 +68,18 @@
     <Compile Include="Interface\ServerForm_New.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Interface\SettingsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\SettingsEditor.Designer.cs">
+      <DependentUpon>SettingsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interface\SettingsLine.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Interface\SettingsLine.Designer.cs">
+      <DependentUpon>SettingsLine.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interface\UserInput.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,7 +101,7 @@
     <Compile Include="Net\SharedComponents.cs" />
     <Compile Include="Options\regInfo.cs" />
     <Compile Include="Options\SerializableDictionary.cs" />
-    <Compile Include="Options\Settings.cs" />
+    <Compile Include="Options\SavePropagation.cs" />
     <Compile Include="Options\SettingsStatic.cs" />
     <Compile Include="Options\TypeHolder.cs" />
     <Compile Include="ProgMain\Program.cs" />
@@ -105,6 +119,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Interface\MainFormP.resx">
       <DependentUpon>MainFormP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\SettingsEditor.resx">
+      <DependentUpon>SettingsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\SettingsLine.resx">
+      <DependentUpon>SettingsLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interface\UserInput.resx" />
     <EmbeddedResource Include="Options\Resources.resx">
