@@ -65,9 +65,6 @@
     <Compile Include="Interface\MainFormP.Designer.cs">
       <DependentUpon>MainFormP.cs</DependentUpon>
     </Compile>
-    <Compile Include="Interface\ServerForm_New.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Interface\SettingsEditor.cs">
       <SubType>Form</SubType>
     </Compile>
