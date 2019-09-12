@@ -18,12 +18,12 @@ using Universal_Share.Security;
 
 namespace Universal_Share.ProgMain {
     public static class ßMainPoint {
-        [DllImport( "kernel32.dll" )] static extern IntPtr GetConsoleWindow();
+        [DllImport( "kernel32.dll" )] private static extern IntPtr GetConsoleWindow();
 
-        [DllImport( "user32.dll" )] static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        [DllImport( "user32.dll" )] private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        const         int  SW_HIDE        = 0;
-        const         int  SW_SHOW        = 5;
+        private const         int  SW_HIDE        = 0;
+        private const         int  SW_SHOW        = 5;
         private const bool DEBUG          = true;
         private const bool SERVER         = false;
         private const bool START_OPPOSITE = true;
@@ -77,9 +77,9 @@ namespace Universal_Share.ProgMain {
             InitializeAll( serverArg, ui );
         }
 
-        static bool serverArg = false;
-        static bool ui        = true;
-        static bool console   = true;
+        private static bool serverArg = false;
+        private static bool ui        = true;
+        private static bool console   = true;
 
         private static void ProgArg(string s) {
             switch (s.ToLower()) {

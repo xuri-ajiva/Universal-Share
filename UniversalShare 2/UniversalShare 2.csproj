@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EF55127D-FE7D-4728-ACD0-E6DA1C7671A8}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>UniversalShare_2</RootNamespace>
+    <AssemblyName>UniversalShare 2</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>UniversalShare_2.ßProgram</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Handlers\FingerPrint.cs" />
+    <Compile Include="Handlers\KeyHandler.cs" />
+    <Compile Include="Handlers\DataHandler.cs" />
+    <Compile Include="Handlers\ConsoleArgsHandler.cs" />
+    <Compile Include="Handlers\ExceptionHandler.cs" />
+    <Compile Include="Handlers\UiHandler.cs" />
+    <Compile Include="Interface\Editor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\MainFormP.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\MainFormP.Designer.cs">
+      <DependentUpon>MainFormP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interface\SettingsEditor.cs" />
+    <Compile Include="Interface\SettingsEditor.Designer.cs">
+      <DependentUpon>SettingsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interface\SettingsLine.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Interface\SettingsLine.Designer.cs">
+      <DependentUpon>SettingsLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interface\UserInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Net\Client.cs" />
+    <Compile Include="Net\NetBase.cs" />
+    <Compile Include="Net\NetOption.cs" />
+    <Compile Include="Net\ReversesHandler.cs" />
+    <Compile Include="Net\SendHandler.cs" />
+    <Compile Include="Net\Server.cs" />
+    <Compile Include="Net\Shared.cs" />
+    <Compile Include="Operation\OperationInfo.cs" />
+    <Compile Include="Operation\TokenItem.cs" />
+    <Compile Include="Oprions\EventStream.cs" />
+    <Compile Include="Oprions\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Oprions\SerializableDictionary.cs" />
+    <Compile Include="ßProgram.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Interface\Editor.resx">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\MainFormP.resx">
+      <DependentUpon>MainFormP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\SettingsEditor.resx">
+      <DependentUpon>SettingsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\SettingsLine.resx">
+      <DependentUpon>SettingsLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\UserInput.resx">
+      <DependentUpon>UserInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Oprions\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
