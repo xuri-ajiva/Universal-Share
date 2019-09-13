@@ -16,6 +16,7 @@ namespace UniversalShare_2 {
         public static UiHandler        U   { [DebuggerStepThrough] get; private set; }
         public static byte[]           T   { [DebuggerStepThrough] get; private set; }
         public static Editor           E   { [DebuggerStepThrough] get; private set; }
+        public static SettingsHandler  SH  { [DebuggerStepThrough] get; private set; }
 
         //public static ExceptionHandler T { [DebuggerStepThrough] get; private set; }
 
@@ -23,17 +24,18 @@ namespace UniversalShare_2 {
         private static void Main(string[] args) {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault( false );
-            
-            U = new UiHandler( EH );
+
+            U  = new UiHandler( EH );
             EH = new ExceptionHandler();
             D  = new DataHandler();
             T  = new byte[KeyHandler.LENGTH_B];
-            E = new Editor();
+            E  = new Editor();
+            SH = new SettingsHandler( EH, U, D );
 
             //DebugHandler.Start();
 
-            new Thread( () => new ConsoleArgsHandler( new string[] { "s" } ) ).Start();
-            new Thread( () => new ConsoleArgsHandler( new string[] { "c" } ) ).Start();
+            new Thread( () => new ConsoleArgsHandler( new string[] { "s" }, new SettingsHandler( EH, U, D, "S" ) ) ).Start();
+            new Thread( () => new ConsoleArgsHandler( new string[] { "c" }, new SettingsHandler( EH, U, D, "C" ) ) ).Start();
             // Application.Run(new Form1());
             Console.ReadLine();
         }

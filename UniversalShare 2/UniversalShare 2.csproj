@@ -50,10 +50,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handlers\FingerPrint.cs" />
+    <Compile Include="Handlers\HandlerBase.cs" />
+    <Compile Include="LowLvlHandler\LowLvlHandlerBase.cs" />
     <Compile Include="Handlers\KeyHandler.cs" />
     <Compile Include="Handlers\DataHandler.cs" />
     <Compile Include="Handlers\ConsoleArgsHandler.cs" />
-    <Compile Include="Handlers\ExceptionHandler.cs" />
+    <Compile Include="LowLvlHandler\ExceptionHandler.cs" />
+    <Compile Include="Handlers\SettingsHandler.cs" />
     <Compile Include="Handlers\UiHandler.cs" />
     <Compile Include="Interface\Editor.cs">
       <SubType>Form</SubType>
@@ -137,5 +140,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

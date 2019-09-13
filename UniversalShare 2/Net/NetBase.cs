@@ -10,10 +10,10 @@ using UniversalShare_2.Operation;
 namespace UniversalShare_2.Net {
     public partial class NetBase { //public static bool LOCKED = false;
         protected ExceptionHandler _exceptionHandler;
-        protected UiHandler        _uiHandler;
+        protected UiHandler        UiHandler;
 
         public NetBase(ExceptionHandler _exceptionHandler, UiHandler uiHandler) {
-            this._uiHandler        = uiHandler;
+            this.UiHandler        = uiHandler;
             this._exceptionHandler = _exceptionHandler;
             FilePort               = 9999;
         }
@@ -28,7 +28,7 @@ namespace UniversalShare_2.Net {
                 if ( ti.Remember ) return ti.Trusted;
             }
 
-            if ( this._uiHandler.GetConfirm( new TokenItem( toaken, false, false ) ) ) {
+            if ( this.UiHandler.GetConfirm( new TokenItem( toaken, false, false ) ) ) {
                 return true;
             }
 

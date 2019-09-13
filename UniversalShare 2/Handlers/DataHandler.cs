@@ -9,8 +9,8 @@ namespace UniversalShare_2.Handlers {
         [XmlIgnore] public bool Changed;
 
 
-        public readonly SerializableDictionary<string, OperationInfo> OperationIdMap = new SerializableDictionary<string, OperationInfo>();
-        public readonly SerializableDictionary<string, TokenItem>     TokenList      = new SerializableDictionary<string, TokenItem>();
+        public  SerializableDictionary<string, OperationInfo> OperationIdMap = new SerializableDictionary<string, OperationInfo>();
+        public  SerializableDictionary<string, TokenItem>     TokenList      = new SerializableDictionary<string, TokenItem>();
 
         private readonly List<Process> _processes = new List<Process>();
 

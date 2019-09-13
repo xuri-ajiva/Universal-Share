@@ -103,109 +103,121 @@ namespace Universal_Share.Interface {
         #region MenüItem
 
         private void NewToolStripMenuItem_Click(object sender, EventArgs e) {
-            switch (this._currentItem[0].ListView.Name) {
-                case "ID":
-                    ßProgram.D.Execute( ßProgram.D.OperationIdMap.Get( this._currentItem[0].Text ) );
-                    break;
-                case "TO":
-                    try {
-                        ( var r20, var r10 ) = ßProgram.E.CreateNewTokenItem();
-                        ßProgram.D.TokenList.Add( r10, r20 );
-                    } catch {
-                        // 
-                    }
+            try {
+                switch (this._currentItem[0].ListView.Name) {
+                    case "ID":
+                        ßProgram.D.Execute( ßProgram.D.OperationIdMap.Get( this._currentItem[0].Text ) );
+                        break;
+                    case "TO":
+                        try {
+                            ( var r20, var r10 ) = ßProgram.E.CreateNewTokenItem();
+                            ßProgram.D.TokenList.Add( r10, r20 );
+                        } catch {
+                            // 
+                        }
 
-                    break;
-                case "RE":
-                    try {
-                        //( var r21, var r11 ) = ßProgram.E.CreateNewRememberType();
-                        //ßProgram.D.RememberType.Add( r11, r21 );
-                    } catch {
-                        //
-                    }
+                        break;
+                    case "RE":
+                        try {
+                            //( var r21, var r11 ) = ßProgram.E.CreateNewRememberType();
+                            //ßProgram.D.RememberType.Add( r11, r21 );
+                        } catch {
+                            //
+                        }
 
-                    break;
-                case "RG":
-                    try {
-                        //( var r22, var r12 ) = ßProgram.E.CreateNewTypeHolder();
-                        //ßProgram.D.RegList.Add( r12, r22 );
-                    } catch {
-                        //
-                    }
+                        break;
+                    case "RG":
+                        try {
+                            //( var r22, var r12 ) = ßProgram.E.CreateNewTypeHolder();
+                            //ßProgram.D.RegList.Add( r12, r22 );
+                        } catch {
+                            //
+                        }
 
-                    break;
+                        break;
+                }
+            } catch (Exception ex) {
+                ßProgram.EH.EscalateException( ex );
             }
         }
 
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e) {
-            switch (this._currentItem[0].ListView.Name) {
-                case "ID":
-                    foreach ( ListViewItem item in this._currentItem ) {
-                        ßProgram.D.OperationIdMap.Remove( item.Name );
-                    }
+            try {
+                switch (this._currentItem[0].ListView.Name) {
+                    case "ID":
+                        foreach ( ListViewItem item in this._currentItem ) {
+                            ßProgram.D.OperationIdMap.Remove( item.Name );
+                        }
 
-                    break;
-                case "TO":
-                    foreach ( ListViewItem item in this._currentItem ) {
-                        ßProgram.D.TokenList.Remove( item.Name );
-                    }
+                        break;
+                    case "TO":
+                        foreach ( ListViewItem item in this._currentItem ) {
+                            ßProgram.D.TokenList.Remove( item.Name );
+                        }
 
-                    break;
-                case "RE":
-                    foreach ( ListViewItem item in this._currentItem ) {
-                        //ßProgram.D.RememberType.Remove( item.Name );
-                    }
+                        break;
+                    case "RE":
+                        foreach ( ListViewItem item in this._currentItem ) {
+                            //ßProgram.D.RememberType.Remove( item.Name );
+                        }
 
-                    break;
-                case "RG":
-                    foreach ( ListViewItem item in this._currentItem ) {
-                        // ßProgram.D.RegList.Remove( item.Name );
-                    }
+                        break;
+                    case "RG":
+                        foreach ( ListViewItem item in this._currentItem ) {
+                            // ßProgram.D.RegList.Remove( item.Name );
+                        }
 
-                    break;
+                        break;
+                }
+            } catch (Exception ex) {
+                ßProgram.EH.EscalateException( ex );
             }
         }
 
         private void EditToolStripMenuItem_Click(object sender, EventArgs e) {
-            switch (this._currentItem[0].ListView.Name) {
-                case "ID":
-                    //ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( this.currentItem[0].Text ) ) );
-                    break;
-                case "TO":
-                    try {
-                        ( var r20, var r10 ) = ßProgram.E.EditTokenItem( ßProgram.D.TokenList.Get( this._currentItem[0].Text ) );
-                        ßProgram.D.TokenList.Remove( this._currentItem[0].Text );
-                        ßProgram.D.TokenList.Add( r10, r20 );
-                    } catch {
-                        // ignored
-                    }
+            try {
+                switch (this._currentItem[0].ListView.Name) {
+                    case "ID":
+                        //ßMainPoint.S.execute( ßMainPoint.S.IdStreamsMap.Get( int.Parse( this.currentItem[0].Text ) ) );
+                        break;
+                    case "TO":
+                        try {
+                            ( var r20, var r10 ) = ßProgram.E.EditTokenItem( ßProgram.D.TokenList.Get( this._currentItem[0].Text ) );
+                            ßProgram.D.TokenList.Remove( this._currentItem[0].Text );
+                            ßProgram.D.TokenList.Add( r10, r20 );
+                        } catch {
+                            // ignored
+                        }
 
-                    break;
-                case "RE":
-                    try {
-                        //var name = this._currentItem[0].SubItems[0].Text;
-                        //( var r21, var r11 ) = ßProgram.E.EditRememberType( ßProgram.D.RememberType.Get( name ) );
-                        //ßProgram.D.RememberType.Remove( name );
-                        //ßProgram.D.RememberType.Add( name, r21 );
-                    } catch {
-                        // ignored
-                    }
+                        break;
+                    case "RE":
+                        try {
+                            //var name = this._currentItem[0].SubItems[0].Text;
+                            //( var r21, var r11 ) = ßProgram.E.EditRememberType( ßProgram.D.RememberType.Get( name ) );
+                            //ßProgram.D.RememberType.Remove( name );
+                            //ßProgram.D.RememberType.Add( name, r21 );
+                        } catch {
+                            // ignored
+                        }
 
-                    break;
-                case "RG":
-                    try {
-                        //var name = this._currentItem[0].SubItems[0].Text;
-                        //( var r22, var r12 ) = ßProgram.E.EditTypeHolder( ßProgram.D.RegList.Get( name ), name );
-                        //ßProgram.D.RegList.Remove( r12 );
-                        //ßProgram.D.RegList.Add( r12, r22 );
-                    } catch (Exception exsa) {
-                        // ignored
-                    }
+                        break;
+                    case "RG":
+                        try {
+                            //var name = this._currentItem[0].SubItems[0].Text;
+                            //( var r22, var r12 ) = ßProgram.E.EditTypeHolder( ßProgram.D.RegList.Get( name ), name );
+                            //ßProgram.D.RegList.Remove( r12 );
+                            //ßProgram.D.RegList.Add( r12, r22 );
+                        } catch (Exception exsa) {
+                            // ignored
+                        }
 
-                    break;
+                        break;
+                }
+
+                ForceUpdateAll_Click( null, null );
+            } catch (Exception ex) {
+                ßProgram.EH.EscalateException( ex );
             }
-
-            ForceUpdateAll_Click( null, null );
         }
 
         #endregion
@@ -213,9 +225,9 @@ namespace Universal_Share.Interface {
         #region Events
 
         private void ServerForm_Load(object sender, EventArgs e) {
-            ßProgram.D.OperationIdMap.OnDictionaryChanged += IdStreamsMapOnDictionaryChanged;
+            if ( ßProgram.D.OperationIdMap != null ) ßProgram.D.OperationIdMap.OnDictionaryChanged += IdStreamsMapOnDictionaryChanged;
             //ßProgram.D.RegList.OnDictionaryChanged      += RegListOnOnDictionaryChanged;
-            ßProgram.D.TokenList.OnDictionaryChanged += TokenListOnOnDictionaryChanged;
+            if ( ßProgram.D.TokenList != null ) ßProgram.D.TokenList.OnDictionaryChanged += TokenListOnOnDictionaryChanged;
             //ßProgram.D.RememberType.OnDictionaryChanged += RememberTypeOnOnDictionaryChanged;
 
             ForceUpdateAll_Click( null, null );
@@ -327,7 +339,7 @@ namespace Universal_Share.Interface {
             var item = ls.SelectedItems[0];
             if ( item.Text == BASE_ITEM ) return;
 
-            ßProgram.D.Execute( ßProgram.D.OperationIdMap.Get(  item.Text  ) );
+            ßProgram.D.Execute( ßProgram.D.OperationIdMap.Get( item.Text ) );
         }
 
         private void _TokenList_DoubleClick(object sender, EventArgs e) {
@@ -395,10 +407,11 @@ namespace Universal_Share.Interface {
             }
         }
 
-       // private void RememberTypeOnOnDictionaryChanged(object sender, DictChangedEventArgs<string, RememberType> e) { Changed( e ); }
-        private void TokenListOnOnDictionaryChanged(object    sender, DictChangedEventArgs<string, TokenItem>    e) { Changed( e ); }
-       // private void RegListOnOnDictionaryChanged(object      sender, DictChangedEventArgs<string, TypeHolder>   e) { Changed( e ); }
-        private void IdStreamsMapOnDictionaryChanged(object   sender, DictChangedEventArgs<string, OperationInfo>   e) { Changed( e ); }
+        // private void RememberTypeOnOnDictionaryChanged(object sender, DictChangedEventArgs<string, RememberType> e) { Changed( e ); }
+        private void TokenListOnOnDictionaryChanged(object sender, DictChangedEventArgs<string, TokenItem> e) { Changed( e ); }
+
+        // private void RegListOnOnDictionaryChanged(object      sender, DictChangedEventArgs<string, TypeHolder>   e) { Changed( e ); }
+        private void IdStreamsMapOnDictionaryChanged(object sender, DictChangedEventArgs<string, OperationInfo> e) { Changed( e ); }
 
         #endregion
 
@@ -430,6 +443,7 @@ namespace Universal_Share.Interface {
                     it.SubItems.Add( ( ti.Remember.ToString() ) );
                     it.SubItems.Add( ( ti.Description ) );
                 }
+
                 //else if ( typeof(TV) == typeof(RememberType) && e.Value is RememberType rm ) {
                 //    it.SubItems.Add( rm.Type.ToString() );
                 //    it.SubItems.Add( ( rm.Value.ToString() ) );
@@ -450,28 +464,32 @@ namespace Universal_Share.Interface {
         private string CreateName(string eKey) => eKey;
 
         private void ForceUpdateAll_Click(object sender, EventArgs e) {
-            this._RegList.Items.Clear();
-            this._RememberList.Items.Clear();
-            this._TokenList.Items.Clear();
-            this._idStreamMap.Items.Clear();
-            foreach ( var s in ßProgram.D.OperationIdMap ) {
-                this._idStreamMap.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, OperationInfo>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
-            }
+            try {
+                this._RegList.Items.Clear();
+                this._RememberList.Items.Clear();
+                this._TokenList.Items.Clear();
+                this._idStreamMap.Items.Clear();
+                foreach ( var s in ßProgram.D.OperationIdMap ) {
+                    this._idStreamMap.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, OperationInfo>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                }
 
-            //foreach ( var s in ßProgram.D.RegList ) {
-            //    this._RegList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, TypeHolder>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
-            //}
-            //
-            //foreach ( var s in ßProgram.D.RememberType ) {
-            //    this._RememberList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, RememberType>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
-            //}
+                //foreach ( var s in ßProgram.D.RegList ) {
+                //    this._RegList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, TypeHolder>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                //}
+                //
+                //foreach ( var s in ßProgram.D.RememberType ) {
+                //    this._RememberList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, RememberType>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                //}
 
-            foreach ( var s in ßProgram.D.TokenList ) {
-                this._TokenList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, TokenItem>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
-            }
+                foreach ( var s in ßProgram.D.TokenList ) {
+                    this._TokenList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, TokenItem>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                }
 
-            foreach ( Control c in this.panel4.Controls ) {
-                c.Refresh();
+                foreach ( Control c in this.panel4.Controls ) {
+                    c.Refresh();
+                }
+            } catch (Exception ex) {
+                ßProgram.EH.EscalateException( ex );
             }
         }
 

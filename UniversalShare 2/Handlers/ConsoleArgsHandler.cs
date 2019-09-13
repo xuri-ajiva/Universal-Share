@@ -8,7 +8,8 @@ using UniversalShare_2.Net;
 
 namespace UniversalShare_2.Handlers {
     public class ConsoleArgsHandler {
-        [DllImport( "kernel32.dll" )] private static extern IntPtr GetConsoleWindow();
+        private readonly                                    SettingsHandler _settingsHandler;
+        [DllImport( "kernel32.dll" )] private static extern IntPtr          GetConsoleWindow();
 
         [DllImport( "user32.dll" )] private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
@@ -17,9 +18,10 @@ namespace UniversalShare_2.Handlers {
 
         private IntPtr handle;
 
-        private bool   _serverArg = false;
-        private bool   _ui        = true;
-        private bool   _console   = true;
+        private bool        _serverArg = false;
+        private bool        _ui        = true;
+        private bool        _autosave  = true;
+        private bool        _console   = true;
         private ISharedAble _currentState;
 
 
@@ -38,26 +40,35 @@ namespace UniversalShare_2.Handlers {
             switch (s.ToLower()) {
                 case "": return;
                 case "s":
-                    _serverArg = true;
+                    this._serverArg = true;
                     break;
                 case "c":
-                    _serverArg = false;
+                    this._serverArg = false;
                     break;
                 case "noui":
-                    _ui = false;
+                    this._ui = false;
                     break;
                 case "ui":
-                    _ui = true;
+                    this._ui = true;
+                    break;
+                case "autosave":
+                    this._autosave = false;
                     break;
                 case "noconsole":
-                    _console = false;
-                    ShowWindow( handle, SW_HIDE );
+                    this._console = false;
+                    ShowWindow( this.handle, SW_HIDE );
                     break;
             }
         }
 
-        private void PreInitialize() { handle = GetConsoleWindow(); }
-        private void Initialize()    { }
+        private void PreInitialize() { this.handle = GetConsoleWindow(); }
+
+        private void Initialize() {
+            this._settingsHandler.LoadSettings();
+            if ( this._autosave ) {
+                this._settingsHandler.SavingLoop = true;
+            }
+        }
 
         private void PostInitialize() {
             //ST._AuthPrivate = new Auth( new[] { (byte) ( isServer ? 0 : 1 ), (byte) ( ui ? 0 : 1 ), (byte) ( console ? 0 : 1 ) } );
@@ -75,24 +86,24 @@ namespace UniversalShare_2.Handlers {
             //} );
             //t.Start();
 
-            if ( _ui )
+            if ( this._ui )
                 CreateUi( this._serverArg );
             else {
                 if ( this._serverArg )
-                    _currentState = new Server(ßProgram.EH, ßProgram.U);
+                    this._currentState = new Server( ßProgram.EH, ßProgram.U );
                 else
-                    _currentState = new Client(ßProgram.EH,ßProgram.U);
-                _currentState.Start( this._serverArg ? IPAddress.Any : IPAddress.Parse( ßProgram.U.UserInput.GetString( "Bitte IP Addresse Eintragen", "127.0.0.1" ) ) );
+                    this._currentState = new Client( ßProgram.EH, ßProgram.U );
+                this._currentState.Start( this._serverArg ? IPAddress.Any : IPAddress.Parse( ßProgram.U.UserInput.GetString( "Bitte IP Addresse Eintragen", "127.0.0.1" ) ) );
             }
         }
 
-        public  void CreateUi(bool isServer) {
+        public void CreateUi(bool isServer) {
             if ( isServer )
-                _currentState = new Server(ßProgram.EH, ßProgram.U);
+                this._currentState = new Server( ßProgram.EH, ßProgram.U );
             else
-                _currentState = new Client(ßProgram.EH, ßProgram.U);
+                this._currentState = new Client( ßProgram.EH, ßProgram.U );
 
-            var form = new MainFormP( _currentState, isServer ) { Text = _currentState.GetType().Name };
+            var form = new MainFormP( this._currentState, isServer ) { Text = this._currentState.GetType().Name };
 
             var t = new Thread( () => {
                 Application.Run( form );
@@ -102,8 +113,11 @@ namespace UniversalShare_2.Handlers {
             t.Start();
         }
 
-        public ConsoleArgsHandler(string[] args) { ProgArgs( args ); }
+        public ConsoleArgsHandler(string[] args, SettingsHandler settingsHandler) {
+            this._settingsHandler = settingsHandler;
+            ProgArgs( args );
+        }
 
-        public ConsoleArgsHandler() { }
+        public ConsoleArgsHandler(SettingsHandler settingsHandler) { this._settingsHandler = settingsHandler; }
     }
 }

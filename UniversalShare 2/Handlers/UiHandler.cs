@@ -8,24 +8,30 @@ using UniversalShare_2.Operation;
 #endregion
 
 namespace UniversalShare_2.Handlers {
-    public class UiHandler {
+    public class UiHandler : LowLvlHandlerBase {
         public UserInput UserInput;
 
-        private readonly ExceptionHandler _handler;
 
-        public UiHandler(ExceptionHandler exceptionHandler) {
-            this._handler = exceptionHandler;
+        public UiHandler(ExceptionHandler exceptionHandler) : base( exceptionHandler ) {
             try {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault( false );
             } catch (Exception e) {
-                this._handler.EscalateException( e );
+                this._exceptionHandler.EscalateException( e );
             }
+
             this.UserInput = new UserInput();
         }
 
-        public void ShowUI(Form _form) { Application.Run( _form ); }
-        public void CloseUI()          { Application.Exit(); }
+        public void ShowUI(Form _form) {
+            try {
+                Application.Run( _form );
+            } catch (Exception e) {
+                this._exceptionHandler.EscalateException( e );
+            }
+        }
+
+        public void CloseUI() { Application.Exit(); }
 
         public bool GetConfirm(TokenItem tokenItem) { return true; }
     }

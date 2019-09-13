@@ -8,7 +8,9 @@ using System.Threading;
 using System.Xml;
 
 namespace UniversalShare_2.Handlers {
-    public class ExceptionHandler {
+    public struct ExceptionHandler {
+        public static readonly ExceptionHandler Empty = default;
+
         public void EscalateException(Exception e) {
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.BackgroundColor = ConsoleColor.DarkGray;
