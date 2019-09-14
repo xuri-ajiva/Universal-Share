@@ -8,6 +8,8 @@ namespace UniversalShare_2.Net {
         public static readonly byte[] CreateRegister = { 103, 4, 1, 1 };
         public static readonly byte[] CloseRegister = { 103, 4, 1, 2 };
         public static readonly byte[] FileType       = { 109, 9, 0, 0 };
+        
+        public static readonly byte[] RegisterToken = { 201, 4, 1, 1 };
 
         [DebuggerStepThrough]
         public static bool IsEqual(byte[] x1, byte[] x2) {

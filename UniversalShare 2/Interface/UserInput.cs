@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
+using Microsoft.SqlServer.Server;
+using UniversalShare_2.Net;
+using UniversalShare_2.Operation;
 
 namespace UniversalShare_2.Interface {
     public class UserInput : Form {
@@ -13,6 +17,8 @@ namespace UniversalShare_2.Interface {
         private Panel    _panel2;
         private Label    _label1;
         private Button   _yesButton;
+
+
         public UserInput() { InitializeComponent(); }
         /*
         //Console.WriteLine(us.GetConfirm( new RegInfo(null,-1,@"..\\..\\..\\test.txt", RegInfo.TYPE.SINGLE_FILE), new TypeHolder(@"C:\windows\system32\cmd.exe","-c pause",true," descript",false)));
@@ -24,42 +30,46 @@ namespace UniversalShare_2.Interface {
             if ( ChackboxChecked ) ßMainPoint.S.RememberType.Add( reg.Extension, new RememberType( this._descriptionBox.Text, ret, reg.Extension ) );
 
             return bret;
-        }
+        }*/
 
         public bool GetConfirm(TokenItem ti) {
-            ResetAndInfo( "Key= " + string.Join( " ,", NetBase.SubArray( ti.TokenBytes, 0, 8 ) ) + "\n" + ti.Base64Key +"\n"+ti.Description);
+            ResetAndInfo( "Key= " + string.Join( " ,", NetBase.SubArray( ti.TokenBytes, 0, 8 ) ) + "\n" + ti.Base64Key + "\n" + ti.Description );
 
             var ret  = ShowDialog();
             var bret = ret == DialogResult.Yes || ret == DialogResult.OK;
-            if ( ChackboxChecked ) ßMainPoint.S.ToakenList.Add( ti.Base64Key, new TokenItem( ti.TokenBytes, bret, true, this._descriptionBox.Text ) );
+            if ( ChackboxChecked ) {
+                if ( ßProgram.D.TokenList.ContainsKey( ti.Base64Key ) ) ßProgram.D.TokenList.Remove( ti.Base64Key );
+                ßProgram.D.TokenList.Add( ti.Base64Key, new TokenItem( ti.TokenBytes, bret, true, this._descriptionBox.Text ) );
+            }
+
             return bret;
         }
-        */
+
         private void ResetAndInfo(string info) {
             this._descriptionBox.Text = "";
-            this.Text = Console.Title.ToUpper();
-            this._infoLable.Text   = info;
-            this._remember.Checked = false;
-            ChackboxChecked        = false;
+            this.Text                 = Console.Title.ToUpper();
+            this._infoLable.Text      = info;
+            this._remember.Checked    = false;
+            ChackboxChecked           = false;
         }
 
-        public string GetString(string description,string example) {
+        public string GetString(string description, string example) {
             ResetAndInfo( description );
             this._descriptionBox.Text = example;
             ShowDialog();
             return this._descriptionBox.Text;
         }
-        
+
         // ReSharper disable RedundantDelegateCreation
         private void InitializeComponent() {
             this._noButton       = new Button();
             this._yesButton      = new Button();
             this._infoLable      = new Label();
             this._remember       = new CheckBox();
-            this._panel1          = new Panel();
+            this._panel1         = new Panel();
             this._descriptionBox = new TextBox();
-            this._panel2          = new Panel();
-            this._label1          = new Label();
+            this._panel2         = new Panel();
+            this._label1         = new Label();
             this._panel1.SuspendLayout();
             this._panel2.SuspendLayout();
             SuspendLayout();
@@ -164,7 +174,7 @@ namespace UniversalShare_2.Interface {
             this._panel2.PerformLayout();
             ResumeLayout( false );
         }
-        
+
         // ReSharper restore RedundantDelegateCreation
         private void Remember_CheckedChanged(object sender, EventArgs e) { ChackboxChecked = this._remember.Checked; }
 

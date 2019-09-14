@@ -8,18 +8,13 @@ using UniversalShare_2.Handlers;
 using UniversalShare_2.Operation;
 
 namespace UniversalShare_2.Net {
-    public partial class NetBase { //public static bool LOCKED = false;
-        protected ExceptionHandler _exceptionHandler;
-        protected UiHandler        UiHandler;
+    public partial class NetBase : HandlerBase {
+        /// <inheritdoc />
+        public NetBase(ExceptionHandler exceptionHandler, UiHandler uiHandler) : base( exceptionHandler, uiHandler ) { FilePort = 9999; }
 
-        public NetBase(ExceptionHandler _exceptionHandler, UiHandler uiHandler) {
-            this.UiHandler        = uiHandler;
-            this._exceptionHandler = _exceptionHandler;
-            FilePort               = 9999;
-        }
 
         [DebuggerStepThrough]
-        protected bool IsKeyVailed(byte[] toaken) {
+        protected static bool IsKeyVailed(byte[] toaken, bool register,UiHandler ui) {
             var base64Key = Convert.ToBase64String( toaken );
 
             if ( ßProgram.D.TokenList.ContainsKey( base64Key ) ) {
@@ -28,16 +23,12 @@ namespace UniversalShare_2.Net {
                 if ( ti.Remember ) return ti.Trusted;
             }
 
-            if ( this.UiHandler.GetConfirm( new TokenItem( toaken, false, false ) ) ) {
-                return true;
-            }
-
-            return false;
+            return ui.GetConfirm( new TokenItem( toaken, false, false ) );
         }
 
         public static int FilePort;
 
-        protected int BUFFER_SIZE = DEFAULT_BUFFER_SIZE;
+        protected static int BUFFER_SIZE = DEFAULT_BUFFER_SIZE;
 
         protected const int ID_SIZE      = DEFAULT_HEATHER_SIZE;
         protected const int KEY_SIZE     = KeyHandler.LENGTH_B;
@@ -52,7 +43,7 @@ namespace UniversalShare_2.Net {
         /// <param name="readBytes">the bytes read</param>
         /// <returns>return new Tuple&amp;lt;byte[], byte[], byte[], byte[]&amp;gt;( tokenArray, idArray, optionArray, contendArray );</returns>
         [DebuggerStepThrough]
-        protected (byte[], byte[], byte[], byte[]) Buffer_To_Parts(byte[] buffer, int readBytes) {
+        protected static (byte[], byte[], byte[], byte[]) Buffer_To_Parts(byte[] buffer, int readBytes) {
             var tokenArray   = SubArray( buffer, 0,                                KEY_SIZE );
             var idArray      = SubArray( buffer, KEY_SIZE,                         ID_SIZE );
             var optionArray  = SubArray( buffer, KEY_SIZE           + ID_SIZE,     OPTION_SIZE );
@@ -60,8 +51,8 @@ namespace UniversalShare_2.Net {
             return ( tokenArray, idArray, optionArray, contendArray );
         }
 
-        //[DebuggerStepThrough]
-        protected byte[] Parts_To_Buffer(byte[] tokenBytes, byte[] idBytes, byte[] option, byte[] contendBytes, int ContenLength) {
+        [DebuggerStepThrough]
+        protected static byte[] Parts_To_Buffer(byte[] tokenBytes, byte[] idBytes, byte[] option, byte[] contendBytes, int ContenLength) {
             var buffer = new byte[ContenLength + HEATHER_SIZE];
             tokenBytes.CopyTo( buffer, 0 );
             idBytes.CopyTo( buffer, tokenBytes.Length );
@@ -71,16 +62,20 @@ namespace UniversalShare_2.Net {
             return buffer;
         }
 
-        protected (string, string) GlobalReversesProgresses(byte[] buffer, int readBytes) {
+        protected (string, string) GlobalReversesProgresses(byte[] buffer, int readBytes,TcpClient cl) {
             buffer = SubArray( buffer, 0, readBytes );
 
             ( var token, var idB, var option, var conetnd ) = Buffer_To_Parts( buffer, readBytes );
 
             var id = Encoding.UTF8.GetString( idB );
 
-            if ( !IsKeyVailed( token ) ) return ( TOKEN_NOT_ACCEPTED, UNKNOWN_ERROR );
+            if ( NetOption.IsEqual( option, NetOption.RegisterToken ) ) {
+                cl.Client.Send( Parts_To_Buffer( ßProgram.T, new byte[ID_SIZE], IsKeyVailed( token, true,this._uiHandler ) ? NetOption.Success : NetOption.Error, ßProgram.T, KeyHandler.LENGTH_B ) );
+            }
 
-            string message = ProcessOptionsUniversal( token, id, option, conetnd, readBytes );
+            if ( !IsKeyVailed( token ,false, this._uiHandler) ) return ( TOKEN_NOT_ACCEPTED, UNKNOWN_ERROR );
+
+            var message = ProcessOptionsUniversal( token, id, option, conetnd, readBytes );
 
             var ret = message == SUCCESS ? SUCCESS : message;
             Console.WriteLine( "Paket: id = [{0}], Token(0,8) = [{1}]", id, string.Join( ", ", SubArray( token, 0, 8 ) ) );
@@ -167,7 +162,20 @@ namespace UniversalShare_2.Net {
             var ipendF     = new IPEndPoint( iPAddress, FilePort );
             var fileSocket = new TcpClient();
             fileSocket.Connect( ipendF );
+            SendToken( fileSocket, ßProgram.T );
             return fileSocket;
+        }
+
+        public static void SendToken(TcpClient cl, byte[] Token) {
+            cl.Client.Send( Parts_To_Buffer( new byte[KeyHandler.LENGTH_B], new byte[ID_SIZE], NetOption.RegisterToken, Token, KeyHandler.LENGTH_B ) );
+
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            var readBytes = cl.Client.Receive( buffer, BUFFER_SIZE, SocketFlags.None );
+            ( var token, var idB, var option, var conetnd ) = Buffer_To_Parts( buffer, readBytes );
+            if ( NetOption.IsEqual( NetOption.Success, option ) ) {
+                IsKeyVailed( token, true, ßProgram.U );
+            }
         }
 
         public static TcpListener CreateLisener() => new TcpListener( IPAddress.Any, FilePort );

@@ -33,6 +33,6 @@ namespace UniversalShare_2.Handlers {
 
         public void CloseUI() { Application.Exit(); }
 
-        public bool GetConfirm(TokenItem tokenItem) { return true; }
+        public bool GetConfirm(TokenItem tokenItem) => this.UserInput.GetConfirm( tokenItem );
     }
 }
