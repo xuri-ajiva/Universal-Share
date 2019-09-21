@@ -3,7 +3,7 @@ using System.Data.SqlTypes;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace UniversalShare_2.Oprions
+namespace UniversalShareCore.Oprions
 {
     public class EventStream : INullable, IDisposable {
         [XmlIgnore] private readonly Stream _selfStream;

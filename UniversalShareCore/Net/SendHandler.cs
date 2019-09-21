@@ -3,10 +3,11 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using UniversalShare_2.Handlers;
+using UniversalShareCore.Handlers;
+using UniversalShareCore.LowLvlHandler;
 
-namespace UniversalShare_2.Net {
-    internal class SendHandler : NetBase {
+namespace UniversalShareCore.Net {
+    public class SendHandler : NetBase {
         public void SendFile(TcpClient fileSocket, string fileName, string addToFileName = "") {
             var id = "";
             try {
@@ -17,9 +18,9 @@ namespace UniversalShare_2.Net {
                 Thread.Sleep( 100 );
 
                 SteamClient( fileSocket, fileName, id );
-                
+
                 Thread.Sleep( 100 );
-                SendCloseStream( fileSocket,  id );
+                SendCloseStream( fileSocket, id );
             } catch (Exception e) {
                 this._exceptionHandler.EscalateException( e );
             }
@@ -29,7 +30,7 @@ namespace UniversalShare_2.Net {
             var idB       = Encoding.UTF8.GetBytes( id );
             var filenameB = Encoding.UTF8.GetBytes( saveFileName );
 
-            var b = Parts_To_Buffer( ßProgram.T, idB, NetOption.CreateRegister, filenameB, filenameB.Length );
+            var b = Parts_To_Buffer( _dataHandler.KeyHandler.TokenBytes, idB, NetOption.CreateRegister, filenameB, filenameB.Length );
 
             communicationSocket.Client.Send( b );
         }
@@ -48,7 +49,7 @@ namespace UniversalShare_2.Net {
 
                 if ( readerBytes <= 0 ) break;
 
-                var x = Parts_To_Buffer( ßProgram.T, idB, NetOption.WriteInFile, buffer, readerBytes );
+                var x = Parts_To_Buffer( _dataHandler.KeyHandler.TokenBytes, idB, NetOption.WriteInFile, buffer, readerBytes );
 
                 cl.Client.Send( x, SocketFlags.None );
                 Thread.Sleep( 10 );
@@ -58,14 +59,14 @@ namespace UniversalShare_2.Net {
         }
 
         private void SendCloseStream(TcpClient communicationSocket, string id) {
-            var idB       = Encoding.UTF8.GetBytes( id );
+            var idB = Encoding.UTF8.GetBytes( id );
 
-            var b = Parts_To_Buffer( ßProgram.T, idB, NetOption.CloseRegister,new byte[1], 1 );
+            var b = Parts_To_Buffer( _dataHandler.KeyHandler.TokenBytes, idB, NetOption.CloseRegister, new byte[1], 1 );
 
             communicationSocket.Client.Send( b );
         }
 
         /// <inheritdoc />
-        public SendHandler(ExceptionHandler _exceptionHandler, UiHandler uiHandler) : base( _exceptionHandler, uiHandler ) { }
+        public SendHandler( DataHandler _dataHandler) : base(  _dataHandler ) { }
     }
 }

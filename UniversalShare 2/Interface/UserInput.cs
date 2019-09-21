@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.SqlServer.Server;
-using UniversalShare_2.Net;
-using UniversalShare_2.Operation;
+using UniversalShareCore.Net;
+using UniversalShareCore.Operation;
 
 namespace UniversalShare_2.Interface {
     public class UserInput : Form {

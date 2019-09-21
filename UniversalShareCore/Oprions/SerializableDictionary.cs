@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 #endregion
 
-namespace UniversalShare_2.Oprions {
+namespace UniversalShareCore.Oprions {
     [XmlRoot( "dictionary" )]
     public class SerializableDictionary <TK, TV> : Dictionary<TK, TV>, IXmlSerializable {
         public SerializableDictionary(IDictionary<TK, TV>            bases) : base( bases ) { }

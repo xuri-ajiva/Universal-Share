@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace UniversalShare_2.Operation {
+namespace UniversalShareCore.Operation {
     public struct OperationInfo {
         public string _id;
         public string _fileName;

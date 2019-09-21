@@ -5,8 +5,8 @@ using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace UniversalShare_2.Handlers {
-    internal class FingerPrint {
+namespace UniversalShareCore.Handlers {
+    public class FingerPrint {
         private static readonly SHA512       Sha512 = SHA512.Create();
         private readonly        List<string> _fref  = new List<string>();
 

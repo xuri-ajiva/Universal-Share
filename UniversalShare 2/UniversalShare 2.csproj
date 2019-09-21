@@ -49,15 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\FingerPrint.cs" />
-    <Compile Include="Handlers\HandlerBase.cs" />
-    <Compile Include="LowLvlHandler\LowLvlHandlerBase.cs" />
-    <Compile Include="Handlers\KeyHandler.cs" />
-    <Compile Include="Handlers\DataHandler.cs" />
-    <Compile Include="Handlers\ConsoleArgsHandler.cs" />
-    <Compile Include="LowLvlHandler\ExceptionHandler.cs" />
-    <Compile Include="Handlers\SettingsHandler.cs" />
-    <Compile Include="Handlers\UiHandler.cs" />
+    <Compile Include="ConsoleArgsHandler.cs" />
+    <Compile Include="FormUiHandler.cs" />
     <Compile Include="Interface\Editor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,22 +73,11 @@
     <Compile Include="Interface\UserInput.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Net\Client.cs" />
-    <Compile Include="Net\NetBase.cs" />
-    <Compile Include="Net\NetOption.cs" />
-    <Compile Include="Net\ReversesHandler.cs" />
-    <Compile Include="Net\SendHandler.cs" />
-    <Compile Include="Net\Server.cs" />
-    <Compile Include="Net\Shared.cs" />
-    <Compile Include="Operation\OperationInfo.cs" />
-    <Compile Include="Operation\TokenItem.cs" />
-    <Compile Include="Oprions\EventStream.cs" />
-    <Compile Include="Oprions\Resources.Designer.cs">
+    <Compile Include="Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Oprions\SerializableDictionary.cs" />
     <Compile Include="ßProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Interface\Editor.resx">
@@ -113,20 +95,11 @@
     <EmbeddedResource Include="Interface\UserInput.resx">
       <DependentUpon>UserInput.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Oprions\Resources.resx">
+    <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -140,6 +113,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalShareCore\UniversalShareCore.csproj">
+      <Project>{0becaa7f-22a9-45b7-9aed-0126ae042322}</Project>
+      <Name>UniversalShareCore</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

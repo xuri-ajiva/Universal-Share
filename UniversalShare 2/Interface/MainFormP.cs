@@ -3,11 +3,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
-using Universal_Share.Options;
 using UniversalShare_2;
-using UniversalShare_2.Net;
-using UniversalShare_2.Operation;
-using UniversalShare_2.Oprions;
+using UniversalShare_2.Properties;
+using UniversalShareCore.Net;
+using UniversalShareCore.Operation;
+using UniversalShareCore.Oprions;
 
 namespace Universal_Share.Interface {
     public partial class MainFormP : Form {
@@ -137,7 +137,7 @@ namespace Universal_Share.Interface {
                         break;
                 }
             } catch (Exception ex) {
-                ßProgram.EH.EscalateException( ex );
+                ßProgram.D.ExceptionHandler.EscalateException( ex );
             }
         }
 
@@ -170,7 +170,7 @@ namespace Universal_Share.Interface {
                         break;
                 }
             } catch (Exception ex) {
-                ßProgram.EH.EscalateException( ex );
+                ßProgram.D.ExceptionHandler.EscalateException( ex );
             }
         }
 
@@ -207,7 +207,7 @@ namespace Universal_Share.Interface {
                             //( var r22, var r12 ) = ßProgram.E.EditTypeHolder( ßProgram.D.RegList.Get( name ), name );
                             //ßProgram.D.RegList.Remove( r12 );
                             //ßProgram.D.RegList.Add( r12, r22 );
-                        } catch (Exception exsa) {
+                        } catch  {
                             // ignored
                         }
 
@@ -216,7 +216,7 @@ namespace Universal_Share.Interface {
 
                 ForceUpdateAll_Click( null, null );
             } catch (Exception ex) {
-                ßProgram.EH.EscalateException( ex );
+                ßProgram.D.ExceptionHandler.EscalateException( ex );
             }
         }
 
@@ -248,7 +248,7 @@ namespace Universal_Share.Interface {
                     try {
                         this._serverThread = null;
                         GC.Collect();
-                        var ip = ßProgram.U.UserInput.GetString( "Bitte IP Addresse Eintragen", "127.0.0.1" );
+                        var ip = ßProgram.F.U.GetString( "Bitte IP Addresse Eintragen", "127.0.0.1" );
                         this._serverThread = new Thread( () => StartServer( this._server as ISharedAble, IPAddress.Parse( ip ) ) );
 
                         this._serverThread.Start();
@@ -489,7 +489,7 @@ namespace Universal_Share.Interface {
                     c.Refresh();
                 }
             } catch (Exception ex) {
-                ßProgram.EH.EscalateException( ex );
+                ßProgram.D.ExceptionHandler.EscalateException( ex );
             }
         }
 
@@ -499,11 +499,5 @@ namespace Universal_Share.Interface {
             Environment.Exit( 0 );
             //foreach ( var process in Process.GetProcessesByName( "Universal Share" ) ) process.Kill();
         }
-    }
-
-    public interface ISharedAble {
-        void      Start(IPAddress ipAddress);
-        void      Abort();
-        TcpClient GetTcpClient();
     }
 }

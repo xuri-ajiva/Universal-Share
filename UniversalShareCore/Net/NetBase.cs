@@ -4,26 +4,32 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using UniversalShare_2.Handlers;
-using UniversalShare_2.Operation;
+using UniversalShareCore.Handlers;
+using UniversalShareCore.LowLvlHandler;
+using UniversalShareCore.Operation;
 
-namespace UniversalShare_2.Net {
+namespace UniversalShareCore.Net {
     public partial class NetBase : HandlerBase {
+        protected readonly DataHandler _dataHandler;
+
         /// <inheritdoc />
-        public NetBase(ExceptionHandler exceptionHandler, UiHandler uiHandler) : base( exceptionHandler, uiHandler ) { FilePort = 9999; }
+        public NetBase(DataHandler dataHandler) : base( dataHandler ) {
+            this._dataHandler = dataHandler;
+            FilePort          = 9999;
+        }
 
 
-        [DebuggerStepThrough]
-        protected static bool IsKeyVailed(byte[] toaken, bool register,UiHandler ui) {
+        //[DebuggerStepThrough]
+        protected static bool IsKeyVailed(byte[] toaken, bool register, DataHandler dataHandler) {
             var base64Key = Convert.ToBase64String( toaken );
 
-            if ( ßProgram.D.TokenList.ContainsKey( base64Key ) ) {
-                var ti = ßProgram.D.TokenList.Get( base64Key );
+            if ( dataHandler.TokenList.ContainsKey( base64Key ) ) {
+                var ti = dataHandler.TokenList.Get( base64Key );
                 NetOption.IsEqual( toaken, ti.TokenBytes );
                 if ( ti.Remember ) return ti.Trusted;
             }
 
-            return ui.GetConfirm( new TokenItem( toaken, false, false ) );
+            return dataHandler.UiHandler.ConfirmHandler( new TokenItem( toaken, false, false ) );
         }
 
         public static int FilePort;
@@ -51,7 +57,7 @@ namespace UniversalShare_2.Net {
             return ( tokenArray, idArray, optionArray, contendArray );
         }
 
-        [DebuggerStepThrough]
+        //[DebuggerStepThrough]
         protected static byte[] Parts_To_Buffer(byte[] tokenBytes, byte[] idBytes, byte[] option, byte[] contendBytes, int ContenLength) {
             var buffer = new byte[ContenLength + HEATHER_SIZE];
             tokenBytes.CopyTo( buffer, 0 );
@@ -62,7 +68,7 @@ namespace UniversalShare_2.Net {
             return buffer;
         }
 
-        protected (string, string) GlobalReversesProgresses(byte[] buffer, int readBytes,TcpClient cl) {
+        protected (string, string) GlobalReversesProgresses(byte[] buffer, int readBytes, TcpClient cl) {
             buffer = SubArray( buffer, 0, readBytes );
 
             ( var token, var idB, var option, var conetnd ) = Buffer_To_Parts( buffer, readBytes );
@@ -70,10 +76,13 @@ namespace UniversalShare_2.Net {
             var id = Encoding.UTF8.GetString( idB );
 
             if ( NetOption.IsEqual( option, NetOption.RegisterToken ) ) {
-                cl.Client.Send( Parts_To_Buffer( ßProgram.T, new byte[ID_SIZE], IsKeyVailed( token, true,this._uiHandler ) ? NetOption.Success : NetOption.Error, ßProgram.T, KeyHandler.LENGTH_B ) );
+                var optionsddsad = IsKeyVailed( token, true, _dataHandler ) ? NetOption.Success : NetOption.Error;
+                var sendsjhdj = Parts_To_Buffer( _dataHandler.KeyHandler.TokenBytes, new byte[ID_SIZE],optionsddsad , _dataHandler.KeyHandler.TokenBytes, KeyHandler.LENGTH_B );
+
+                cl.Client.Send( sendsjhdj );
             }
 
-            if ( !IsKeyVailed( token ,false, this._uiHandler) ) return ( TOKEN_NOT_ACCEPTED, UNKNOWN_ERROR );
+            if ( !IsKeyVailed( token, false, _dataHandler ) ) return ( TOKEN_NOT_ACCEPTED, UNKNOWN_ERROR );
 
             var message = ProcessOptionsUniversal( token, id, option, conetnd, readBytes );
 
@@ -88,15 +97,15 @@ namespace UniversalShare_2.Net {
                     this._exceptionHandler.EscalateException( new Exception( Encoding.UTF8.GetString( contend ).Replace( Encoding.UTF8.GetString( new byte[] { 0 } ), "" ) ) );
                 }
                 else if ( NetOption.IsEqual( option, NetOption.WriteInFile ) ) {
-                    if ( !ßProgram.D.OperationIdMap.ContainsKey( id ) ) return ( ID_NOT_EXIST );
+                    if ( !_dataHandler.OperationIdMap.ContainsKey( id ) ) return ( ID_NOT_EXIST );
 
-                    var rehi = ßProgram.D.OperationIdMap.Get( id );
+                    var rehi = _dataHandler.OperationIdMap.Get( id );
                     rehi.CreateStream();
                     rehi.Stream.Write( contend, 0, readBytes - ( KEY_SIZE + ID_SIZE + OPTION_SIZE ) );
                     rehi.Stream.Flush();
                 }
                 else if ( NetOption.IsEqual( option, NetOption.CreateRegister ) ) {
-                    if ( ßProgram.D.OperationIdMap.ContainsKey( id ) ) return ( ID_ALREADY_EXISTS );
+                    if ( _dataHandler.OperationIdMap.ContainsKey( id ) ) return ( ID_ALREADY_EXISTS );
 
                     var finalFileName = string.Concat( ( DateTime.Now + ( Encoding.UTF8.GetString( contend ) ) ).Split( Path.GetInvalidFileNameChars() ) );
                     var finalSaveName = DEFAULT_SAVE_LOCATION + finalFileName;
@@ -104,12 +113,12 @@ namespace UniversalShare_2.Net {
                     Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) ?? throw new InvalidOperationException() );
 
                     var regInfo = new OperationInfo( finalSaveName, id, Convert.ToBase64String( tokenBytes ) );
-                    ßProgram.D.OperationIdMap.Add( id, regInfo );
+                    _dataHandler.OperationIdMap.Add( id, regInfo );
                 }
                 else if ( NetOption.IsEqual( option, NetOption.CloseRegister ) ) {
-                    if ( !ßProgram.D.OperationIdMap.ContainsKey( id ) ) return ( ID_NOT_EXIST );
+                    if ( !_dataHandler.OperationIdMap.ContainsKey( id ) ) return ( ID_NOT_EXIST );
 
-                    var rehi = ßProgram.D.OperationIdMap.Get( id );
+                    var rehi = _dataHandler.OperationIdMap.Get( id );
                     rehi.CloseStream();
                     rehi.Finished();
                     rehi.Dispose();
@@ -158,15 +167,15 @@ namespace UniversalShare_2.Net {
         public const int    DEFAULT_HEATHER_SIZE  = 8;
 
 
-        public static TcpClient CreateClient(IPAddress iPAddress) {
+        public static TcpClient CreateClient(IPAddress iPAddress, DataHandler _dataHandler) {
             var ipendF     = new IPEndPoint( iPAddress, FilePort );
             var fileSocket = new TcpClient();
             fileSocket.Connect( ipendF );
-            SendToken( fileSocket, ßProgram.T );
+            SendToken( fileSocket, _dataHandler.KeyHandler.TokenBytes, _dataHandler );
             return fileSocket;
         }
 
-        public static void SendToken(TcpClient cl, byte[] Token) {
+        public static void SendToken(TcpClient cl, byte[] Token, DataHandler _dataHandler) {
             cl.Client.Send( Parts_To_Buffer( new byte[KeyHandler.LENGTH_B], new byte[ID_SIZE], NetOption.RegisterToken, Token, KeyHandler.LENGTH_B ) );
 
             byte[] buffer = new byte[BUFFER_SIZE];
@@ -174,10 +183,16 @@ namespace UniversalShare_2.Net {
             var readBytes = cl.Client.Receive( buffer, BUFFER_SIZE, SocketFlags.None );
             ( var token, var idB, var option, var conetnd ) = Buffer_To_Parts( buffer, readBytes );
             if ( NetOption.IsEqual( NetOption.Success, option ) ) {
-                IsKeyVailed( token, true, ßProgram.U );
+                IsKeyVailed( token, true, _dataHandler );
             }
         }
 
         public static TcpListener CreateLisener() => new TcpListener( IPAddress.Any, FilePort );
+    }
+
+    public interface ISharedAble {
+        void      Start(IPAddress ipAddress);
+        void      Abort();
+        TcpClient GetTcpClient();
     }
 }

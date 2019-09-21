@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Xml;
 
-namespace UniversalShare_2.Handlers {
+namespace UniversalShareCore.LowLvlHandler {
     public struct ExceptionHandler {
         public static readonly ExceptionHandler Empty = default;
 

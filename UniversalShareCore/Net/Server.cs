@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Universal_Share.Interface;
-using UniversalShare_2.Handlers;
+using UniversalShareCore.Handlers;
+using UniversalShareCore.LowLvlHandler;
 
-namespace UniversalShare_2.Net {
-    internal class Server : Shared, ISharedAble {
+namespace UniversalShareCore.Net {
+    public class Server : Shared, ISharedAble {
         /// <inheritdoc />
-        public Server(ExceptionHandler _exceptionHandler, UiHandler uiHandler) : base( _exceptionHandler, uiHandler ) {
-            this._send     = new SendHandler( ßProgram.EH, ßProgram.U );
-            this._reverses = new ReversesHandler( ßProgram.EH, ßProgram.U );
+        public Server( DataHandler dataHandler) : base( dataHandler ) {
+            this._send     = new SendHandler( dataHandler);
+            this._reverses = new ReversesHandler(  dataHandler );
         }
 
         List<TcpClient> tcpClients = new List<TcpClient>();

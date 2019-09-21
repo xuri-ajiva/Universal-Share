@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using UniversalShare_2.Operation;
-using UniversalShare_2.Oprions;
+using UniversalShareCore.LowLvlHandler;
+using UniversalShareCore.Operation;
+using UniversalShareCore.Oprions;
 
-namespace UniversalShare_2.Handlers {
+namespace UniversalShareCore.Handlers {
     public class SettingsHandler : HandlerBase {
         public const string SAVE_BASE        = ".xml";
         public const string SAVE_IDENTIFIER  = "IDENTIFIER";
@@ -23,7 +20,7 @@ namespace UniversalShare_2.Handlers {
         private string _explicitSaveName = "";
 
         /// <inheritdoc />
-        public SettingsHandler(ExceptionHandler exceptionHandler, UiHandler uiHandler, DataHandler dataHandler, string explicitSaveName = "") : base( exceptionHandler, uiHandler ) {
+        public SettingsHandler( DataHandler dataHandler, string explicitSaveName = "") : base( dataHandler ) {
             this.name         = Path.GetFileNameWithoutExtension( System.Reflection.Assembly.GetExecutingAssembly().Location );
             this._dataHandler = dataHandler;
             this._saveThread  = new Thread( () => SaveLoop( 100 ) );

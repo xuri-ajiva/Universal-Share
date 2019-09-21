@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace UniversalShare_2.Handlers {
+namespace UniversalShareCore.Handlers {
     [Serializable]
     public struct KeyHandler {
         private readonly SHA512 _sha512;

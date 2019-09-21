@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace UniversalShare_2.Net {
+namespace UniversalShareCore.Net {
     public class NetOption {
         public static readonly byte[] Error          = { 255, 255, 255, 255 };
         public static readonly byte[] Success        = { 201, 201, 201, 201 };

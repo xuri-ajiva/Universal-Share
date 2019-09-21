@@ -3,8 +3,8 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Universal_Share.Options;
-using UniversalShare_2.Operation;
+using UniversalShare_2.Properties;
+using UniversalShareCore.Operation;
 
 #endregion
 

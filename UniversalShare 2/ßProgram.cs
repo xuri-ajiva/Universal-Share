@@ -4,19 +4,19 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
-using UniversalShare_2.Handlers;
+using Universal_Share.Interface;
 using UniversalShare_2.Interface;
-using UniversalShare_2.Net;
+using UniversalShareCore.Handlers;
+using UniversalShareCore.LowLvlHandler;
+using UniversalShareCore.Net;
 
 namespace UniversalShare_2 {
     internal static class ßProgram {
         // ReSharper disable once InconsistentNaming
-        public static ExceptionHandler @EH { [DebuggerStepThrough] get; private set; }
-        public static DataHandler      D   { [DebuggerStepThrough] get; private set; }
-        public static UiHandler        U   { [DebuggerStepThrough] get; private set; }
-        public static byte[]           T   { [DebuggerStepThrough] get; private set; }
-        public static Editor           E   { [DebuggerStepThrough] get; private set; }
-        public static SettingsHandler  SH  { [DebuggerStepThrough] get; private set; }
+        public static DataHandler     D  { [DebuggerStepThrough] get; private set; }
+        public static Editor          E  { [DebuggerStepThrough] get; private set; }
+        public static SettingsHandler SH { [DebuggerStepThrough] get; private set; }
+        public static FormUiHandler   F  { [DebuggerStepThrough] get; internal set; }
 
         //public static ExceptionHandler T { [DebuggerStepThrough] get; private set; }
 
@@ -25,17 +25,16 @@ namespace UniversalShare_2 {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault( false );
 
-            U  = new UiHandler( EH );
-            EH = new ExceptionHandler();
-            D  = new DataHandler();
-            T  = new byte[KeyHandler.LENGTH_B];
+            //_formUiHandler= new FormUiHandler( new MainFormP(  ),  );
+
+            D  = new DataHandler( new ExceptionHandler(), F, SH, new KeyHandler() );
             E  = new Editor();
-            SH = new SettingsHandler( EH, U, D );
+            SH = new SettingsHandler( D );
 
             //DebugHandler.Start();
 
-            new Thread( () => new ConsoleArgsHandler( new string[] { "s" }, new SettingsHandler( EH, U, D, "S" ) ) ).Start();
-            new Thread( () => new ConsoleArgsHandler( new string[] { "c" }, new SettingsHandler( EH, U, D, "C" ) ) ).Start();
+            new Thread( () => new ConsoleArgsHandler( new string[] { "s" }, new SettingsHandler( D, "S" ) ) ).Start();
+            new Thread( () => new ConsoleArgsHandler( new string[] { "c" }, new SettingsHandler( D, "C" ) ) ).Start();
             // Application.Run(new Form1());
             Console.ReadLine();
         }
@@ -48,13 +47,13 @@ namespace UniversalShare_2 {
         }
     }
 
-    internal class NetType {
+    public class NetType {
         private SendHandler     _send;
         private ReversesHandler _reverses;
 
         public NetType() {
-            this._send     = new SendHandler( ßProgram.EH, ßProgram.U );
-            this._reverses = new ReversesHandler( ßProgram.EH, ßProgram.U );
+            this._send     = new SendHandler( ßProgram.D );
+            this._reverses = new ReversesHandler( ßProgram.D );
         }
 
         public void Server() {
@@ -71,7 +70,7 @@ namespace UniversalShare_2 {
 
         public void Client() {
             for ( int i = 0; i < 4; i++ ) {
-                TcpClient cl = NetBase.CreateClient( IPAddress.Parse( "127.0.0.1" ) );
+                TcpClient cl = NetBase.CreateClient( IPAddress.Parse( "127.0.0.1" ), ßProgram.D );
                 new Thread( () => this._reverses.SteamServer( cl, false ) ).Start();
                 Thread.Sleep( 200 );
                 //new Thread( () => {

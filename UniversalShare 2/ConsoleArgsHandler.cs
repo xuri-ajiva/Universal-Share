@@ -4,9 +4,11 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using Universal_Share.Interface;
-using UniversalShare_2.Net;
+using UniversalShare_2.Interface;
+using UniversalShareCore.Handlers;
+using UniversalShareCore.Net;
 
-namespace UniversalShare_2.Handlers {
+namespace UniversalShare_2 {
     public class ConsoleArgsHandler {
         private readonly                                    SettingsHandler _settingsHandler;
         [DllImport( "kernel32.dll" )] private static extern IntPtr          GetConsoleWindow();
@@ -18,11 +20,11 @@ namespace UniversalShare_2.Handlers {
 
         private IntPtr handle;
 
-        private bool        _serverArg = false;
-        private bool        _ui        = true;
-        private bool        _autosave  = true;
-        private bool        _console   = true;
-        private ISharedAble _currentState;
+        private bool                               _serverArg = false;
+        private bool                               _ui        = true;
+        private bool                               _autosave  = true;
+        private bool                               _console   = true;
+        private UniversalShareCore.Net.ISharedAble _currentState;
 
 
         public void ProgArgs(string[] args) {
@@ -90,21 +92,26 @@ namespace UniversalShare_2.Handlers {
                 CreateUi( this._serverArg );
             else {
                 if ( this._serverArg )
-                    this._currentState = new Server( ßProgram.EH, ßProgram.U );
+                    this._currentState = new Server( ßProgram.D );
                 else
-                    this._currentState = new Client( ßProgram.EH, ßProgram.U );
-                this._currentState.Start( this._serverArg ? IPAddress.Any : IPAddress.Parse( ßProgram.U.UserInput.GetString( "Bitte IP Addresse Eintragen", "127.0.0.1" ) ) );
+                    this._currentState = new Client( ßProgram.D );
+                this._currentState.Start( this._serverArg ? IPAddress.Any : IPAddress.Parse( ßProgram.F.U.GetString( "Bitte IP Addresse Eintragen", "127.0.0.1" ) ) );
             }
         }
 
         public void CreateUi(bool isServer) {
             if ( isServer )
-                this._currentState = new Server( ßProgram.EH, ßProgram.U );
+                this._currentState = new Server( ßProgram.D );
             else
-                this._currentState = new Client( ßProgram.EH, ßProgram.U );
+                this._currentState = new Client( ßProgram.D );
 
             var form = new MainFormP( this._currentState, isServer ) { Text = this._currentState.GetType().Name };
 
+            ßProgram.F = new FormUiHandler( form, new Editor(), new UserInput() );
+
+            ßProgram.D.UiHandler = ßProgram.F;
+
+            ßProgram.D.KeyHandler = (KeyHandler) new byte[KeyHandler.LENGTH_B];
             var t = new Thread( () => {
                 Application.Run( form );
             } );

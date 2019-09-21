@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace UniversalShare_2.Operation {
+namespace UniversalShareCore.Operation {
     public struct TokenItem {
         [XmlIgnore] public byte[] TokenBytes { [DebuggerStepThrough] get; private set; }
 

@@ -2,10 +2,11 @@
 using System.Net.Sockets;
 using System.Threading;
 using System.Xml.Serialization;
-using UniversalShare_2.Handlers;
+using UniversalShareCore.Handlers;
+using UniversalShareCore.LowLvlHandler;
 
-namespace UniversalShare_2.Net {
-    internal class ReversesHandler : SendHandler {
+namespace UniversalShareCore.Net {
+    public class ReversesHandler : SendHandler {
         [XmlIgnore] public Dictionary<string, List<string>> _returns = new Dictionary<string, List<string>>();
         [XmlIgnore] public List<Thread> threads = new List<Thread>();
 
@@ -28,6 +29,6 @@ namespace UniversalShare_2.Net {
         }
 
         /// <inheritdoc />
-        public ReversesHandler(ExceptionHandler _exceptionHandler, UiHandler uiHandler) : base( _exceptionHandler, uiHandler ) { }
+        public ReversesHandler(DataHandler uiHandler) : base(  uiHandler ) { }
     }
 }

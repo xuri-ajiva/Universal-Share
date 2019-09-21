@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaApp", "JavaApp\JavaApp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalShare 2", "UniversalShare 2\UniversalShare 2.csproj", "{EF55127D-FE7D-4728-ACD0-E6DA1C7671A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalShareCore", "UniversalShareCore\UniversalShareCore.csproj", "{0BECAA7F-22A9-45B7-9AED-0126AE042322}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{EF55127D-FE7D-4728-ACD0-E6DA1C7671A8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF55127D-FE7D-4728-ACD0-E6DA1C7671A8}.Release|x86.ActiveCfg = Release|Any CPU
 		{EF55127D-FE7D-4728-ACD0-E6DA1C7671A8}.Release|x86.Build.0 = Release|Any CPU
+		{0BECAA7F-22A9-45B7-9AED-0126AE042322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BECAA7F-22A9-45B7-9AED-0126AE042322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BECAA7F-22A9-45B7-9AED-0126AE042322}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0BECAA7F-22A9-45B7-9AED-0126AE042322}.Debug|x86.Build.0 = Debug|Any CPU
+		{0BECAA7F-22A9-45B7-9AED-0126AE042322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BECAA7F-22A9-45B7-9AED-0126AE042322}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BECAA7F-22A9-45B7-9AED-0126AE042322}.Release|x86.ActiveCfg = Release|Any CPU
+		{0BECAA7F-22A9-45B7-9AED-0126AE042322}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
