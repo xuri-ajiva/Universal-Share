@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace UniversalShareCore.Operation {
@@ -6,22 +7,30 @@ namespace UniversalShareCore.Operation {
         public string _id;
         public string _fileName;
         public string _senderAuth;
+        public string _extention;
 
 
         [XmlIgnore] public Stream Stream;
 
-        public OperationInfo(string fileName, string id, string senderAuth) {
+        public OperationInfo(string fileName, string id, string senderAuth, string extention = "") {
             this._fileName   = fileName;
             this._id         = id;
             this._senderAuth = senderAuth;
-            this.Stream      = File.Open( fileName, FileMode.Append );
+
+            this._extention = extention == "" ? Path.GetExtension( fileName ) : extention;
+
+            this.Stream = File.Open( fileName, FileMode.Append );
         }
 
         public void CloseStream() {
             if ( this.Stream == null ) return;
-            this.Stream?.Flush();
-            this.Stream?.Close();
-            this.Stream?.Dispose();
+            try {
+                this.Stream?.Flush();
+                this.Stream?.Close();
+                this.Stream?.Dispose();
+            } catch (Exception e) {
+                //
+            }
         }
 
         public void Finished() {

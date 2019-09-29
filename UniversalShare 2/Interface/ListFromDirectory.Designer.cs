@@ -31,12 +31,10 @@ namespace UniversalShare_2.Interface
         private void InitializeComponent()
         {
             this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader = new ColumnHeader();
             this.SuspendLayout();
             // 
             // listView1
             //
-            this.listView1.Columns.Add( this.columnHeader );
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(0, 0);
@@ -56,7 +54,6 @@ namespace UniversalShare_2.Interface
 
         #endregion
         
-        private System.Windows.Forms.ColumnHeader columnHeader;
         private System.Windows.Forms.ListView listView1;
     }
 }

@@ -1,17 +1,26 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Eternal.Utils;
 using UniversalShareCore.Handlers;
 using UniversalShareCore.LowLvlHandler;
 
 namespace UniversalShareCore.Net {
     public class SendHandler : NetBase {
+        private static RandomGenerator random = new Eternal.Utils.RandomGenerator();
+
+        public static string RandomString(int length) {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string( Enumerable.Repeat( chars, length ).Select( s => s[random.Next( 0, s.Length )] ).ToArray() );
+        }
+
         public void SendFile(TcpClient fileSocket, string fileName, string addToFileName = "") {
             var id = "";
             try {
-                id = new Random().Next( 10000000, 19999999 ).ToString();
+                id = RandomString( 8 );
 
                 SendRegisterStream( fileSocket, addToFileName + Path.GetFileName( fileName ), id );
 
@@ -67,6 +76,6 @@ namespace UniversalShareCore.Net {
         }
 
         /// <inheritdoc />
-        public SendHandler( DataHandler _dataHandler) : base(  _dataHandler ) { }
+        public SendHandler(DataHandler _dataHandler) : base( _dataHandler ) { }
     }
 }

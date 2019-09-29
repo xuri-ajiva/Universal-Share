@@ -1,4 +1,8 @@
-﻿namespace Universal_Share.Interface
+﻿using UniversalShare_2;
+using UniversalShare_2.Interface;
+using UniversalShareCore.Operation;
+
+namespace Universal_Share.Interface
 {
     partial class MainFormP
     {
@@ -29,7 +33,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this._idStreamMap = new System.Windows.Forms.ListView();
+            this._idStreamMap = new ListFromDirectory<string,OperationInfo>();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
             this.b_clodeStreams = new System.Windows.Forms.Button();
@@ -42,13 +46,13 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.splitter4 = new System.Windows.Forms.Splitter();
-            this._TokenList = new System.Windows.Forms.ListView();
+            this._TokenList = new ListFromDirectory<string,TokenItem>();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this._RememberList = new System.Windows.Forms.ListView();
+            //this._RememberList = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitter2 = new System.Windows.Forms.Splitter();
-            this._RegList = new System.Windows.Forms.ListView();
+            //this._RegList = new System.Windows.Forms.ListView();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,17 +66,13 @@
             // 
             // _idStreamMap
             // 
-            this._idStreamMap.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this._idStreamMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this._idStreamMap.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._idStreamMap.HideSelection = false;
-            this._idStreamMap.HoverSelection = true;
             this._idStreamMap.Location = new System.Drawing.Point(0, 0);
             this._idStreamMap.Name = "_idStreamMap";
             this._idStreamMap.Size = new System.Drawing.Size(908, 546);
             this._idStreamMap.TabIndex = 0;
-            this._idStreamMap.UseCompatibleStateImageBehavior = false;
             this._idStreamMap.View = System.Windows.Forms.View.Details;
             this._idStreamMap.DoubleClick += new System.EventHandler(this._idStreamMap_DoubleClick);
             this._idStreamMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this._idStreamMap_MouseClick);
@@ -177,9 +177,9 @@
             this.panel4.Controls.Add(this.splitter4);
             this.panel4.Controls.Add(this._TokenList);
             this.panel4.Controls.Add(this.splitter1);
-            this.panel4.Controls.Add(this._RememberList);
+            //this.panel4.Controls.Add(this._RememberList);
             this.panel4.Controls.Add(this.splitter2);
-            this.panel4.Controls.Add(this._RegList);
+            //this.panel4.Controls.Add(this._RegList);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(194, 0);
             this.panel4.Name = "panel4";
@@ -201,12 +201,10 @@
             this._TokenList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4});
             this._TokenList.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._TokenList.HideSelection = false;
             this._TokenList.Location = new System.Drawing.Point(0, 551);
             this._TokenList.Name = "_TokenList";
             this._TokenList.Size = new System.Drawing.Size(908, 108);
             this._TokenList.TabIndex = 3;
-            this._TokenList.UseCompatibleStateImageBehavior = false;
             this._TokenList.View = System.Windows.Forms.View.Details;
             this._TokenList.DoubleClick += new System.EventHandler(this._TokenList_DoubleClick);
             this._TokenList.MouseClick += new System.Windows.Forms.MouseEventHandler(this._TokenList_MouseClick);
@@ -227,18 +225,18 @@
             // 
             // _RememberList
             // 
-            this._RememberList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader2});
-            this._RememberList.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._RememberList.HideSelection = false;
-            this._RememberList.Location = new System.Drawing.Point(0, 664);
-            this._RememberList.Name = "_RememberList";
-            this._RememberList.Size = new System.Drawing.Size(908, 95);
-            this._RememberList.TabIndex = 1;
-            this._RememberList.UseCompatibleStateImageBehavior = false;
-            this._RememberList.View = System.Windows.Forms.View.Details;
-            this._RememberList.DoubleClick += new System.EventHandler(this._RememberList_DoubleClick);
-            this._RememberList.MouseClick += new System.Windows.Forms.MouseEventHandler(this._RememberList_MouseClick);
+            //this._RememberList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            //this.columnHeader2});
+            //this._RememberList.Dock = System.Windows.Forms.DockStyle.Bottom;
+            //this._RememberList.HideSelection = false;
+            //this._RememberList.Location = new System.Drawing.Point(0, 664);
+            //this._RememberList.Name = "_RememberList";
+            //this._RememberList.Size = new System.Drawing.Size(908, 95);
+            //this._RememberList.TabIndex = 1;
+            //this._RememberList.UseCompatibleStateImageBehavior = false;
+            //this._RememberList.View = System.Windows.Forms.View.Details;
+            //this._RememberList.DoubleClick += new System.EventHandler(this._RememberList_DoubleClick);
+            //this._RememberList.MouseClick += new System.Windows.Forms.MouseEventHandler(this._RememberList_MouseClick);
             // 
             // columnHeader2
             // 
@@ -256,18 +254,18 @@
             // 
             // _RegList
             // 
-            this._RegList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader3});
-            this._RegList.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._RegList.HideSelection = false;
-            this._RegList.Location = new System.Drawing.Point(0, 764);
-            this._RegList.Name = "_RegList";
-            this._RegList.Size = new System.Drawing.Size(908, 94);
-            this._RegList.TabIndex = 2;
-            this._RegList.UseCompatibleStateImageBehavior = false;
-            this._RegList.View = System.Windows.Forms.View.Details;
-            this._RegList.DoubleClick += new System.EventHandler(this._RegList_DoubleClick);
-            this._RegList.MouseClick += new System.Windows.Forms.MouseEventHandler(this._RegList_MouseClick);
+            //this._RegList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            //this.columnHeader3});
+            //this._RegList.Dock = System.Windows.Forms.DockStyle.Bottom;
+            //this._RegList.HideSelection = false;
+            //this._RegList.Location = new System.Drawing.Point(0, 764);
+            //this._RegList.Name = "_RegList";
+            //this._RegList.Size = new System.Drawing.Size(908, 94);
+            //this._RegList.TabIndex = 2;
+            //this._RegList.UseCompatibleStateImageBehavior = false;
+            //this._RegList.View = System.Windows.Forms.View.Details;
+            //this._RegList.DoubleClick += new System.EventHandler(this._RegList_DoubleClick);
+            //this._RegList.MouseClick += new System.Windows.Forms.MouseEventHandler(this._RegList_MouseClick);
             // 
             // columnHeader3
             // 
@@ -326,18 +324,18 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView _idStreamMap;
+        private ListFromDirectory<string,OperationInfo> _idStreamMap;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button B_StartServer;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.ListView _RegList;
+        //private System.Windows.Forms.ListView _RegList;
         private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ListView _RememberList;
+        //private System.Windows.Forms.ListView _RememberList;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ListView _TokenList;
+        private ListFromDirectory<string,TokenItem> _TokenList;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Splitter splitter4;
         private System.Windows.Forms.Splitter splitter2;

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
 using UniversalShare_2;
+using UniversalShare_2.Interface;
 using UniversalShare_2.Properties;
 using UniversalShareCore.Net;
 using UniversalShareCore.Operation;
@@ -40,21 +42,27 @@ namespace Universal_Share.Interface {
             this._TokenList.Columns.Add( "Trusted",     100, HorizontalAlignment.Left );
             this._TokenList.Columns.Add( "remember",    100, HorizontalAlignment.Left );
             this._TokenList.Columns.Add( "Description", -2,  HorizontalAlignment.Left );
-            this._RememberList.Columns.Add( "Type",        100, HorizontalAlignment.Left );
-            this._RememberList.Columns.Add( "Value",       100, HorizontalAlignment.Left );
-            this._RememberList.Columns.Add( "Description", -2,  HorizontalAlignment.Left );
-            this._RegList.Columns.Add( "CloseFileStream", 100, HorizontalAlignment.Left );
-            this._RegList.Columns.Add( "UserConfirm",     100, HorizontalAlignment.Left );
-            this._RegList.Columns.Add( "OpenWith",        100, HorizontalAlignment.Left );
-            this._RegList.Columns.Add( "Arguments",       300, HorizontalAlignment.Left );
-            this._RegList.Columns.Add( "Description",     -2,  HorizontalAlignment.Left );
+            //this._RememberList.Columns.Add( "Type",        100, HorizontalAlignment.Left );
+            //this._RememberList.Columns.Add( "Value",       100, HorizontalAlignment.Left );
+            //this._RememberList.Columns.Add( "Description", -2,  HorizontalAlignment.Left );
+            //this._RegList.Columns.Add( "CloseFileStream", 100, HorizontalAlignment.Left );
+            //this._RegList.Columns.Add( "UserConfirm",     100, HorizontalAlignment.Left );
+            //this._RegList.Columns.Add( "OpenWith",        100, HorizontalAlignment.Left );
+            //this._RegList.Columns.Add( "Arguments",       300, HorizontalAlignment.Left );
+            //this._RegList.Columns.Add( "Description",     -2,  HorizontalAlignment.Left );
 
-            this._idStreamMap.Name  = "ID";
-            this._TokenList.Name    = "TO";
-            this._RememberList.Name = "RE";
-            this._RegList.Name      = "RG";
+            this._idStreamMap.Name = "ID";
+            this._TokenList.Name   = "TO";
+            //this._RememberList.Name = "RE";
+            //this._RegList.Name      = "RG";
 
             this.B_StartServer.Text = "Start " + s.GetType().Name;
+
+            this._idStreamMap.SetItemCreationMathode( pair => CreateFromDictChange( new DictChangedEventArgs<string, OperationInfo>() { Key = pair.Key, Value = pair.Value, Type = TypeE.AddItem } ) );
+            this._TokenList.SetItemCreationMathode( pair => CreateFromDictChange( new DictChangedEventArgs<string, TokenItem>() { Key       = pair.Key, Value = pair.Value, Type = TypeE.AddItem } ) );
+
+            this._idStreamMap.UpdateAll( ßProgram.D.OperationIdMap );
+            this._TokenList.UpdateAll( ßProgram.D.TokenList );
         }
 
 
@@ -207,7 +215,7 @@ namespace Universal_Share.Interface {
                             //( var r22, var r12 ) = ßProgram.E.EditTypeHolder( ßProgram.D.RegList.Get( name ), name );
                             //ßProgram.D.RegList.Remove( r12 );
                             //ßProgram.D.RegList.Add( r12, r22 );
-                        } catch  {
+                        } catch {
                             // ignored
                         }
 
@@ -288,6 +296,7 @@ namespace Universal_Share.Interface {
             this.contextMenuStrip1.Show( Cursor.Position );
         }
 
+/*
         private void _RememberList_MouseClick(object sender, MouseEventArgs e) {
             if ( !( sender is ListView ls ) ) return;
             var item = ls.SelectedItems;
@@ -307,7 +316,7 @@ namespace Universal_Share.Interface {
             this.contextMenuStrip1.Items["newToolStripMenuItem"].Text = @"New";
             this.contextMenuStrip1.Show( Cursor.Position );
         }
-
+        */
         private void B_SendFile_Click(object sender, EventArgs e) {
             if ( !( this._server is ISharedAble server ) ) return;
             using ( OpenFileDialog f = new OpenFileDialog { Multiselect = true } ) {
@@ -350,7 +359,7 @@ namespace Universal_Share.Interface {
                 ßProgram.D.OperationIdMap.Remove( item.Text );
             }
         }
-
+/*
         private void _RememberList_DoubleClick(object sender, EventArgs e) {
             if ( !( sender is ListView ls ) ) return;
             var item = ls.SelectedItems[0];
@@ -368,11 +377,13 @@ namespace Universal_Share.Interface {
                 //ßProgram.D.RegList.Remove( item.Text );
             }
         }
+        */
 
         #endregion
 
         #region delegatedEvents
 
+        /*
         private void Changed <T, TV>(DictChangedEventArgs<T, TV> e) {
             switch (e.Type) {
                 case TypeE.AddItem:    break;
@@ -381,15 +392,15 @@ namespace Universal_Share.Interface {
                 default:               return;
             }
 
-            ListView ls = null;
+            ListFromDirectory<T, TV> ls = null;
 
             if ( typeof(T) == typeof(string) ) {
-                ls = /*typeof(TV) == typeof(RememberType) ? this._RememberList : */this._RegList;
+                //ls = /*typeof(TV) == typeof(RememberType) ? this._RememberList : * /this._RegList;
+            }
+            else if ( typeof(TV) == typeof(OperationInfo) ) {
+                ls = this._idStreamMap;
             }
             else if ( typeof(T) == typeof(string) ) {
-                ls = this._TokenList;
-            }
-            else if ( typeof(T) == typeof(int) ) {
                 ls = this._idStreamMap;
             }
 
@@ -406,12 +417,42 @@ namespace Universal_Share.Interface {
                 default: throw new ArgumentOutOfRangeException();
             }
         }
+*/
+
 
         // private void RememberTypeOnOnDictionaryChanged(object sender, DictChangedEventArgs<string, RememberType> e) { Changed( e ); }
-        private void TokenListOnOnDictionaryChanged(object sender, DictChangedEventArgs<string, TokenItem> e) { Changed( e ); }
+        private void TokenListOnOnDictionaryChanged(object sender, DictChangedEventArgs<string, TokenItem> e) {
+            var l = this._TokenList;
+            switch (e.Type) {
+                case TypeE.AddItem:
+                    l.AddItem( new KeyValuePair<string, TokenItem>( e.Key, e.Value ) );
+                    break;
+                case TypeE.RemoveItem:
+                    l.RemoveItemByKey( e.Key );
+                    break;
+                case TypeE.Clear:
+                    l.Clear();
+                    break;
+                default: return;
+            }
+        }
 
         // private void RegListOnOnDictionaryChanged(object      sender, DictChangedEventArgs<string, TypeHolder>   e) { Changed( e ); }
-        private void IdStreamsMapOnDictionaryChanged(object sender, DictChangedEventArgs<string, OperationInfo> e) { Changed( e ); }
+        private void IdStreamsMapOnDictionaryChanged(object sender, DictChangedEventArgs<string, OperationInfo> e) {
+            var l = this._idStreamMap;
+            switch (e.Type) {
+                case TypeE.AddItem:
+                    l.AddItem( new KeyValuePair<string, OperationInfo>( e.Key, e.Value ) );
+                    break;
+                case TypeE.RemoveItem:
+                    l.RemoveItemByKey( e.Key );
+                    break;
+                case TypeE.Clear:
+                    l.Clear();
+                    break;
+                default: return;
+            }
+        }
 
         #endregion
 
@@ -433,7 +474,7 @@ namespace Universal_Share.Interface {
             it.ImageKey = key;
             try {
                 if ( typeof(TV) == typeof(OperationInfo) && e.Value is OperationInfo rg ) {
-                    it.SubItems.Add( rg._id.ToString() );
+                    it.SubItems.Add( rg._extention.ToString() );
                     it.SubItems.Add( ( rg.Stream?.Length.ToString() ) );
                     it.SubItems.Add( ( rg._senderAuth ) );
                     it.SubItems.Add( ( rg._fileName ) );
@@ -465,12 +506,12 @@ namespace Universal_Share.Interface {
 
         private void ForceUpdateAll_Click(object sender, EventArgs e) {
             try {
-                this._RegList.Items.Clear();
-                this._RememberList.Items.Clear();
-                this._TokenList.Items.Clear();
-                this._idStreamMap.Items.Clear();
+                //this._RegList.Items.Clear();
+                //this._RememberList.Items.Clear();
+                this._TokenList.Clear();
+                this._idStreamMap.Clear();
                 foreach ( var s in ßProgram.D.OperationIdMap ) {
-                    this._idStreamMap.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, OperationInfo>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                    this._idStreamMap.AddItem( s );
                 }
 
                 //foreach ( var s in ßProgram.D.RegList ) {
@@ -482,7 +523,7 @@ namespace Universal_Share.Interface {
                 //}
 
                 foreach ( var s in ßProgram.D.TokenList ) {
-                    this._TokenList.Items.Add( CreateFromDictChange( new DictChangedEventArgs<string, TokenItem>() { Key = s.Key, Type = TypeE.AddItem, Value = s.Value } ) );
+                    this._TokenList.AddItem( s );
                 }
 
                 foreach ( Control c in this.panel4.Controls ) {

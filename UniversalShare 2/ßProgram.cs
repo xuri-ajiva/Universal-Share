@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -30,11 +31,26 @@ namespace UniversalShare_2 {
             D  = new DataHandler( new ExceptionHandler(), F, SH, new KeyHandler() );
             E  = new Editor();
             SH = new SettingsHandler( D );
-
+            SH.LoadSettings();
+            SH.SavingLoop = true;
             //DebugHandler.Start();
 
-            new Thread( () => new ConsoleArgsHandler( new string[] { "s" }, new SettingsHandler( D, "S" ) ) ).Start();
-            new Thread( () => new ConsoleArgsHandler( new string[] { "c" }, new SettingsHandler( D, "C" ) ) ).Start();
+            if ( args.Length == 0 ) {
+                var c_name = Path.GetFileNameWithoutExtension( Application.ExecutablePath ) + "c" + ".exe";
+                var s_name = Path.GetFileNameWithoutExtension( Application.ExecutablePath ) + "s" + ".exe";
+                File.Copy( Application.ExecutablePath, s_name, true );
+                File.Copy( Application.ExecutablePath, c_name, true );
+
+                Process.Start( c_name, "s" );
+                Process.Start( s_name, "c" );
+                //new Thread( () => new ConsoleArgsHandler( new string[] { "s" }, new SettingsHandler( D, "S" ) ) ).Start();
+                //new Thread( () => new ConsoleArgsHandler( new string[] { "c" }, new SettingsHandler( D, "C" ) ) ).Start();
+                Environment.Exit( 0 );
+            }
+            else {
+                new Thread( () => new ConsoleArgsHandler( args, SH ) ).Start();
+            }
+
             // Application.Run(new Form1());
             Console.ReadLine();
         }

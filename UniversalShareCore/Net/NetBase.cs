@@ -112,7 +112,7 @@ namespace UniversalShareCore.Net {
 
                     Directory.CreateDirectory( Path.GetDirectoryName( finalSaveName ) ?? throw new InvalidOperationException() );
 
-                    var regInfo = new OperationInfo( finalSaveName, id, Convert.ToBase64String( tokenBytes ) );
+                    var regInfo = new OperationInfo( finalSaveName, id, Convert.ToBase64String( tokenBytes ),"" );
                     _dataHandler.OperationIdMap.Add( id, regInfo );
                 }
                 else if ( NetOption.IsEqual( option, NetOption.CloseRegister ) ) {
