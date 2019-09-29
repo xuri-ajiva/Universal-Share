@@ -32,6 +32,7 @@
             this._idStreamMap = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.b_clodeStreams = new System.Windows.Forms.Button();
             this.b_Settings = new System.Windows.Forms.Button();
             this.b_SendFile = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -53,7 +54,6 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.b_clodeStreams = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -91,6 +91,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(194, 858);
             this.panel1.TabIndex = 1;
+            // 
+            // b_clodeStreams
+            // 
+            this.b_clodeStreams.Location = new System.Drawing.Point(6, 70);
+            this.b_clodeStreams.Name = "b_clodeStreams";
+            this.b_clodeStreams.Size = new System.Drawing.Size(182, 23);
+            this.b_clodeStreams.TabIndex = 4;
+            this.b_clodeStreams.Text = "CloseAllStreams";
+            this.b_clodeStreams.UseVisualStyleBackColor = true;
+            this.b_clodeStreams.Click += new System.EventHandler(this.B_clodeStreams_Click);
             // 
             // b_Settings
             // 
@@ -292,16 +302,6 @@
             this.newToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
-            // 
-            // b_clodeStreams
-            // 
-            this.b_clodeStreams.Location = new System.Drawing.Point(6, 70);
-            this.b_clodeStreams.Name = "b_clodeStreams";
-            this.b_clodeStreams.Size = new System.Drawing.Size(182, 23);
-            this.b_clodeStreams.TabIndex = 4;
-            this.b_clodeStreams.Text = "CloseAllStreams";
-            this.b_clodeStreams.UseVisualStyleBackColor = true;
-            this.b_clodeStreams.Click += new System.EventHandler(this.B_clodeStreams_Click);
             // 
             // MainFormP
             // 
